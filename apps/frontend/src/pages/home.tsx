@@ -1,13 +1,23 @@
-import { Link } from 'react-router-dom';
+import { BlogSection } from '@/components/home/blog-section';
+import { CategoriesSection } from '@/components/home/categories-section';
+import { CoursesSection } from '@/components/home/courses-section';
+import { FeaturesRibbon } from '@/components/home/features-ribbon';
+import { HeroSection } from '@/components/home/hero-section';
+import { MentorsSection } from '@/components/home/mentors-section';
+import { MetricsSection } from '@/components/home/metrics-section';
+import { TestimonialsSection } from '@/components/home/testimonials-section';
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-svh max-w-2xl flex-col items-center justify-center gap-4 p-8 text-center">
-      <h1 className="text-3xl font-bold tracking-tight">Youthpreneur</h1>
-      <p className="text-muted-foreground">Vite + React + TypeScript.</p>
-      <Link className="underline" to="/about">
-        About
-      </Link>
-    </main>
+    <>
+      <HeroSection />
+      <MetricsSection />
+      <CoursesSection />
+      <FeaturesRibbon />
+      <CategoriesSection />
+      <MentorsSection />
+      <TestimonialsSection />
+      <BlogSection />
+    </>
   );
 }

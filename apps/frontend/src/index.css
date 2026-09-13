@@ -39,6 +39,20 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-yellow-light: var(--brand-yellow-light);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-peach: var(--brand-peach);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-footer: var(--brand-footer);
+  --shadow-solid-sm: 2px 2px 0px 0px #141416;
+  --shadow-solid: 3px 3px 0px 0px #141416;
+  --shadow-solid-lg: 5px 5px 0px 0px #141416;
+  --shadow-solid-hover: 4px 4px 0px 0px #141416;
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +95,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --brand-bg: #faf7f2;
+  --brand-dark: #141416;
+  --brand-yellow: #fee78a;
+  --brand-yellow-light: #fef3c7;
+  --brand-purple: #ddd6fe;
+  --brand-blue: #bae6fd;
+  --brand-peach: #fecdd3;
+  --brand-mint: #d1fae5;
+  --brand-muted: #71717a;
+  --brand-footer: #f4efe6;
 }
 
 .dark {
@@ -115,6 +139,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --brand-bg: #141416;
+  --brand-footer: #1c1c1f;
 }
 
 @layer base {
@@ -122,9 +148,45 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-brand-bg text-brand-dark antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
   html {
     @apply font-sans;
   }
+}
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-float {
+  animation: gentleFloat 4s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: gentleFloat 4.5s ease-in-out 1.5s infinite;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--brand-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
 }
