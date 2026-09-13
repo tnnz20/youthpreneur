@@ -1,32 +1,115 @@
-# React + TypeScript + Vite
+# Youthpreneur Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React frontend for Youthpreneur Tapin, a youth entrepreneurship platform for Dinas Pemuda dan Olahraga Kabupaten Tapin.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React v19
+- TypeScript v6
+- Vite v8
+- React Router v8
+- Tailwind CSS v4
+- shadcn/ui with `base-nova`
+- Base UI primitives
+- Lucide React icons
+- Sonner notifications
+- ESLint
+- Prettier
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```text
+├── public/           # Static assets served from the site root
+└── src/
+    ├── components/
+    │   ├── about/    # About page components
+    │   ├── home/     # Home page components
+    │   ├── shared/   # Shared layout and site components
+    │   └── ui/       # shadcn/ui components
+    ├── constants/    # Static content and configuration
+    ├── hooks/       # Reusable React hooks
+    ├── layouts/     # Shared page layouts
+    ├── lib/         # Framework-agnostic utilities
+    ├── pages/       # Route-level page components
+    ├── types/       # Shared TypeScript types
+    ├── app.tsx      # Declarative route definitions
+    ├── index.css    # Tailwind v4 theme and global styles
+    └── main.tsx     # Application bootstrap
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`MainLayout` provides shared navigation and footer for public pages. The login page renders outside this layout. Routes use declarative `react-router` configuration.
+
+## Routes
+
+- `/` — Youthpreneur landing page
+- `/about` — Youthpreneur and Dispora overview
+- `/login` — Login form
+
+## Usage
+
+Run commands from `apps/frontend/`:
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
+
+```bash
+npm run dev
+```
+
+Format source files:
+
+```bash
+npm run format
+```
+
+Check formatting:
+
+```bash
+npm run format:check
+```
+
+Run ESLint:
+
+```bash
+npm run lint
+```
+
+Run TypeScript checks:
+
+```bash
+npm run typecheck
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview production build:
+
+```bash
+npm run preview
+```
+
+From project root, equivalent Makefile commands are available:
+
+```bash
+make fe-install
+make fe-dev
+make fe-format
+make fe-format-check
+make fe-lint
+make fe-typecheck
+make fe-build
+make fe-preview
+```
+
+## Design
+
+The frontend follows the Youthpreneur Tapin neo-brutalist editorial design system. Warm cream surfaces, pastel brand accents, solid borders, hard-edge shadows, responsive layouts, and accessible interactive components are defined in the root `DESIGN.md` and `src/index.css`.
