@@ -2,7 +2,6 @@
 
 **Target Stack:** Vite 8 + React 19 + TypeScript 6 + React Router 7 + Tailwind CSS 4 + shadcn/ui (`base-nova`)
 **Supporting Libraries:** `@base-ui/react`, `class-variance-authority`, `lucide-react`, `tw-animate-css`, `@fontsource-variable/geist`, ESLint, Prettier
-**Baseline Design:** `fix/landingpage.html` & `fix/tentang.html` (reference mockups)
 **Institution:** Dinas Pemuda dan Olahraga (Dispora) Kabupaten Tapin, Kalimantan Selatan
 **Design Style:** _Neo-Brutalist Editorial & Warm Retro-Modern_
 

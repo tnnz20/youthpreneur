@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router';
 import { Footer } from '@/components/shared/footer';
 import { Navbar } from '@/components/shared/navbar';
 import { SiteProvider } from '@/components/shared/site-provider';

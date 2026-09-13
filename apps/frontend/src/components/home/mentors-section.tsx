@@ -24,7 +24,7 @@ export function MentorsSection() {
             >
               <div className="p-6">
                 <Avatar
-                  className={`mb-4 h-28 w-28 border-2 border-brand-dark p-1 after:hidden ${mentor.rim}`}
+                  className={`mx-auto mb-4 h-28 w-28 border-2 border-brand-dark p-1 after:hidden ${mentor.rim}`}
                 >
                   <AvatarImage src={mentor.image} alt={mentor.name} />
                   <AvatarFallback>

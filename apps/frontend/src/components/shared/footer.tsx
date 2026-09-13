@@ -1,5 +1,5 @@
 import { useState, type SubmitEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { toast } from 'sonner';
 import { Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';

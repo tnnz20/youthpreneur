@@ -13,7 +13,7 @@ export function BadapatanSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           <div className="order-2 lg:order-1 lg:col-span-5">
-            <Card className="relative rounded-3xl border-2 border-brand-dark bg-brand-yellow p-6 py-6 ring-0 shadow-solid-lg sm:p-8">
+            <Card className="relative gap-0 overflow-visible rounded-3xl border-2 border-brand-dark bg-brand-yellow p-6 py-6 ring-0 shadow-solid-lg sm:p-8">
               <Badge className="absolute -right-3 -top-3 h-auto rounded-full border-0 bg-brand-dark px-3.5 py-1 text-[10px] font-black uppercase tracking-wider text-white">
                 Sistem Satu Data
               </Badge>

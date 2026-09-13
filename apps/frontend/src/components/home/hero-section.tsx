@@ -90,8 +90,8 @@ export function HeroSection() {
               <Sparkles className="h-8 w-8" />
             </div>
 
-            <div className="relative w-[300px] sm:w-[380px] lg:w-[410px]">
-              <div className="relative h-[410px] w-full overflow-hidden rounded-t-full rounded-b-[100px] border-2 border-brand-dark bg-brand-yellow shadow-solid-lg sm:h-[480px]">
+            <div className="relative w-75 sm:w-95 lg:w-[410px]">
+              <div className="relative h-[410px] w-full overflow-hidden rounded-t-full rounded-b-[100px] border-2 border-brand-dark bg-brand-yellow shadow-solid-lg sm:h-120">
                 <SmartImage
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
                   fallbackSrc="https://placehold.co/600x800/FEE78A/141416?text=Wirausaha+Muda"
