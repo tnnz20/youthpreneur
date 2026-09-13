@@ -58,16 +58,19 @@ export function Footer() {
             </div>
 
             <div className="flex items-center gap-2 pt-2">
-              {SOCIALS.map((social) => (
-                <a
-                  key={social.label}
-                  href="#"
-                  aria-label={social.label}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-dark text-xs font-bold text-white transition hover:opacity-80"
-                >
-                  {social.short}
-                </a>
-              ))}
+              {SOCIALS.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href="#"
+                    aria-label={social.label}
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-dark text-white transition hover:opacity-80"
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 

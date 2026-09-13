@@ -1,5 +1,4 @@
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import { toast } from 'sonner';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { SmartImage } from '@/components/shared/smart-image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -53,7 +52,6 @@ export function MentorsSection() {
             type="button"
             variant="ghost"
             size="icon-lg"
-            onClick={() => toast.info('Menampilkan mentor sebelumnya')}
             aria-label="Sebelumnya"
             className="h-10 w-10 rounded-full bg-brand-dark text-white hover:bg-black"
           >
@@ -63,7 +61,6 @@ export function MentorsSection() {
             type="button"
             variant="ghost"
             size="icon-lg"
-            onClick={() => toast.info('Menampilkan mentor berikutnya')}
             aria-label="Selanjutnya"
             className="h-10 w-10 rounded-full bg-brand-dark text-white hover:bg-black"
           >

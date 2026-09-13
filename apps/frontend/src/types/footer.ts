@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import type { NavLinkItem } from './site';
 
 export interface FooterAction {
@@ -14,5 +15,5 @@ export interface FooterColumn {
 
 export interface SocialLink {
   label: string;
-  short: string;
+  icon: LucideIcon;
 }

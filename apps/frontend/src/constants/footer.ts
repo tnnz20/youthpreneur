@@ -1,3 +1,4 @@
+import { Globe, Image, Play, Users } from 'lucide-react';
 import type { FooterColumn, SocialLink } from '@/types/footer';
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
@@ -38,8 +39,8 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
 ];
 
 export const SOCIALS: SocialLink[] = [
-  { label: 'Facebook', short: 'f' },
-  { label: 'Instagram', short: 'ig' },
-  { label: 'LinkedIn', short: 'in' },
-  { label: 'YouTube', short: 'yt' },
+  { label: 'Facebook', icon: Globe },
+  { label: 'Instagram', icon: Image },
+  { label: 'LinkedIn', icon: Users },
+  { label: 'YouTube', icon: Play },
 ];
