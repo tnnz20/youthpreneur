@@ -1,27 +1,30 @@
 import { Link } from 'react-router';
-import { Sparkles } from 'lucide-react';
 
-import { useSite } from '@/hooks/use-site';
 import { cn } from '@/lib/utils';
+
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+
+import { useSite } from '@/hooks/use-site';
+
+import { Sparkles } from 'lucide-react';
 
 export function CtaSection() {
   const { openModal } = useSite();
 
   return (
-    <section className="border-t border-black/10 bg-brand-bg py-16">
+    <section className="bg-brand-bg border-t border-black/10 py-16">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <Card className="mx-auto max-w-4xl rounded-3xl border-2 border-brand-dark bg-white p-8 py-8 ring-0 shadow-solid-lg sm:p-14">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 border-brand-dark bg-brand-yellow text-2xl shadow-solid-sm">
+        <Card className="border-brand-dark shadow-solid-lg mx-auto max-w-4xl rounded-3xl border-2 bg-white p-8 py-8 ring-0 sm:p-14">
+          <div className="border-brand-dark bg-brand-yellow shadow-solid-sm mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border-2 text-2xl">
             <Sparkles className="h-6 w-6" aria-hidden="true" />
           </div>
 
-          <h2 className="text-3xl font-black tracking-tight text-brand-dark sm:text-4xl">
+          <h2 className="text-brand-dark text-3xl font-black tracking-tight sm:text-4xl">
             Mari Bergabung dalam Gerakan Pemuda Tapin
           </h2>
 
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-brand-muted sm:text-base">
+          <p className="text-brand-muted mx-auto mt-3 max-w-xl text-sm leading-relaxed sm:text-base">
             Apakah Anda pemuda berjiwa wirausaha, pegiat komunitas, atlet berprestasi, akademisi,
             atau mitra dunia usaha? Saatnya bersinergi memajukan potensi daerah Kabupaten Tapin.
           </p>

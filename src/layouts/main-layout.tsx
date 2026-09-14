@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+
 import { Outlet, useLocation } from 'react-router';
+
 import { Footer } from '@/components/shared/footer';
 import { Navbar } from '@/components/shared/navbar';
 import { SiteProvider } from '@/components/shared/site-provider';
@@ -26,7 +28,7 @@ export default function MainLayout() {
   return (
     <SiteProvider>
       <ScrollToHash />
-      <div className="flex min-h-screen flex-col bg-brand-bg text-brand-dark selection:bg-brand-yellow selection:text-black">
+      <div className="bg-brand-bg text-brand-dark selection:bg-brand-yellow flex min-h-screen flex-col selection:text-black">
         <Navbar />
         <main className="grow">
           <Outlet />

@@ -2,8 +2,10 @@ import { SectionHeading } from '@/components/shared/section-heading';
 import { SmartImage } from '@/components/shared/smart-image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ARTICLES } from '@/constants/home';
+
 import { useSite } from '@/hooks/use-site';
+
+import { ARTICLES } from '@/constants/home';
 
 export function BlogSection() {
   const { openModal } = useSite();
@@ -20,9 +22,9 @@ export function BlogSection() {
           {ARTICLES.map((article) => (
             <Card
               key={article.title}
-              className="group flex flex-col gap-0 overflow-hidden rounded-2xl border-2 border-brand-dark bg-white py-0 ring-0 transition-all hover:-translate-y-1"
+              className="group border-brand-dark flex flex-col gap-0 overflow-hidden rounded-2xl border-2 bg-white py-0 ring-0 transition-all hover:-translate-y-1"
             >
-              <div className="h-44 overflow-hidden border-b-2 border-brand-dark bg-stone-100">
+              <div className="border-brand-dark h-44 overflow-hidden border-b-2 bg-stone-100">
                 <SmartImage
                   src={article.image}
                   fallbackSrc={article.fallback}
@@ -35,11 +37,11 @@ export function BlogSection() {
                   type="button"
                   variant="ghost"
                   onClick={() => openModal(article.modalTitle)}
-                  className="h-auto w-full justify-start whitespace-normal p-0 text-left text-base font-bold leading-snug text-brand-dark hover:bg-transparent group-hover:underline"
+                  className="text-brand-dark h-auto w-full justify-start p-0 text-left text-base leading-snug font-bold whitespace-normal group-hover:underline hover:bg-transparent"
                 >
                   {article.title}
                 </Button>
-                <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-3 text-[11px] text-brand-muted">
+                <div className="text-brand-muted mt-5 flex items-center justify-between border-t border-gray-100 pt-3 text-[11px]">
                   <span>{article.date}</span>
                   <span className="font-medium">{article.readTime}</span>
                 </div>
@@ -52,7 +54,7 @@ export function BlogSection() {
           <Button
             type="button"
             onClick={() => openModal('Koleksi Artikel Lengkap')}
-            className="h-auto rounded-full bg-brand-dark px-8 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:bg-black active:scale-95"
+            className="bg-brand-dark h-auto rounded-full px-8 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:bg-black active:scale-95"
           >
             Baca Selengkapnya
           </Button>

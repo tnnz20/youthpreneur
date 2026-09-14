@@ -1,11 +1,14 @@
-import { ArrowRight, Star } from 'lucide-react';
 import { SectionHeading } from '@/components/shared/section-heading';
 import { SmartImage } from '@/components/shared/smart-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { COURSES } from '@/constants/home';
+
 import { useSite } from '@/hooks/use-site';
+
+import { COURSES } from '@/constants/home';
+
+import { ArrowRight, Star } from 'lucide-react';
 
 export function CoursesSection() {
   const { openModal } = useSite();
@@ -22,13 +25,13 @@ export function CoursesSection() {
           {COURSES.map((course) => (
             <Card
               key={course.title}
-              className="group flex flex-col gap-0 overflow-hidden rounded-2xl border-2 border-brand-dark bg-white py-0 ring-0 transition-transform duration-200 hover:-translate-y-1"
+              className="group border-brand-dark flex flex-col gap-0 overflow-hidden rounded-2xl border-2 bg-white py-0 ring-0 transition-transform duration-200 hover:-translate-y-1"
             >
-              <div className="relative h-48 overflow-hidden border-b-2 border-brand-dark bg-stone-100">
+              <div className="border-brand-dark relative h-48 overflow-hidden border-b-2 bg-stone-100">
                 {course.bestSeller ? (
                   <Badge
                     variant="neoYellow"
-                    className="absolute left-3 top-3 z-10 h-auto rounded-md px-2.5 py-1 text-[10px] uppercase tracking-wider"
+                    className="absolute top-3 left-3 z-10 h-auto rounded-md px-2.5 py-1 text-[10px] tracking-wider uppercase"
                   >
                     BEST SELLER
                   </Badge>
@@ -43,15 +46,15 @@ export function CoursesSection() {
 
               <CardContent className="flex flex-1 flex-col justify-between p-5">
                 <div>
-                  <h3 className="line-clamp-2 text-base font-bold leading-snug text-brand-dark sm:text-[17px]">
+                  <h3 className="text-brand-dark line-clamp-2 text-base leading-snug font-bold sm:text-[17px]">
                     {course.title}
                   </h3>
-                  <p className="mt-2 text-xs font-medium text-brand-muted">{course.mentor}</p>
+                  <p className="text-brand-muted mt-2 text-xs font-medium">{course.mentor}</p>
                 </div>
 
                 <div className="mt-4 border-t border-gray-100 pt-3">
                   <div className="mb-2 flex items-center gap-1 text-xs">
-                    <span className="font-bold text-brand-dark">{course.rating}</span>
+                    <span className="text-brand-dark font-bold">{course.rating}</span>
                     <div className="flex text-amber-500" aria-hidden="true">
                       {Array.from({ length: 5 }, (_, index) => (
                         <Star
@@ -60,12 +63,12 @@ export function CoursesSection() {
                         />
                       ))}
                     </div>
-                    <span className="text-[11px] text-brand-muted">({course.reviews})</span>
+                    <span className="text-brand-muted text-[11px]">({course.reviews})</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-lg font-black text-brand-dark">{course.price}</span>
-                      <span className="ml-1 text-xs text-brand-muted line-through">
+                      <span className="text-brand-dark text-lg font-black">{course.price}</span>
+                      <span className="text-brand-muted ml-1 text-xs line-through">
                         {course.originalPrice}
                       </span>
                       {course.tag ? (
@@ -83,7 +86,7 @@ export function CoursesSection() {
                       size="icon"
                       onClick={() => openModal(`Daftar Kelas: ${course.title}`)}
                       aria-label={`Daftar kelas ${course.title}`}
-                      className="rounded-full text-brand-dark hover:bg-black/5"
+                      className="text-brand-dark rounded-full hover:bg-black/5"
                     >
                       <ArrowRight className="h-5 w-5" aria-hidden="true" />
                     </Button>
@@ -98,7 +101,7 @@ export function CoursesSection() {
           <Button
             type="button"
             onClick={() => openModal('Katalog 60+ Program Wirausaha Daerah')}
-            className="h-auto rounded-full bg-brand-dark px-8 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:bg-black active:scale-95"
+            className="bg-brand-dark h-auto rounded-full px-8 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:bg-black active:scale-95"
           >
             Lihat Semua Program Pelatihan
           </Button>

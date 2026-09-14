@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+
 import type { NavLinkItem } from './site';
 
 export interface FooterAction {

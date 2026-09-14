@@ -13,9 +13,9 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div className={`mx-auto mb-14 max-w-2xl text-center ${className}`}>
-      <h2 className={`${titleClassName} tracking-tight text-brand-dark`}>{title}</h2>
+      <h2 className={`${titleClassName} text-brand-dark tracking-tight`}>{title}</h2>
       {description ? (
-        <p className="mt-3 text-sm text-brand-muted sm:text-base">{description}</p>
+        <p className="text-brand-muted mt-3 text-sm sm:text-base">{description}</p>
       ) : null}
     </div>
   );

@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+
 import type { SiteContextValue } from '@/types/site';
 
 export const SiteContext = createContext<SiteContextValue | null>(null);

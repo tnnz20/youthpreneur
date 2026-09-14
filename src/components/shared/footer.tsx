@@ -1,13 +1,18 @@
-import { useState, type SubmitEvent } from 'react';
+import { type SubmitEvent, useState } from 'react';
+
 import { Link } from 'react-router';
 import { toast } from 'sonner';
-import { Mail, Phone } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { BRAND } from '@/constants/site';
-import { FOOTER_COLUMNS, SOCIALS } from '@/constants/footer';
+
 import { useSite } from '@/hooks/use-site';
+
+import { FOOTER_COLUMNS, SOCIALS } from '@/constants/footer';
+import { BRAND } from '@/constants/site';
+
+import { Mail, Phone } from 'lucide-react';
 
 export function Footer() {
   const { openModal } = useSite();
@@ -23,36 +28,36 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t border-black/15 bg-brand-footer pb-12 pt-16">
+    <footer className="bg-brand-footer border-t border-black/15 pt-16 pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 pb-12 md:grid-cols-12 lg:gap-8">
           <div className="space-y-4 md:col-span-4">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl border-2 border-brand-dark bg-brand-yellow text-lg font-extrabold shadow-solid-sm">
+              <div className="border-brand-dark bg-brand-yellow shadow-solid-sm flex h-9 w-9 items-center justify-center rounded-xl border-2 text-lg font-extrabold">
                 YT
               </div>
               <div>
-                <div className="text-xl font-black leading-none tracking-tight text-brand-dark">
+                <div className="text-brand-dark text-xl leading-none font-black tracking-tight">
                   {BRAND.name}
                   <span className="text-amber-500"> {BRAND.suffix}</span>
                 </div>
-                <div className="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                <div className="text-brand-muted mt-0.5 text-[10px] font-bold tracking-wider uppercase">
                   {BRAND.organizer}
                 </div>
               </div>
             </div>
-            <p className="max-w-sm text-xs leading-relaxed text-brand-muted">
+            <p className="text-brand-muted max-w-sm text-xs leading-relaxed">
               Inisiatif inkubasi mandiri pemuda nusantara untuk melahirkan wirausaha tangguh
               berbasis komoditas lokal dan kearifan daerah Tapin.
             </p>
 
-            <div className="space-y-1.5 pt-2 text-xs text-brand-dark/80">
+            <div className="text-brand-dark/80 space-y-1.5 pt-2 text-xs">
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-brand-dark" aria-hidden="true" />
+                <Phone className="text-brand-dark h-4 w-4" aria-hidden="true" />
                 <span>{BRAND.phone} (WhatsApp Halo Youthpreneur)</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-brand-dark" aria-hidden="true" />
+                <Mail className="text-brand-dark h-4 w-4" aria-hidden="true" />
                 <span>{BRAND.email}</span>
               </div>
             </div>
@@ -65,7 +70,7 @@ export function Footer() {
                     key={social.label}
                     href="#"
                     aria-label={social.label}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-dark text-white transition hover:opacity-80"
+                    className="bg-brand-dark flex h-8 w-8 items-center justify-center rounded-full text-white transition hover:opacity-80"
                   >
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </a>
@@ -76,13 +81,13 @@ export function Footer() {
 
           {FOOTER_COLUMNS.map((column) => (
             <div key={column.title} className="space-y-3 md:col-span-2">
-              <h4 className="text-xs font-black uppercase tracking-wider text-brand-dark">
+              <h4 className="text-brand-dark text-xs font-black tracking-wider uppercase">
                 {column.title}
               </h4>
-              <ul className="space-y-2 text-xs text-brand-muted">
+              <ul className="text-brand-muted space-y-2 text-xs">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.to} className="transition hover:text-brand-dark">
+                    <Link to={link.to} className="hover:text-brand-dark transition">
                       {link.label}
                     </Link>
                   </li>
@@ -93,7 +98,7 @@ export function Footer() {
                       type="button"
                       variant="link"
                       onClick={() => openModal(action.modalTitle, action.modalDescription)}
-                      className="h-auto justify-start p-0 text-xs font-normal text-brand-muted underline-offset-4 hover:text-brand-dark"
+                      className="text-brand-muted hover:text-brand-dark h-auto justify-start p-0 text-xs font-normal underline-offset-4"
                     >
                       {action.label}
                     </Button>
@@ -104,10 +109,10 @@ export function Footer() {
           ))}
 
           <div className="space-y-4 md:col-span-4">
-            <h4 className="text-xs font-black uppercase tracking-wider text-brand-dark">
+            <h4 className="text-brand-dark text-xs font-black tracking-wider uppercase">
               Berlangganan Kabar & Beasiswa
             </h4>
-            <p className="text-xs text-brand-muted">
+            <p className="text-brand-muted text-xs">
               Dapatkan info inkubasi, pembukaan beasiswa, dan panduan usaha mingguan gratis.
             </p>
 
@@ -122,7 +127,7 @@ export function Footer() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Ketik email aktif kamu"
-                className="h-auto w-full rounded-xl border border-black/25 bg-white px-4 py-2.5 text-xs text-brand-dark focus-visible:border-brand-dark focus-visible:ring-0"
+                className="text-brand-dark focus-visible:border-brand-dark h-auto w-full rounded-xl border border-black/25 bg-white px-4 py-2.5 text-xs focus-visible:ring-0"
               />
               <Button
                 type="submit"
@@ -137,14 +142,14 @@ export function Footer() {
 
         <Separator className="bg-black/10" />
 
-        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-xs text-brand-muted sm:flex-row">
+        <div className="text-brand-muted flex flex-col items-center justify-between gap-4 pt-8 text-xs sm:flex-row">
           <p>{BRAND.copyright}</p>
           <div className="flex items-center gap-6">
             <Button
               type="button"
               variant="link"
               onClick={() => openModal('Syarat & Ketentuan')}
-              className="h-auto p-0 text-xs font-normal text-brand-muted hover:text-brand-dark"
+              className="text-brand-muted hover:text-brand-dark h-auto p-0 text-xs font-normal"
             >
               Syarat & Ketentuan
             </Button>
@@ -152,7 +157,7 @@ export function Footer() {
               type="button"
               variant="link"
               onClick={() => openModal('Kebijakan Privasi')}
-              className="h-auto p-0 text-xs font-normal text-brand-muted hover:text-brand-dark"
+              className="text-brand-muted hover:text-brand-dark h-auto p-0 text-xs font-normal"
             >
               Privasi
             </Button>
@@ -160,7 +165,7 @@ export function Footer() {
               type="button"
               variant="link"
               onClick={() => openModal('Pusat Bantuan')}
-              className="h-auto p-0 text-xs font-normal text-brand-muted hover:text-brand-dark"
+              className="text-brand-muted hover:text-brand-dark h-auto p-0 text-xs font-normal"
             >
               Bantuan
             </Button>

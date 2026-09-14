@@ -1,6 +1,8 @@
 import { toast } from 'sonner';
+
 import { SectionHeading } from '@/components/shared/section-heading';
 import { Button } from '@/components/ui/button';
+
 import { CATEGORIES } from '@/constants/home';
 
 export function CategoriesSection() {
@@ -26,13 +28,13 @@ export function CategoriesSection() {
                   type="button"
                   variant="ghost"
                   onClick={() => filterByCategory(category.name)}
-                  className={`h-auto w-full flex-col gap-0 rounded-2xl border-2 border-brand-dark p-6 text-center shadow-solid-sm transition-all hover:bg-transparent! group-hover:-translate-y-1 hover:text-brand-dark ${category.color}`}
+                  className={`border-brand-dark shadow-solid-sm hover:text-brand-dark h-auto w-full flex-col gap-0 rounded-2xl border-2 p-6 text-center transition-all group-hover:-translate-y-1 hover:bg-transparent! ${category.color}`}
                 >
-                  <h3 className="text-lg font-black text-brand-dark">{category.name}</h3>
-                  <p className="mt-1 text-xs text-brand-dark/70">{category.subtitle}</p>
+                  <h3 className="text-brand-dark text-lg font-black">{category.name}</h3>
+                  <p className="text-brand-dark/70 mt-1 text-xs">{category.subtitle}</p>
                 </Button>
-                <div className="pointer-events-none absolute -bottom-4 left-1/2 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border-2 border-brand-dark bg-brand-yellow shadow-sm">
-                  <Icon className="h-4 w-4 text-brand-dark" aria-hidden="true" />
+                <div className="border-brand-dark bg-brand-yellow pointer-events-none absolute -bottom-4 left-1/2 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full border-2 shadow-sm">
+                  <Icon className="text-brand-dark h-4 w-4" aria-hidden="true" />
                 </div>
               </div>
             );

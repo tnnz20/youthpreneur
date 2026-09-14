@@ -1,3 +1,5 @@
+import type { Benefit, DatasetRow, ProfileRole, Stakeholder } from '@/types/about';
+
 import {
   Banknote,
   BookOpen,
@@ -14,7 +16,6 @@ import {
   Trophy,
   UserRound,
 } from 'lucide-react';
-import type { Benefit, DatasetRow, ProfileRole, Stakeholder } from '@/types/about';
 
 export const PROFILE_ROLES: ProfileRole[] = [
   {

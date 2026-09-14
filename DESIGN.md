@@ -215,9 +215,9 @@ const buttonVariants = cva('...existing base classes...', {
   variants: {
     variant: {
       // ...existing variants...
-      neo: 'bg-brand-dark text-white font-bold border-2 border-brand-dark shadow-solid hover:bg-black hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-solid-sm active:translate-x-1 active:translate-y-1 active:shadow-none',
+      neo: 'bg-brand-dark border-brand-dark shadow-solid hover:shadow-solid-sm border-2 font-bold text-white hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-black active:translate-x-1 active:translate-y-1 active:shadow-none',
       neoYellow:
-        'bg-brand-yellow text-brand-dark font-bold border-2 border-brand-dark shadow-solid hover:bg-amber-300 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-solid-sm active:translate-x-1 active:translate-y-1 active:shadow-none',
+        'bg-brand-yellow text-brand-dark border-brand-dark shadow-solid hover:shadow-solid-sm border-2 font-bold hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-amber-300 active:translate-x-1 active:translate-y-1 active:shadow-none',
     },
     size: {
       // ...existing sizes: default, xs, sm, lg, icon, icon-xs, icon-sm, icon-lg...

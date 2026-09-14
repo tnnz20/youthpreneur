@@ -1,5 +1,6 @@
-import { Globe, Image, Play, Users } from 'lucide-react';
 import type { FooterColumn, SocialLink } from '@/types/footer';
+
+import { Globe, Image, Play, Users } from 'lucide-react';
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {

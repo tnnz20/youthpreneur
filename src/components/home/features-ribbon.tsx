@@ -15,8 +15,8 @@ export function FeaturesRibbon() {
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-brand-dark">{feature.title}</h4>
-                  <p className="text-xs text-brand-muted">{feature.description}</p>
+                  <h4 className="text-brand-dark text-sm font-extrabold">{feature.title}</h4>
+                  <p className="text-brand-muted text-xs">{feature.description}</p>
                 </div>
               </div>
             );

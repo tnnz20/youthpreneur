@@ -1,5 +1,6 @@
-import { BookOpen, Compass, Megaphone, Store, Users, Video } from 'lucide-react';
 import type { Article, Category, Course, Feature, Mentor, Metric, Testimonial } from '@/types/home';
+
+import { BookOpen, Compass, Megaphone, Store, Users, Video } from 'lucide-react';
 
 export const METRICS: Metric[] = [
   { value: '15k+', label: 'Pemuda Lulus Pelatihan' },
