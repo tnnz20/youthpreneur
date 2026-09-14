@@ -1,6 +1,4 @@
-﻿FRONTEND_DIR := apps/frontend
-
-.DEFAULT_GOAL := help
+﻿.DEFAULT_GOAL := help
 .PHONY: help fe-dev fe-install fe-build fe-lint fe-typecheck fe-format fe-format-check fe-preview
 
 help:
@@ -15,25 +13,25 @@ help:
 	@echo "  fe-preview      Preview production build"
 
 fe-dev:
-	npm --prefix apps/frontend run dev
+	npm run dev
 
 fe-install:
-	npm --prefix apps/frontend install
+	npm install
 
 fe-build:
-	npm --prefix apps/frontend run build
+	npm run build
 
 fe-lint:
-	npm --prefix apps/frontend run lint
+	npm run lint
 
 fe-typecheck:
-	npm --prefix apps/frontend run typecheck
+	npm run typecheck
 
 fe-format:
-	npm --prefix apps/frontend run format
+	npm run format
 
 fe-format-check:
-	npm --prefix apps/frontend run format:check
+	npm run format:check
 
 fe-preview:
-	npm --prefix apps/frontend run preview
+	npm run preview

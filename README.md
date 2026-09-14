@@ -1,31 +1,32 @@
 # Youthpreneur
 
-Youthpreneur Tapin is a youth entrepreneurship platform for Dinas Pemuda dan Olahraga Kabupaten Tapin. It supports youth data, business incubation, local commodity development, training, mentorship, partnerships, and entrepreneurship resources.
+Youthpreneur Tapin is a youth entrepreneurship platform for Dinas Pemuda dan Olahraga Kabupaten Tapin.
 
-## Tech Stack
-
-### Frontend
+## Stack
 
 - React v19
 - TypeScript v6
 - Vite v8
 - React Router v8
+- Tailwind CSS v4
+- Base UI, shadcn/ui, Lucide React, Sonner
 
-### Backend
-
-- Golang v1.27
-
-## Project Structure
+## Structure
 
 ```text
 .
-├── apps/
-│   ├── backend/       # Reserved for the future Go backend
-│   └── frontend/      # React frontend application
-├── DESIGN.md          # Design system and implementation specification
-├── Makefile           # Development command shortcuts
+├── public/       # Static assets
+├── src/           # React application
+├── DESIGN.md     # Design system
+├── Makefile      # Development command shortcuts
 └── README.md
 ```
+
+Routes:
+
+- `/` — Youthpreneur landing page
+- `/about` — Youthpreneur and Dispora overview
+- `/login` — Login form
 
 ## Requirements
 
@@ -35,21 +36,19 @@ Youthpreneur Tapin is a youth entrepreneurship platform for Dinas Pemuda dan Ola
 
 ## Usage
 
-Use `make help` to list available development commands:
-
-```bash
-make help
-```
-
-Install frontend dependencies and start development server:
-
 ```bash
 make fe-install
 make fe-dev
 ```
 
-The detailed frontend architecture, routes, and frontend commands are documented in [`apps/frontend/README.md`](apps/frontend/README.md).
+Run `make help` for all commands. Direct npm commands run from repository root:
 
-## Design
+```bash
+npm install
+npm run format:check
+npm run lint
+npm run typecheck
+npm run build
+```
 
-The project follows the Youthpreneur Tapin neo-brutalist editorial design system documented in `DESIGN.md`.
+The frontend follows the neo-brutalist editorial design system documented in `DESIGN.md` and `src/index.css`.

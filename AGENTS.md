@@ -2,9 +2,9 @@
 
 ## Repository
 
-- `apps/frontend` is the only implemented application; `apps/backend` is an empty placeholder.
-- This is not an npm workspace. Frontend dependencies and lockfile live in `apps/frontend/`.
-- Frontend entrypoints: `apps/frontend/src/main.tsx` bootstraps React; `src/app.tsx` defines declarative `react-router` routes.
+- This repository contains the Youthpreneur frontend application.
+- Frontend dependencies and lockfile live at repository root.
+- `src/main.tsx` bootstraps React; `src/app.tsx` defines declarative `react-router` routes.
 - Public pages use `src/layouts/main-layout.tsx`; `/login` intentionally renders outside that layout.
 - Keep page components in `src/pages/`, page-specific components in `src/components/home/` or `src/components/about/`, shared components in `src/components/shared/`, and shadcn components in `src/components/ui/`.
 - Static data belongs in `src/constants/`; shared TypeScript types belong in `src/types/`.
@@ -25,7 +25,7 @@ make fe-build
 make fe-preview
 ```
 
-Or run npm commands from `apps/frontend/`:
+Or run npm commands from repository root:
 
 ```bash
 npm install
