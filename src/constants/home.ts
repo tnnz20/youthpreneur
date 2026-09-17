@@ -1,4 +1,13 @@
-import type { Article, Category, Course, Feature, Mentor, Metric, Testimonial } from '@/types/home';
+import type {
+  Article,
+  Category,
+  Course,
+  Feature,
+  Mentor,
+  Metric,
+  Official,
+  Testimonial,
+} from '@/types/home';
 
 import { BookOpen, Compass, Megaphone, Store, Users, Video } from 'lucide-react';
 
@@ -67,9 +76,7 @@ export const COURSES: Course[] = [
     rating: '5.0',
     stars: 5,
     reviews: '24,410',
-    price: 'Rp 0',
-    originalPrice: 'Rp 350.000',
-    tag: 'Beasiswa',
+    slotAvailable: true,
     bestSeller: true,
   },
   {
@@ -81,8 +88,7 @@ export const COURSES: Course[] = [
     rating: '4.8',
     stars: 4,
     reviews: '18,340',
-    price: 'Rp 149.000',
-    originalPrice: 'Rp 499.000',
+    slotAvailable: false,
   },
   {
     title: 'Manajemen Rantai Pasok Kopi & Rempah Desa Berkelanjutan',
@@ -93,9 +99,7 @@ export const COURSES: Course[] = [
     rating: '4.9',
     stars: 5,
     reviews: '35,110',
-    price: 'Rp 0',
-    originalPrice: 'Rp 299.000',
-    tag: 'Kemenpora',
+    slotAvailable: true,
   },
   {
     title: 'Pencatatan Keuangan Digital & Akses Modal Usaha KUR',
@@ -106,8 +110,7 @@ export const COURSES: Course[] = [
     rating: '4.9',
     stars: 5,
     reviews: '19,700',
-    price: 'Rp 99.000',
-    originalPrice: 'Rp 450.000',
+    slotAvailable: false,
     bestSeller: true,
   },
 ];
@@ -203,5 +206,22 @@ export const ARTICLES: Article[] = [
     image:
       'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80',
     fallback: 'https://placehold.co/400x250/141416/FFFFFF?text=Ekspor+Komoditas',
+  },
+];
+
+export const OFFICIALS: Official[] = [
+  {
+    name: 'H. Yamani',
+    role: 'Bupati Tapin',
+    image: '/assets/bupati.webp',
+    accentColor: 'bg-brand-yellow',
+    badgeVariant: 'neoYellow',
+  },
+  {
+    name: 'H. Juanda',
+    role: 'Wakil Bupati Tapin',
+    image: '/assets/wakil-bupati.webp',
+    accentColor: 'bg-brand-blue',
+    badgeVariant: 'neoMint',
   },
 ];

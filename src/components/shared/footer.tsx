@@ -32,18 +32,14 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 pb-12 md:grid-cols-12 lg:gap-8">
           <div className="space-y-4 md:col-span-4">
-            <div className="flex items-center gap-2.5">
-              <div className="border-brand-dark bg-brand-yellow shadow-solid-sm flex h-9 w-9 items-center justify-center rounded-xl border-2 text-lg font-extrabold">
-                YT
-              </div>
-              <div>
-                <div className="text-brand-dark text-xl leading-none font-black tracking-tight">
-                  {BRAND.name}
-                  <span className="text-amber-500"> {BRAND.suffix}</span>
-                </div>
-                <div className="text-brand-muted mt-0.5 text-[10px] font-bold tracking-wider uppercase">
-                  {BRAND.organizer}
-                </div>
+            <div className="space-y-2">
+              <img
+                src="/assets/logo-youth.webp"
+                alt="Logo Youthpreneur Tapin"
+                className="h-10 w-auto object-contain"
+              />
+              <div className="text-brand-muted text-[10px] font-bold tracking-wider uppercase">
+                {BRAND.organizer}
               </div>
             </div>
             <p className="text-brand-muted max-w-sm text-xs leading-relaxed">

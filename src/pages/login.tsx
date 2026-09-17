@@ -51,7 +51,7 @@ export default function LoginPage() {
               value={identity}
               onChange={(event) => setIdentity(event.target.value)}
               placeholder="nama@email.com atau 08xxxxxxxxxx"
-              className="text-brand-dark focus-visible:border-brand-dark h-auto w-full rounded-xl border border-black/30 bg-white px-3.5 py-2.5 text-sm focus-visible:ring-0"
+              className="text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm"
             />
           </div>
 
@@ -70,7 +70,7 @@ export default function LoginPage() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Masukkan kata sandi"
-              className="text-brand-dark focus-visible:border-brand-dark h-auto w-full rounded-xl border border-black/30 bg-white px-3.5 py-2.5 text-sm focus-visible:ring-0"
+              className="text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm"
             />
           </div>
 
@@ -103,7 +103,7 @@ export default function LoginPage() {
 
         <p className="text-brand-muted mt-6 text-center text-xs">
           Belum punya akun?{' '}
-          <Link to="/" className="text-brand-dark font-bold underline underline-offset-2">
+          <Link to="/register" className="text-brand-dark font-bold underline underline-offset-2">
             Daftar kelas gratis
           </Link>
         </p>

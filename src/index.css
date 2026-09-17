@@ -2,12 +2,14 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/geist';
+@import '@fontsource-variable/plus-jakarta-sans';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
+  --font-jakarta: 'Plus Jakarta Sans Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -53,6 +55,28 @@
   --shadow-solid: 3px 3px 0px 0px #141416;
   --shadow-solid-lg: 5px 5px 0px 0px #141416;
   --shadow-solid-hover: 4px 4px 0px 0px #141416;
+  --color-dash-bg: var(--dash-bg);
+  --color-dash-surface: var(--dash-surface);
+  --color-dash-surface-2: var(--dash-surface-2);
+  --color-dash-border: var(--dash-border);
+  --color-dash-fg: var(--dash-fg);
+  --color-dash-muted: var(--dash-muted);
+  --color-dash-accent: var(--dash-accent);
+  --color-dash-accent-strong: var(--dash-accent-strong);
+  --color-dash-accent-fg: var(--dash-accent-fg);
+  --color-dash-panel: var(--dash-panel);
+  --color-dash-panel-fg: var(--dash-panel-fg);
+  --color-dash-panel-muted: var(--dash-panel-muted);
+  --color-dash-chart-1: var(--dash-chart-1);
+  --color-dash-chart-2: var(--dash-chart-2);
+  --color-dash-chart-3: var(--dash-chart-3);
+  --color-dash-chart-4: var(--dash-chart-4);
+  --color-dash-chart-5: var(--dash-chart-5);
+  --color-dash-chart-6: var(--dash-chart-6);
+  --color-dash-chart-7: var(--dash-chart-7);
+  --shadow-bento: var(--dash-shadow);
+  --shadow-bento-lg: var(--dash-shadow-lg);
+  --shadow-pill: var(--dash-shadow-pill);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -105,6 +129,30 @@
   --brand-mint: #d1fae5;
   --brand-muted: #71717a;
   --brand-footer: #f4efe6;
+
+  /* Dashboard (bento) tokens — light */
+  --dash-bg: #eff2f6;
+  --dash-surface: #ffffff;
+  --dash-surface-2: #f8fafc;
+  --dash-border: #e2e6ec;
+  --dash-fg: #17181c;
+  --dash-muted: #6b7280;
+  --dash-accent: #d2f839;
+  --dash-accent-strong: #bce028;
+  --dash-accent-fg: #17181c;
+  --dash-panel: #121316;
+  --dash-panel-fg: #ffffff;
+  --dash-panel-muted: #9ca3af;
+  --dash-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.05), 0 4px 12px -2px rgb(0 0 0 / 0.03);
+  --dash-shadow-lg: 0 20px 35px -10px rgb(0 0 0 / 0.08), 0 8px 16px -3px rgb(0 0 0 / 0.04);
+  --dash-shadow-pill: 0 2px 8px rgb(0 0 0 / 0.04);
+  --dash-chart-1: #fbbf24;
+  --dash-chart-2: #a78bfa;
+  --dash-chart-3: #38bdf8;
+  --dash-chart-4: #34d399;
+  --dash-chart-5: #fb7185;
+  --dash-chart-6: #fb923c;
+  --dash-chart-7: #2dd4bf;
 }
 
 .dark {
@@ -189,4 +237,42 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
+}
+
+@keyframes dashFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dash-reveal {
+  animation: dashFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes dashPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+}
+
+.dash-pulse {
+  animation: dashPulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-reveal,
+  .dash-pulse {
+    animation: none;
+  }
 }

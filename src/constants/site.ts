@@ -11,8 +11,10 @@ export const BRAND = {
 } as const;
 
 export const NAV_LINKS: NavLinkItem[] = [
+  { label: 'Beranda', to: '/' },
   { label: 'Kategori', to: '/#kategori' },
   { label: 'Mentor', to: '/#mentor' },
+  { label: 'Database Pemuda', to: '/database' },
   { label: 'Tentang Kami', to: '/about' },
 ];
 

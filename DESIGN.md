@@ -300,3 +300,54 @@ apps/frontend/
 - [ ] **Accessibility & responsiveness:** navigation collapses into a `Sheet` on mobile, dialogs use focus trapping, and layout breakpoints remain stable.
 - [ ] **Brand integrity:** tagline, copywriting, and the 12 official Kabupaten Tapin kecamatan are consistent across pages.
 - [ ] **Quality gates:** `npm run typecheck`, `npm run lint`, and `npm run format:check` pass in `apps/frontend/`.
+
+---
+
+## 9. Dashboard (Bento) Theme
+
+The public site keeps the Neo-Brutalist Editorial language from Sections 1-8. The authenticated dashboard areas (`/admin/*`, `/dashboard/*`) use a **separate, additive theme**: a neutral bento grid with soft surfaces. Both themes coexist in one stylesheet; neither overrides the other.
+
+### 9.1 Scope
+
+- Applies to: `src/layouts/dashboard-layout.tsx`, everything under `src/components/dashboard/`, and the dashboard pages in `src/pages/` (`admin*.tsx`, `dashboard*.tsx`).
+- Does **not** apply to: public layouts/pages (`main-layout`, `home`, `about`, `database`, `login`, `register`) or shared shadcn primitives in `src/components/ui/`. Primitives stay neutral; dashboard styling is applied through `className` overrides and the additive tokens below.
+
+### 9.2 Dashboard Tokens (`src/index.css`)
+
+Raw values live in `:root` and `.dark`, exposed to Tailwind through `@theme inline`, so utilities such as `bg-dash-surface`, `text-dash-fg`, `border-dash-border`, and `shadow-bento` are generated.
+
+| Token              | Light     | Dark      | Utility               |
+| :----------------- | :-------- | :-------- | :-------------------- |
+| `--dash-bg`        | `#f4f5f7` | `#0b0d10` | `bg-dash-bg`          |
+| `--dash-surface`   | `#ffffff` | `#16181d` | `bg-dash-surface`     |
+| `--dash-surface-2` | `#fafafa` | `#1d2027` | `bg-dash-surface-2`   |
+| `--dash-border`    | `#e7e8ec` | `#2a2e37` | `border-dash-border`  |
+| `--dash-fg`        | `#18181b` | `#f4f4f5` | `text-dash-fg`        |
+| `--dash-muted`     | `#71717a` | `#a1a1aa` | `text-dash-muted`     |
+| `--dash-accent`    | `#fee78a` | `#fee78a` | `bg-dash-accent`      |
+| `--dash-accent-fg` | `#422006` | `#422006` | `text-dash-accent-fg` |
+
+Shadows are exposed as `--shadow-bento` and `--shadow-bento-lg` (soft, blurred, no hard offset).
+
+### 9.3 Visual Rules
+
+1. **Surfaces, not outlines:** `bg-dash-surface` + `ring-1 ring-dash-border` + `shadow-bento`. Do not use `border-2 border-brand-dark` or the `shadow-solid*` trio inside the dashboard.
+2. **Radius:** `rounded-2xl` for cards and dialogs, `rounded-xl` for controls, `rounded-full` for pills.
+3. **Typography:** `font-semibold` / `font-medium` with `tracking-tight` headings. Avoid `font-black` and uppercase display weights.
+4. **Accent:** `bg-dash-accent` fills (badges, active nav pill, progress bars, avatar). Accent is a fill colour; pair it with `text-dash-accent-fg` for contrast. Primary actions use the default `Button` variant.
+5. **Status colours:** soft tinted pills — `bg-{hue}-500/12 text-{hue}-700 ring-{hue}-500/25` with a `dark:text-{hue}-300` counterpart.
+6. **Layout:** bento grid — `grid gap-5 lg:grid-cols-12` with tiles spanning different column counts (`lg:col-span-3/5/7/12`). One tile hosts a `Tabs` switcher; supporting tiles stack in the narrower column.
+7. **Motion:** `transition-shadow` / `transition-colors` only. No `hover:-translate-y-1` or `active:scale-95`.
+
+### 9.4 Dark Mode
+
+- Driven by the `.dark` class on `<html>`, already registered via `@custom-variant dark (&:is(.dark *))`.
+- `ThemeToggle` (`src/components/dashboard/shared/theme-toggle.tsx`) toggles the class, persists the choice in `localStorage['youthpreneur-theme']`, and falls back to `prefers-color-scheme`.
+- The toggle only exists inside `DashboardLayout`; on unmount it removes `.dark`, so the public Neo-Brutalist pages are never rendered in the dashboard palette.
+
+### 9.5 Verification
+
+- [ ] Dashboard renders correctly at 360px, 768px, and 1440px widths, in both light and dark mode.
+- [ ] No dashboard file imports `shadow-solid*`, `border-brand-dark`, or `variant="neo*"`.
+- [ ] `--dash-*` tokens have both `:root` and `.dark` values; no hardcoded hex values in dashboard components.
+- [ ] Public pages are visually unchanged.
