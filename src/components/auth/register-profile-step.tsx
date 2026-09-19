@@ -1,4 +1,5 @@
 import { BirthDatePicker } from '@/components/auth/birth-date-picker';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -63,6 +64,7 @@ export function RegisterProfileStep({ values, onChange }: RegisterProfileStepPro
         <Field label="Jenis Kelamin" htmlFor="register-gender">
           <Select
             value={values.gender}
+            items={{ male: 'Laki-Laki', female: 'Perempuan' }}
             onValueChange={(value) => onChange('gender', value as 'male' | 'female')}
           >
             <SelectTrigger id="register-gender" className={inputClass}>
@@ -119,12 +121,11 @@ export function RegisterProfileStep({ values, onChange }: RegisterProfileStepPro
         htmlFor="register-terms"
         className="text-brand-dark flex items-start gap-2 text-xs font-medium"
       >
-        <input
+        <Checkbox
           id="register-terms"
-          type="checkbox"
           checked={values.terms}
-          onChange={(e) => onChange('terms', e.target.checked)}
-          className="accent-brand-dark mt-0.5 h-4 w-4 cursor-pointer rounded border-black/30"
+          onCheckedChange={(checked) => onChange('terms', checked === true)}
+          className="mt-0.5 cursor-pointer"
         />
         <span>Saya setuju dengan Syarat &amp; Ketentuan program Youthpreneur Tapin.</span>
       </label>

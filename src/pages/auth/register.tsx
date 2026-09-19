@@ -9,11 +9,11 @@ import { ApiError } from '@/lib/api/client';
 
 import { RegisterCredentialsStep } from '@/components/auth/register-credentials-step';
 import { RegisterProfileStep } from '@/components/auth/register-profile-step';
-import { RegisterProgress, StepBackIcon, StepNextIcon } from '@/components/auth/register-progress';
+import { RegisterProgress } from '@/components/auth/register-progress';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
-import { UserPlus } from 'lucide-react';
+import { ArrowLeft, ArrowRight, UserPlus } from 'lucide-react';
 
 const initialValues = {
   email: '',
@@ -65,7 +65,17 @@ export default function RegisterPage() {
 
     setSubmitting(true);
     try {
-      await registerUser({ ...credentials.data, ...profile.data });
+      await registerUser({
+        email: credentials.data.email,
+        password: credentials.data.password,
+        full_name: profile.data.full_name,
+        nik: profile.data.nik,
+        birth_date: profile.data.birth_date,
+        gender: profile.data.gender,
+        district: profile.data.district,
+        phone: profile.data.phone,
+        address: profile.data.address,
+      });
       toast.success(`Akun berhasil dibuat! Selamat datang, ${profile.data.full_name}.`);
       navigate('/auth/login');
     } catch (error) {
@@ -113,7 +123,7 @@ export default function RegisterPage() {
                 onClick={() => setStep(1)}
                 className="h-auto flex-1 rounded-xl py-3"
               >
-                <StepBackIcon className="h-4 w-4" /> Kembali
+                <ArrowLeft className="h-4 w-4" /> Kembali
               </Button>
             )}
             {step === 1 ? (
@@ -123,7 +133,7 @@ export default function RegisterPage() {
                 onClick={nextStep}
                 className="h-auto flex-1 rounded-xl py-3"
               >
-                Lanjut <StepNextIcon className="h-4 w-4" />
+                Lanjut <ArrowRight className="h-4 w-4" />
               </Button>
             ) : (
               <Button

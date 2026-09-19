@@ -8,9 +8,12 @@ const password = z
   .min(8, { message: 'Kata sandi minimal 8 karakter.' })
   .max(72, { message: 'Kata sandi maksimal 72 karakter.' });
 
-const phone = z.string().regex(/^(\+62|62|0)8\d{7,11}$/, {
-  message: 'Nomor WhatsApp tidak valid.',
-});
+const phone = z
+  .string()
+  .trim()
+  .regex(/^(\+62|62|0)8\d{7,11}$/, {
+    message: 'Nomor WhatsApp tidak valid.',
+  });
 
 const birthDate = z.string().refine(
   (value) => {
@@ -47,9 +50,6 @@ export const registerProfileSchema = z.object({
   terms: z.literal(true, { message: 'Anda harus menyetujui syarat & ketentuan.' }),
 });
 
-export const registerSchema = registerCredentialsSchema.and(registerProfileSchema);
-
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterCredentialsInput = z.infer<typeof registerCredentialsSchema>;
 export type RegisterProfileInput = z.infer<typeof registerProfileSchema>;
-export type RegisterInput = z.infer<typeof registerSchema>;
