@@ -1,7 +1,11 @@
 import { type SubmitEvent, useState } from 'react';
 
-import { Link } from 'react-router';
+import { registerSchema } from '@/schema/auth';
+import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
+
+import { registerUser } from '@/lib/api/auth';
+import { ApiError } from '@/lib/api/client';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -22,23 +26,52 @@ const inputClass =
   'text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm';
 
 export default function RegisterPage() {
-  const [name, setName] = useState('');
+  const navigate = useNavigate();
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [kecamatan, setKecamatan] = useState('');
+  const [phone, setPhone] = useState('');
+  const [district, setDistrict] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [terms, setTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    toast.success(`Akun berhasil dibuat! Selamat datang, ${name}.`);
-    setName('');
-    setEmail('');
-    setWhatsapp('');
-    setKecamatan('');
-    setPassword('');
-    setConfirmPassword('');
+
+    const result = registerSchema.safeParse({
+      full_name: fullName,
+      email,
+      phone,
+      district,
+      password,
+      confirmPassword,
+      terms,
+    });
+
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message ?? 'Data pendaftaran tidak valid.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await registerUser({
+        email: result.data.email,
+        password: result.data.password,
+        full_name: result.data.full_name,
+        district: result.data.district || undefined,
+        phone: result.data.phone || undefined,
+      });
+      toast.success(`Akun berhasil dibuat! Selamat datang, ${result.data.full_name}.`);
+      navigate('/auth/login');
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : 'Pendaftaran gagal. Coba lagi.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -58,16 +91,19 @@ export default function RegisterPage() {
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="register-name" className="text-brand-dark mb-1 block text-xs font-bold">
+            <label
+              htmlFor="register-full-name"
+              className="text-brand-dark mb-1 block text-xs font-bold"
+            >
               Nama Lengkap
             </label>
             <Input
-              id="register-name"
+              id="register-full-name"
               type="text"
               required
               autoComplete="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              value={fullName}
+              onChange={(event) => setFullName(event.target.value)}
               placeholder="Nama sesuai KTP"
               className={inputClass}
             />
@@ -94,18 +130,17 @@ export default function RegisterPage() {
 
           <div>
             <label
-              htmlFor="register-whatsapp"
+              htmlFor="register-phone"
               className="text-brand-dark mb-1 block text-xs font-bold"
             >
               Nomor WhatsApp
             </label>
             <Input
-              id="register-whatsapp"
+              id="register-phone"
               type="tel"
-              required
               autoComplete="tel"
-              value={whatsapp}
-              onChange={(event) => setWhatsapp(event.target.value)}
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
               placeholder="08xxxxxxxxxx"
               className={inputClass}
             />
@@ -113,18 +148,18 @@ export default function RegisterPage() {
 
           <div>
             <label
-              htmlFor="register-kecamatan"
+              htmlFor="register-district"
               className="text-brand-dark mb-1 block text-xs font-bold"
             >
               Kecamatan
             </label>
             <Select
               items={KECAMATAN.map((item) => ({ label: item, value: item }))}
-              value={kecamatan}
-              onValueChange={(value) => setKecamatan(value as string)}
+              value={district}
+              onValueChange={(value) => setDistrict(value as string)}
             >
               <SelectTrigger
-                id="register-kecamatan"
+                id="register-district"
                 className="text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 data-[size=default]:h-12 sm:text-sm"
               >
                 <SelectValue placeholder="Pilih kecamatan" />
@@ -195,6 +230,8 @@ export default function RegisterPage() {
               id="register-terms"
               type="checkbox"
               required
+              checked={terms}
+              onChange={(event) => setTerms(event.target.checked)}
               className="accent-brand-dark mt-0.5 h-4 w-4 rounded border-black/30"
             />
             <span>
@@ -206,14 +243,19 @@ export default function RegisterPage() {
             </span>
           </label>
 
-          <Button type="submit" variant="neo" className="h-auto w-full rounded-xl py-3">
-            Buat Akun
+          <Button
+            type="submit"
+            variant="neo"
+            disabled={submitting}
+            className="h-auto w-full rounded-xl py-3"
+          >
+            {submitting ? 'Memproses...' : 'Buat Akun'}
           </Button>
         </form>
 
         <p className="text-brand-muted mt-6 text-center text-xs">
           Sudah punya akun?{' '}
-          <Link to="/login" className="text-brand-dark font-bold underline underline-offset-2">
+          <Link to="/auth/login" className="text-brand-dark font-bold underline underline-offset-2">
             Masuk
           </Link>
         </p>

@@ -1,7 +1,12 @@
 import { type SubmitEvent, useState } from 'react';
 
-import { Link } from 'react-router';
+import { loginSchema } from '@/schema/auth';
+import { useSession } from '@/hooks/use-session';
+import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
+
+import { loginUser } from '@/lib/api/auth';
+import { ApiError } from '@/lib/api/client';
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -10,14 +15,35 @@ import { Input } from '@/components/ui/input';
 import { Sparkles } from 'lucide-react';
 
 export default function LoginPage() {
-  const [identity, setIdentity] = useState('');
+  const navigate = useNavigate();
+  const { markAuthenticated } = useSession();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    toast.success(`Berhasil masuk! Selamat datang kembali, ${identity}.`);
-    setIdentity('');
-    setPassword('');
+
+    const result = loginSchema.safeParse({ email, password });
+
+    if (!result.success) {
+      toast.error(result.error.issues[0]?.message ?? 'Data masuk tidak valid.');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const user = await loginUser(result.data);
+      markAuthenticated();
+      const name = user.profile.full_name ?? user.email;
+      toast.success(`Berhasil masuk! Selamat datang kembali, ${name}.`);
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : 'Gagal masuk. Coba lagi.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -37,20 +63,17 @@ export default function LoginPage() {
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label
-              htmlFor="login-identity"
-              className="text-brand-dark mb-1 block text-xs font-bold"
-            >
-              Email atau Nomor WhatsApp
+            <label htmlFor="login-email" className="text-brand-dark mb-1 block text-xs font-bold">
+              Email
             </label>
             <Input
-              id="login-identity"
-              type="text"
+              id="login-email"
+              type="email"
               required
-              autoComplete="username"
-              value={identity}
-              onChange={(event) => setIdentity(event.target.value)}
-              placeholder="nama@email.com atau 08xxxxxxxxxx"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="nama@email.com"
               className="text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm"
             />
           </div>
@@ -96,14 +119,22 @@ export default function LoginPage() {
             </Button>
           </div>
 
-          <Button type="submit" variant="neo" className="h-auto w-full rounded-xl py-3">
-            Masuk ke Akun
+          <Button
+            type="submit"
+            variant="neo"
+            disabled={submitting}
+            className="h-auto w-full rounded-xl py-3"
+          >
+            {submitting ? 'Memproses...' : 'Masuk ke Akun'}
           </Button>
         </form>
 
         <p className="text-brand-muted mt-6 text-center text-xs">
           Belum punya akun?{' '}
-          <Link to="/register" className="text-brand-dark font-bold underline underline-offset-2">
+          <Link
+            to="/auth/register"
+            className="text-brand-dark font-bold underline underline-offset-2"
+          >
             Daftar kelas gratis
           </Link>
         </p>
