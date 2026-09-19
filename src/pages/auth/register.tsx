@@ -76,7 +76,7 @@ export default function RegisterPage() {
         phone: profile.data.phone,
         address: profile.data.address,
       });
-      toast.success(`Akun berhasil dibuat! Selamat datang, ${profile.data.full_name}.`);
+      toast.success(`Akun berhasil dibuat! Silahkan masuk dengan akun yang dibuat.`);
       navigate('/auth/login');
     } catch (error) {
       toast.error(error instanceof ApiError ? error.message : 'Pendaftaran gagal. Coba lagi.');
