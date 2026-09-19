@@ -106,7 +106,7 @@ export default function DashboardPage() {
                 <h3 className="text-dash-fg text-base font-bold">Progres Modul Pelatihan</h3>
               </div>
               <Link
-                to="/dashboard/program-saya"
+                to="/dashboard/my-trainings"
                 className="text-dash-muted hover:text-dash-fg flex items-center gap-1 text-xs font-semibold transition-colors"
               >
                 Rincian <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

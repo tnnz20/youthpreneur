@@ -1,23 +1,24 @@
 import { Suspense, lazy } from 'react';
 
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 
 import AuthLayout from '@/layouts/auth-layout';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import MainLayout from '@/layouts/main-layout';
 
-import { RedirectIfAuthenticated, RequireAuth } from '@/components/shared/auth-guard';
+import { RedirectIfAuthenticated, RequireAuth, RequireRole } from '@/components/shared/auth-guard';
 import { SessionProvider } from '@/components/shared/session-provider';
 import { Toaster } from '@/components/ui/sonner';
 
 import { LoaderCircle } from 'lucide-react';
 
 const AboutPage = lazy(() => import('@/pages/about'));
-const AdminPage = lazy(() => import('@/pages/admin'));
 const AdminPemudaPage = lazy(() => import('@/pages/admin-pemuda'));
 const AdminPendaftaranPage = lazy(() => import('@/pages/admin-pendaftaran'));
 const AdminProgramPage = lazy(() => import('@/pages/admin-program'));
-const DashboardPage = lazy(() => import('@/pages/dashboard'));
+const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
+const DashboardPasswordPage = lazy(() => import('@/pages/dashboard-password'));
+const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
 const DashboardProfilPage = lazy(() => import('@/pages/dashboard-profil'));
 const DashboardProgramPage = lazy(() => import('@/pages/dashboard-program'));
 const DashboardProgramSayaPage = lazy(() => import('@/pages/dashboard-program-saya'));
@@ -71,14 +72,43 @@ export default function App() {
               </RequireAuth>
             }
           >
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/admin/pemuda" element={<AdminPemudaPage />} />
-            <Route path="/admin/program" element={<AdminProgramPage />} />
-            <Route path="/admin/pendaftaran" element={<AdminPendaftaranPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/admin/pemuda"
+              element={<Navigate to="/dashboard/enterprises" replace />}
+            />
+            <Route path="/admin/program" element={<Navigate to="/dashboard/trainings" replace />} />
+            <Route path="/admin/pendaftaran" element={<Navigate to="/dashboard/users" replace />} />
+            <Route path="/dashboard" element={<DashboardIndexPage />} />
             <Route path="/dashboard/program" element={<DashboardProgramPage />} />
-            <Route path="/dashboard/program-saya" element={<DashboardProgramSayaPage />} />
-            <Route path="/dashboard/profil" element={<DashboardProfilPage />} />
+            <Route path="/dashboard/my-trainings" element={<DashboardProgramSayaPage />} />
+            <Route path="/dashboard/my-enterprises" element={<DashboardProfilPage />} />
+            <Route path="/dashboard/profile" element={<DashboardProfilePage />} />
+            <Route path="/dashboard/password" element={<DashboardPasswordPage />} />
+            <Route
+              path="/dashboard/enterprises"
+              element={
+                <RequireRole role="admin">
+                  <AdminPemudaPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/dashboard/trainings"
+              element={
+                <RequireRole role="admin">
+                  <AdminProgramPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/dashboard/users"
+              element={
+                <RequireRole role="admin">
+                  <AdminPendaftaranPage />
+                </RequireRole>
+              }
+            />
           </Route>
         </Routes>
       </Suspense>

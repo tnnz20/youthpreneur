@@ -1,9 +1,15 @@
 import { useState } from 'react';
 
+import { DashboardFooterMenu } from '@/components/dashboard/shared/dashboard-footer-menu';
 import { type DashboardNavItem, SidebarNav } from '@/components/dashboard/shared/dashboard-sidebar';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-
-import { useNavBadges } from '@/hooks/use-nav-badges';
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 import { Menu } from 'lucide-react';
 
@@ -13,12 +19,10 @@ interface DashboardTopbarProps {
 }
 
 export function DashboardTopbar({ items, areaLabel }: DashboardTopbarProps) {
-  const badges = useNavBadges();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="dash-reveal flex items-center justify-between lg:hidden">
-      {/* Mobile menu trigger & title */}
       <div className="flex items-center gap-3">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger
@@ -33,9 +37,16 @@ export function DashboardTopbar({ items, areaLabel }: DashboardTopbarProps) {
                 {areaLabel}
               </SheetTitle>
             </SheetHeader>
-            <div className="pt-3">
-              <SidebarNav items={items} badges={badges} onNavigate={() => setMobileOpen(false)} />
+            <div className="grow pt-3">
+              <SidebarNav items={items} onNavigate={() => setMobileOpen(false)} />
             </div>
+            <SheetFooter className="border-dash-border mt-4 border-t p-0 pt-3">
+              <DashboardFooterMenu
+                align="start"
+                onNavigate={() => setMobileOpen(false)}
+                className="bg-dash-surface-2"
+              />
+            </SheetFooter>
           </SheetContent>
         </Sheet>
 

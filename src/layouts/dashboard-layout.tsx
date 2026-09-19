@@ -6,7 +6,9 @@ import { DashboardProvider } from '@/components/dashboard/dashboard-provider';
 import { DashboardSidebar } from '@/components/dashboard/shared/dashboard-sidebar';
 import { DashboardTopbar } from '@/components/dashboard/shared/dashboard-topbar';
 
-import { ADMIN_NAV, USER_NAV } from '@/constants/dashboard';
+import { useSession } from '@/hooks/use-session';
+
+import { DASHBOARD_NAV_BY_ROLE } from '@/constants/dashboard';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -19,9 +21,9 @@ function ScrollToTop() {
 }
 
 export default function DashboardLayout() {
-  const { pathname } = useLocation();
-  const isAdmin = pathname.startsWith('/admin');
-  const items = isAdmin ? ADMIN_NAV : USER_NAV;
+  const { role } = useSession();
+  const isAdmin = role === 'admin';
+  const items = role ? DASHBOARD_NAV_BY_ROLE[role] : [];
   const areaLabel = isAdmin ? 'Panel Admin Dispora' : 'Dashboard Pemuda';
 
   useEffect(() => {

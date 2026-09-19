@@ -98,7 +98,7 @@ export function OverviewStats() {
           </div>
         </div>
         <Link
-          to="/admin/program"
+          to="/dashboard/trainings"
           className="bg-dash-fg text-dash-bg inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-opacity hover:opacity-90"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden="true" />
@@ -221,7 +221,7 @@ export function OverviewStats() {
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-dash-fg text-base font-bold">Pendaftaran Terbaru</h2>
             <Link
-              to="/admin/pendaftaran"
+              to="/dashboard/users"
               className="text-dash-muted hover:text-dash-fg flex items-center gap-1 text-xs font-semibold transition-colors"
             >
               Lihat semua <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

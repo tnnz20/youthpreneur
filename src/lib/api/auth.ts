@@ -43,6 +43,10 @@ export function refreshSession(): Promise<boolean> {
   return refreshInFlight;
 }
 
+export function getCurrentUser(): Promise<AuthUser> {
+  return apiRequest<AuthUser>('/auth/me');
+}
+
 export function logoutUser(): Promise<void> {
   return apiRequest<void>('/auth/logout', { method: 'POST' });
 }
