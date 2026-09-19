@@ -1,31 +1,6 @@
+import type { AuthUser, LoginRequest, RegisterRequest } from '@/types/auth';
+
 import { API_BASE_URL, apiRequest } from './client';
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  full_name: string;
-  district?: string;
-  phone?: string;
-}
-
-export interface AuthUser {
-  public_id: string;
-  email: string;
-  role: string;
-  is_active: boolean;
-  created_at: number;
-  updated_at: number;
-  profile: {
-    full_name?: string;
-    district?: string;
-    phone?: string;
-  };
-}
 
 export function loginUser(input: LoginRequest): Promise<AuthUser> {
   return apiRequest<AuthUser>('/auth/login', {
