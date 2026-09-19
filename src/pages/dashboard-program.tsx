@@ -133,7 +133,7 @@ export default function DashboardProgramPage() {
                 key={option.value}
                 type="button"
                 onClick={() => setCategory(option.value)}
-                className={`rounded-full border px-3.5 py-1.5 font-semibold whitespace-nowrap transition-all ${
+                className={`cursor-pointer rounded-full border px-3.5 py-1.5 font-semibold whitespace-nowrap transition-all ${
                   active
                     ? 'bg-dash-fg text-dash-bg border-transparent shadow-md'
                     : 'border-dash-border/60 bg-dash-surface-2 text-dash-muted hover:text-dash-fg'

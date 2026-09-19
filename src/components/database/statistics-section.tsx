@@ -68,7 +68,7 @@ export function StatisticsSection({ onRegister }: StatisticsSectionProps) {
               <button
                 type="button"
                 onClick={onRegister}
-                className="text-brand-dark font-bold underline hover:opacity-75"
+                className="text-brand-dark cursor-pointer font-bold underline hover:opacity-75"
               >
                 Daftarkan Diri Anda Sekarang →
               </button>

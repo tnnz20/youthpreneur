@@ -155,7 +155,7 @@ export function DirectorySection({ directory }: DirectorySectionProps) {
                   key={option.value}
                   type="button"
                   onClick={() => setCategory(option.value)}
-                  className={`border-brand-dark rounded-full border px-4 py-2 font-bold whitespace-nowrap transition-all ${
+                  className={`border-brand-dark cursor-pointer rounded-full border px-4 py-2 font-bold whitespace-nowrap transition-all ${
                     active
                       ? 'bg-brand-dark shadow-solid-sm text-white'
                       : `text-brand-dark bg-white ${option.hover}`

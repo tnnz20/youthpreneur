@@ -115,7 +115,7 @@ export function DashboardSidebar({ items, areaLabel, badges }: DashboardSidebarP
         <button
           type="button"
           onClick={handleLogout}
-          className="text-dash-muted group flex items-center gap-2.5 rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
+          className="text-dash-muted group flex cursor-pointer items-center gap-2.5 rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
         >
           <LogOut
             className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
