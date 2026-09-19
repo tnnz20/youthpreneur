@@ -49,7 +49,3 @@ export const registerProfileSchema = z.object({
   address: z.string().trim().min(1, { message: 'Alamat wajib diisi.' }),
   terms: z.literal(true, { message: 'Anda harus menyetujui syarat & ketentuan.' }),
 });
-
-export type LoginInput = z.infer<typeof loginSchema>;
-export type RegisterCredentialsInput = z.infer<typeof registerCredentialsSchema>;
-export type RegisterProfileInput = z.infer<typeof registerProfileSchema>;

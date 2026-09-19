@@ -1,9 +1,8 @@
+import { AuthField } from '@/components/auth/auth-field';
+import { authInputClass } from '@/components/auth/auth-form';
 import { Input } from '@/components/ui/input';
 
 import { Eye, EyeOff } from 'lucide-react';
-
-const inputClass =
-  'text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm';
 
 interface RegisterCredentialsStepProps {
   email: string;
@@ -24,7 +23,7 @@ export function RegisterCredentialsStep({
 }: RegisterCredentialsStepProps) {
   return (
     <div className="space-y-4">
-      <Field label="Email" htmlFor="register-email">
+      <AuthField label="Email" htmlFor="register-email">
         <Input
           id="register-email"
           type="email"
@@ -33,10 +32,10 @@ export function RegisterCredentialsStep({
           value={email}
           onChange={(event) => onChange('email', event.target.value)}
           placeholder="nama@email.com"
-          className={inputClass}
+          className={authInputClass}
         />
-      </Field>
-      <Field label="Kata Sandi" htmlFor="register-password">
+      </AuthField>
+      <AuthField label="Kata Sandi" htmlFor="register-password">
         <PasswordInput
           id="register-password"
           value={password}
@@ -45,8 +44,8 @@ export function RegisterCredentialsStep({
           onTogglePassword={onTogglePassword}
           placeholder="Minimal 8 karakter"
         />
-      </Field>
-      <Field label="Ulangi Kata Sandi" htmlFor="register-confirm-password">
+      </AuthField>
+      <AuthField label="Ulangi Kata Sandi" htmlFor="register-confirm-password">
         <PasswordInput
           id="register-confirm-password"
           value={confirmPassword}
@@ -55,26 +54,7 @@ export function RegisterCredentialsStep({
           onTogglePassword={onTogglePassword}
           placeholder="Ulangi kata sandi"
         />
-      </Field>
-    </div>
-  );
-}
-
-function Field({
-  label,
-  htmlFor,
-  children,
-}: {
-  label: string;
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <label htmlFor={htmlFor} className="text-brand-dark mb-1 block text-xs font-bold">
-        {label}
-      </label>
-      {children}
+      </AuthField>
     </div>
   );
 }
@@ -104,7 +84,7 @@ function PasswordInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className={`${inputClass} pr-11`}
+        className={`${authInputClass} pr-11`}
       />
       <button
         type="button"

@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { DateTime } from 'luxon';
 
+import { authInputClass } from '@/components/auth/auth-form';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -12,8 +13,7 @@ interface BirthDatePickerProps {
   onChange: (value: string) => void;
 }
 
-const triggerClass =
-  'text-brand-dark focus-visible:border-brand-dark focus-visible:ring-0 h-12 w-full justify-start rounded-xl border border-black/30 bg-white px-3.5 text-left text-base font-normal data-placeholder:text-brand-muted sm:text-sm';
+const triggerClass = `${authInputClass} flex items-center justify-between text-left font-normal data-placeholder:text-brand-muted`;
 
 export function BirthDatePicker({ value, onChange }: BirthDatePickerProps) {
   const [open, setOpen] = React.useState(false);
@@ -31,11 +31,11 @@ export function BirthDatePicker({ value, onChange }: BirthDatePickerProps) {
         data-placeholder={value ? undefined : ''}
         className={triggerClass}
       >
+        <span className="truncate">{displayValue || 'Pilih tanggal'}</span>
         <CalendarDays
-          className="text-brand-muted pointer-events-none mr-2 h-4 w-4"
+          className="text-brand-muted pointer-events-none ml-2 h-4 w-4 shrink-0"
           aria-hidden="true"
         />
-        {displayValue || 'Pilih tanggal'}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

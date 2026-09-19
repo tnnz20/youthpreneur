@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { loginUser } from '@/lib/api/auth';
 import { ApiError } from '@/lib/api/client';
 
+import { authInputClass } from '@/components/auth/auth-form';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,9 +15,6 @@ import { Input } from '@/components/ui/input';
 import { useSession } from '@/hooks/use-session';
 
 import { Sparkles } from 'lucide-react';
-
-const inputClass =
-  'text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -51,7 +49,7 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="border-brand-dark shadow-solid-lg w-full gap-0 rounded-3xl border-2 bg-white p-6 py-6 ring-0 sm:p-10">
+    <Card className="border-brand-dark shadow-solid-lg mx-auto w-full max-w-md gap-0 rounded-3xl border-2 bg-white p-6 py-6 ring-0 sm:p-10">
       <div className="mb-6 flex items-center gap-3">
         <div className="border-brand-dark bg-brand-yellow shadow-solid-sm flex h-12 w-12 items-center justify-center rounded-2xl border-2">
           <Sparkles className="h-6 w-6" />
@@ -77,7 +75,7 @@ export default function LoginPage() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="nama@email.com"
-            className={inputClass}
+            className={authInputClass}
           />
         </div>
 
@@ -93,7 +91,7 @@ export default function LoginPage() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Masukkan kata sandi"
-            className={inputClass}
+            className={authInputClass}
           />
         </div>
 

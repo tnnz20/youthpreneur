@@ -263,7 +263,6 @@ function Nav({
   })();
 
   const handlePreviousClick = () => {
-    if (!previousMonth) return;
     if (navView === 'years') {
       setDisplayYears((prev) => ({
         from: prev.from - (prev.to - prev.from + 1),
@@ -272,12 +271,12 @@ function Nav({
       onPrevClick?.(new Date(displayYears.from - (displayYears.to - displayYears.from), 0, 1));
       return;
     }
+    if (!previousMonth) return;
     goToMonth(previousMonth);
     onPrevClick?.(previousMonth);
   };
 
   const handleNextClick = () => {
-    if (!nextMonth) return;
     if (navView === 'years') {
       setDisplayYears((prev) => ({
         from: prev.from + (prev.to - prev.from + 1),
@@ -286,6 +285,7 @@ function Nav({
       onNextClick?.(new Date(displayYears.from + (displayYears.to - displayYears.from), 0, 1));
       return;
     }
+    if (!nextMonth) return;
     goToMonth(nextMonth);
     onNextClick?.(nextMonth);
   };

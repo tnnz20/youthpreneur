@@ -12,7 +12,7 @@ export default function AuthLayout() {
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Kembali ke Beranda
       </Link>
-      <div className="w-full max-w-md sm:max-w-3xl">
+      <div className="w-full">
         <Outlet />
       </div>
     </div>
