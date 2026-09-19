@@ -26,13 +26,10 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
   if (!response.ok) {
     let message = `Permintaan gagal (${response.status}).`;
 
-    try {
-      const data = (await response.json()) as { error?: unknown };
-      if (typeof data?.error === 'string' && data.error.length > 0) {
-        message = data.error;
-      }
-    } catch {
-      void 0;
+    const data = (await response.json().catch(() => undefined)) as { error?: unknown } | undefined;
+
+    if (typeof data?.error === 'string' && data.error.length > 0) {
+      message = data.error;
     }
 
     throw new ApiError(message, response.status);

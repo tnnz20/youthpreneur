@@ -1,7 +1,6 @@
 import { type SubmitEvent, useState } from 'react';
 
 import { loginSchema } from '@/schema/auth';
-import { useSession } from '@/hooks/use-session';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
@@ -12,7 +11,12 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
+import { useSession } from '@/hooks/use-session';
+
 import { Sparkles } from 'lucide-react';
+
+const inputClass =
+  'text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -74,7 +78,7 @@ export default function LoginPage() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="nama@email.com"
-              className="text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm"
+              className={inputClass}
             />
           </div>
 
@@ -93,7 +97,7 @@ export default function LoginPage() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Masukkan kata sandi"
-              className="text-brand-dark focus-visible:border-brand-dark h-12 w-full rounded-xl border border-black/30 bg-white px-3.5 text-base focus-visible:ring-0 sm:text-sm"
+              className={inputClass}
             />
           </div>
 
