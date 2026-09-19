@@ -7,12 +7,15 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
+import { useSession } from '@/hooks/use-session';
+
 import { NAV_LINKS } from '@/constants/site';
 
-import { Menu } from 'lucide-react';
+import { LayoutDashboard, Menu } from 'lucide-react';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { status } = useSession();
 
   const masukClasses = cn(
     buttonVariants({ variant: 'neoOutline' }),
@@ -58,12 +61,21 @@ export function Navbar() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <Link to="/login" className={masukClasses}>
-            Masuk
-          </Link>
-          <Link to="/register" className={daftarClasses}>
-            Daftar
-          </Link>
+          {status === 'authenticated' ? (
+            <Link to="/dashboard" className={daftarClasses}>
+              <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+              Dashboard Saya
+            </Link>
+          ) : status === 'anonymous' ? (
+            <>
+              <Link to="/auth/login" className={masukClasses}>
+                Masuk
+              </Link>
+              <Link to="/auth/register" className={daftarClasses}>
+                Daftar
+              </Link>
+            </>
+          ) : null}
 
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger

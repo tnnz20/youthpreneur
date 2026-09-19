@@ -1,8 +1,12 @@
-import { Link, NavLink } from 'react-router';
+import { Link, NavLink, useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
+import { logoutUser } from '@/lib/api/auth';
+import { ApiError } from '@/lib/api/client';
 import { cn } from '@/lib/utils';
 
 import { useNavBadges } from '@/hooks/use-nav-badges';
+import { useSession } from '@/hooks/use-session';
 
 import type { LucideIcon } from 'lucide-react';
 import { LogOut } from 'lucide-react';
@@ -67,7 +71,23 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ items, areaLabel, badges }: DashboardSidebarProps) {
   const navBadges = useNavBadges();
+  const navigate = useNavigate();
+  const { markAnonymous } = useSession();
   const resolvedBadges = badges ?? navBadges;
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      if (!(error instanceof ApiError && error.status === 401)) {
+        toast.error('Gagal keluar. Coba lagi.');
+        return;
+      }
+    }
+
+    markAnonymous();
+    navigate('/auth/login', { replace: true });
+  };
 
   return (
     <aside className="border-dash-border/60 bg-dash-surface shadow-bento sticky top-5 hidden h-[calc(100vh-2.5rem)] w-64 shrink-0 flex-col justify-between overflow-y-auto rounded-[2rem] border p-5 lg:flex">
@@ -92,8 +112,9 @@ export function DashboardSidebar({ items, areaLabel, badges }: DashboardSidebarP
       </div>
 
       <div className="mt-6 flex flex-col gap-2">
-        <Link
-          to="/login"
+        <button
+          type="button"
+          onClick={handleLogout}
           className="text-dash-muted group flex items-center gap-2.5 rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
         >
           <LogOut
@@ -101,7 +122,7 @@ export function DashboardSidebar({ items, areaLabel, badges }: DashboardSidebarP
             aria-hidden="true"
           />
           Keluar
-        </Link>
+        </button>
       </div>
     </aside>
   );
