@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 
 import { Route, Routes } from 'react-router';
 
+import AuthLayout from '@/layouts/auth-layout';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import MainLayout from '@/layouts/main-layout';
 
@@ -45,22 +46,24 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/database" element={<DatabasePage />} />
           </Route>
-          <Route
-            path="/auth/login"
-            element={
-              <RedirectIfAuthenticated>
-                <LoginPage />
-              </RedirectIfAuthenticated>
-            }
-          />
-          <Route
-            path="/auth/register"
-            element={
-              <RedirectIfAuthenticated>
-                <RegisterPage />
-              </RedirectIfAuthenticated>
-            }
-          />
+          <Route element={<AuthLayout />}>
+            <Route
+              path="/auth/login"
+              element={
+                <RedirectIfAuthenticated>
+                  <LoginPage />
+                </RedirectIfAuthenticated>
+              }
+            />
+            <Route
+              path="/auth/register"
+              element={
+                <RedirectIfAuthenticated>
+                  <RegisterPage />
+                </RedirectIfAuthenticated>
+              }
+            />
+          </Route>
           <Route
             element={
               <RequireAuth>
