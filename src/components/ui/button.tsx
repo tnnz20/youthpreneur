@@ -22,6 +22,7 @@ const buttonVariants = cva(
           'bg-brand-yellow text-brand-dark border-brand-dark shadow-solid hover:shadow-solid-sm border-2 font-bold hover:translate-x-0.5 hover:translate-y-0.5 hover:bg-amber-300 active:translate-x-1 active:translate-y-1 active:shadow-none',
         neoOutline:
           'text-brand-dark border-brand-dark shadow-solid-sm border-2 bg-white font-bold hover:bg-black/5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none',
+        lime: 'bg-dash-accent text-dash-accent-fg hover:bg-dash-accent-strong font-semibold',
       },
       size: {
         default:

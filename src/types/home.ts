@@ -27,9 +27,7 @@ export interface Course {
   rating: string;
   stars: number;
   reviews: string;
-  price: string;
-  originalPrice: string;
-  tag?: string;
+  slotAvailable: boolean;
   bestSeller?: boolean;
 }
 
@@ -58,4 +56,13 @@ export interface Article {
   readTime: string;
   image: string;
   fallback: string;
+}
+
+export interface Official {
+  name: string;
+  role: string;
+  institution?: string;
+  image: string;
+  accentColor: string;
+  badgeVariant?: 'neoYellow' | 'neoMint';
 }

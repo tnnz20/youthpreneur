@@ -93,7 +93,7 @@ export function HeroSection() {
               <Sparkles className="h-8 w-8" />
             </div>
 
-            <div className="relative w-75 sm:w-95 lg:w-[410px]">
+            <div className="relative w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[410px]">
               <div className="border-brand-dark bg-brand-yellow shadow-solid-lg relative h-[410px] w-full overflow-hidden rounded-t-full rounded-b-[100px] border-2 sm:h-120">
                 <SmartImage
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"

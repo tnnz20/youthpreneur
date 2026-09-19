@@ -66,26 +66,27 @@ export function CoursesSection() {
                     <span className="text-brand-muted text-[11px]">({course.reviews})</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-brand-dark text-lg font-black">{course.price}</span>
-                      <span className="text-brand-muted ml-1 text-xs line-through">
-                        {course.originalPrice}
-                      </span>
-                      {course.tag ? (
-                        <Badge
-                          variant="outline"
-                          className="ml-1 h-auto rounded border-emerald-200 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-bold text-emerald-600"
-                        >
-                          {course.tag}
-                        </Badge>
-                      ) : null}
-                    </div>
+                    <Badge
+                      variant="default"
+                      className={`border-brand-dark h-auto rounded-full border-2 px-2.5 py-1 text-[11px] font-bold ${
+                        course.slotAvailable
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-brand-peach text-brand-dark'
+                      }`}
+                    >
+                      {course.slotAvailable ? 'Slot Tersedia' : 'Slot Penuh'}
+                    </Badge>
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
+                      disabled={!course.slotAvailable}
                       onClick={() => openModal(`Daftar Kelas: ${course.title}`)}
-                      aria-label={`Daftar kelas ${course.title}`}
+                      aria-label={
+                        course.slotAvailable
+                          ? `Daftar kelas ${course.title}`
+                          : `Kelas ${course.title} sudah penuh`
+                      }
                       className="text-brand-dark rounded-full hover:bg-black/5"
                     >
                       <ArrowRight className="h-5 w-5" aria-hidden="true" />
