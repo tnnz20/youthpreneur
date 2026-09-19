@@ -5,9 +5,11 @@
 - This repository contains the Youthpreneur frontend application.
 - Frontend dependencies and lockfile live at repository root.
 - `src/main.tsx` bootstraps React; `src/app.tsx` defines declarative `react-router` routes.
-- Public pages use `src/layouts/main-layout.tsx`; `/login` intentionally renders outside that layout.
-- Keep page components in `src/pages/`, page-specific components in `src/components/home/` or `src/components/about/`, shared components in `src/components/shared/`, and shadcn components in `src/components/ui/`.
-- Static data belongs in `src/constants/`; shared TypeScript types belong in `src/types/`.
+- Public pages use `src/layouts/main-layout.tsx`; `/auth/login` and `/auth/register` intentionally render outside that layout.
+- Keep page components in `src/pages/`, auth pages in `src/pages/auth/`, page-specific components in `src/components/home/` or `src/components/about/`, shared components in `src/components/shared/`, and shadcn components in `src/components/ui/`.
+- Static data belongs in `src/constants/`; shared TypeScript types belong in `src/types/`; Zod schemas belong in `src/schema/`.
+- Keep API transport in `src/lib/api/client.ts` and domain API functions in `src/lib/api/`; auth API types belong in `src/types/auth.ts`.
+- Frontend API base URL uses `VITE_API_BASE_URL`; local fallback is `http://localhost:8080`. Cookie-auth requests use `credentials: 'include'`.
 - Follow `DESIGN.md` for Youthpreneur visual tokens and component rules.
 
 ## Commands
