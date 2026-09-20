@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import { DateTime } from 'luxon';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+
+import { formatUnixDateTime } from '@/lib/utils';
 
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import {
@@ -23,12 +24,29 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { Input } from '@/components/ui/input';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -43,17 +61,9 @@ import type { UserState } from '@/hooks/use-users';
 import type { User, UserGender } from '@/types/users';
 
 import { KECAMATAN } from '@/constants/site';
-import { GENDER_LABELS, GENDER_OPTIONS } from '@/constants/users';
+import { GENDER_LABELS, GENDER_OPTIONS, USER_PAGE_SIZE_OPTIONS } from '@/constants/users';
 
-import {
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  MoreHorizontal,
-  RotateCcw,
-  Trash2,
-  UserX,
-} from 'lucide-react';
+import { Eye, MoreHorizontal, RotateCcw, SearchX, Trash2, UserX } from 'lucide-react';
 
 interface UserTableProps {
   state: UserState;
@@ -64,14 +74,13 @@ const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow
 const selectClassName =
   'text-dash-fg focus-visible:border-dash-fg h-11 w-full rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
 
+const inputClassName =
+  'text-dash-fg focus-visible:border-dash-fg h-11 rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 text-sm focus-visible:ring-0';
+
 const LABEL_CLASS =
   'text-dash-muted mb-1.5 block text-[11px] font-semibold tracking-wide uppercase';
 
 const HEAD_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
-
-function formatTimestamp(value: number): string {
-  return DateTime.fromSeconds(value).setLocale('id').toFormat('dd LLL yyyy, HH:mm');
-}
 
 function renderValue(value: string | null | undefined) {
   return value ? value : '—';
@@ -85,19 +94,26 @@ export function UserTable({ state }: UserTableProps) {
   const {
     users,
     filters,
+    search,
+    limit,
     loading,
     mutatingId,
     error,
     hasNextPage,
+    hasPreviousPage,
+    setSearch,
     setDistrict,
     setGender,
+    setLimit,
     resetFilters,
     nextPage,
+    previousPage,
     deactivate,
     remove,
   } = state;
 
-  const filtersActive = filters.district.trim() !== '' || filters.gender !== 'all';
+  const filtersActive =
+    search.trim() !== '' || filters.district.trim() !== '' || filters.gender !== 'all';
 
   const confirmDeactivate = async () => {
     if (!pendingDeactivate) {
@@ -135,16 +151,37 @@ export function UserTable({ state }: UserTableProps) {
     <div className="space-y-5">
       <div className={`${CARD} space-y-4 p-5`}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
-          <div className="md:col-span-6">
+          <div className="md:col-span-5">
+            <label htmlFor="user-search" className={LABEL_CLASS}>
+              Cari Nama
+            </label>
+            <Input
+              id="user-search"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Cari nama pengguna"
+              className={inputClassName}
+            />
+          </div>
+
+          <div className="md:col-span-4">
             <label htmlFor="user-district" className={LABEL_CLASS}>
               Kecamatan
             </label>
-            <Select value={filters.district} onValueChange={(value) => setDistrict(value ?? '')}>
+            <Select
+              value={filters.district || null}
+              onValueChange={(value) => setDistrict(value ?? '')}
+              items={[
+                { label: 'Semua Kecamatan', value: null },
+                ...KECAMATAN.map((name) => ({ label: name, value: name })),
+              ]}
+            >
               <SelectTrigger id="user-district" className={selectClassName}>
-                <SelectValue />
+                <SelectValue placeholder="Semua Kecamatan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Semua Kecamatan</SelectItem>
+                <SelectItem value={null}>Semua Kecamatan</SelectItem>
                 {KECAMATAN.map((name) => (
                   <SelectItem key={name} value={name}>
                     {name}
@@ -156,18 +193,19 @@ export function UserTable({ state }: UserTableProps) {
 
           <div className="md:col-span-3">
             <label htmlFor="user-gender" className={LABEL_CLASS}>
-              Gender
+              Jenis Kelamin
             </label>
             <Select
-              value={filters.gender}
+              value={filters.gender === 'all' ? null : filters.gender}
               onValueChange={(value) => setGender((value ?? 'all') as UserGender | 'all')}
+              items={GENDER_OPTIONS}
             >
               <SelectTrigger id="user-gender" className={selectClassName}>
-                <SelectValue />
+                <SelectValue placeholder="Semua Jenis Kelamin" />
               </SelectTrigger>
               <SelectContent>
                 {GENDER_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem key={option.label} value={option.value}>
                     {option.label}
                   </SelectItem>
                 ))}
@@ -176,11 +214,7 @@ export function UserTable({ state }: UserTableProps) {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-          <span className="text-dash-muted text-xs font-semibold">
-            <strong className="text-dash-fg text-sm font-extrabold">{users.length}</strong> pengguna
-            ditemukan
-          </span>
+        <div className="flex flex-col justify-end gap-3 sm:flex-row sm:items-center">
           <Button
             type="button"
             variant="outline"
@@ -220,7 +254,7 @@ export function UserTable({ state }: UserTableProps) {
                 <TableRow key={`skeleton-${index}`} className="border-dash-border">
                   {Array.from({ length: 8 }).map((__, cellIndex) => (
                     <TableCell key={`skeleton-${index}-${cellIndex}`}>
-                      <span className="bg-dash-surface-2 block h-3.5 w-full animate-pulse rounded-full" />
+                      <Skeleton className="bg-dash-surface-2 h-3.5 w-full rounded-full" />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -254,13 +288,13 @@ export function UserTable({ state }: UserTableProps) {
                       <StatusBadge label={user.is_active ? 'Aktif' : 'Non Aktif'} />
                     </TableCell>
                     <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
-                      {formatTimestamp(user.updated_at)}
+                      {formatUnixDateTime(user.updated_at)}
                     </TableCell>
                     <TableCell className="py-3.5 pr-6 text-right sm:pr-8">
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           disabled={isMutating}
-                          className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg inline-flex h-9 w-9 items-center justify-center rounded-full border px-2 py-2 transition-colors focus:outline-none disabled:opacity-50"
+                          className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors focus:outline-none disabled:opacity-50"
                           aria-label={`Aksi untuk ${user.profile?.full_name ?? user.email}`}
                         >
                           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
@@ -268,6 +302,7 @@ export function UserTable({ state }: UserTableProps) {
                         <DropdownMenuContent align="end" className="w-52">
                           <DropdownMenuItem
                             onClick={() => navigate(`/admin/users/${user.public_id}`)}
+                            className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >
                             <Eye className="h-4 w-4" aria-hidden="true" />
                             Lihat Detail
@@ -275,6 +310,7 @@ export function UserTable({ state }: UserTableProps) {
                           <DropdownMenuItem
                             disabled={isMutating || !user.is_active}
                             onClick={() => setPendingDeactivate(user)}
+                            className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >
                             <UserX className="h-4 w-4" aria-hidden="true" />
                             Non Aktifkan Pengguna
@@ -283,6 +319,7 @@ export function UserTable({ state }: UserTableProps) {
                             disabled={isMutating}
                             variant="destructive"
                             onClick={() => setPendingDelete(user)}
+                            className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >
                             <Trash2 className="h-4 w-4" aria-hidden="true" />
                             Delete Pengguna
@@ -297,50 +334,93 @@ export function UserTable({ state }: UserTableProps) {
         </Table>
 
         {!loading && users.length === 0 && (
-          <div className="flex flex-col items-center gap-3 p-8 text-center">
-            <p className="text-dash-muted text-sm">
-              {filtersActive
-                ? 'Tidak ada pengguna yang cocok dengan filter.'
-                : 'Belum ada pengguna terdaftar.'}
-            </p>
+          <Empty className="p-8">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <SearchX aria-hidden="true" />
+              </EmptyMedia>
+              <EmptyTitle>
+                {filtersActive ? 'Pengguna Tidak Ditemukan' : 'Belum Ada Pengguna'}
+              </EmptyTitle>
+              <EmptyDescription>
+                {filtersActive
+                  ? 'Tidak ada pengguna yang cocok dengan filter.'
+                  : 'Belum ada pengguna terdaftar.'}
+              </EmptyDescription>
+            </EmptyHeader>
             {filtersActive && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={resetFilters}
-                className="border-dash-border rounded-full"
-              >
-                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-                Reset Filter
-              </Button>
+              <EmptyContent>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={resetFilters}
+                  className="border-dash-border rounded-full"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                  Reset Filter
+                </Button>
+              </EmptyContent>
             )}
-          </div>
+          </Empty>
         )}
 
-        <div className="border-dash-border flex items-center justify-between gap-3 border-t p-4 sm:px-8">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={resetFilters}
-            disabled={loading}
-            className="border-dash-border rounded-full"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            Halaman Pertama
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={nextPage}
-            disabled={loading || !hasNextPage}
-            className="border-dash-border rounded-full"
-          >
-            Halaman Berikutnya
-            <ChevronRight className="h-4 w-4" aria-hidden="true" />
-          </Button>
+        <div className="border-dash-border flex flex-col justify-between gap-3 border-t p-4 sm:flex-row sm:items-center sm:px-8">
+          <div className="flex items-center gap-2">
+            <span className="text-dash-muted text-xs font-semibold">Baris per halaman</span>
+            <Select
+              value={String(limit)}
+              onValueChange={(value) => setLimit(Number(value ?? limit))}
+            >
+              <SelectTrigger id="user-limit" className="h-9 w-[88px] rounded-full" size="sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {USER_PAGE_SIZE_OPTIONS.map((value) => (
+                  <SelectItem key={value} value={String(value)}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Pagination className="mx-0 w-auto justify-end">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  text="Sebelumnya"
+                  aria-disabled={loading || !hasPreviousPage}
+                  className={
+                    loading || !hasPreviousPage
+                      ? 'pointer-events-none rounded-full opacity-50'
+                      : 'rounded-full'
+                  }
+                  onClick={(event) => {
+                    event.preventDefault();
+                    previousPage();
+                  }}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  text="Berikutnya"
+                  aria-disabled={loading || !hasNextPage}
+                  className={
+                    loading || !hasNextPage
+                      ? 'pointer-events-none rounded-full opacity-50'
+                      : 'rounded-full'
+                  }
+                  onClick={(event) => {
+                    event.preventDefault();
+                    nextPage();
+                  }}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
 

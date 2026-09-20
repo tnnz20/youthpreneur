@@ -21,6 +21,10 @@ export function listUsers(params: UserListParams): Promise<UserListResponse> {
     search.set('gender', params.gender);
   }
 
+  if (params.search) {
+    search.set('search', params.search);
+  }
+
   const query = search.toString();
 
   return apiRequest<UserListResponse>(`/users${query ? `?${query}` : ''}`);

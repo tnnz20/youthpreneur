@@ -30,4 +30,5 @@ export interface UserListParams {
   limit?: number;
   district?: string;
   gender?: UserGender;
+  search?: string;
 }

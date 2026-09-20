@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { getUser } from '@/lib/api/users';
+import { formatUnixDateTime } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 
@@ -20,13 +21,6 @@ const GENDER_LABELS: Record<string, string> = {
   male: 'Laki-laki',
   female: 'Perempuan',
 };
-
-function formatTimestamp(value: number): string {
-  return new Intl.DateTimeFormat('id-ID', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value));
-}
 
 function renderValue(value: string | null | undefined) {
   return value ? value : '—';
@@ -137,7 +131,7 @@ export default function AdminUserDetailPage() {
           </div>
           <div>
             <p className={LABEL_CLASS}>Terakhir Diperbarui</p>
-            <p className={VALUE_CLASS}>{formatTimestamp(user.updated_at)}</p>
+            <p className={VALUE_CLASS}>{formatUnixDateTime(user.updated_at)}</p>
           </div>
           <div className="sm:col-span-2">
             <p className={LABEL_CLASS}>Alamat</p>
