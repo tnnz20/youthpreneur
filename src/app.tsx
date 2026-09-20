@@ -13,8 +13,8 @@ import { Toaster } from '@/components/ui/sonner';
 import { LoaderCircle } from 'lucide-react';
 
 const AboutPage = lazy(() => import('@/pages/about'));
-const AdminPemudaPage = lazy(() => import('@/pages/admin-pemuda'));
 const AdminProgramPage = lazy(() => import('@/pages/admin-program'));
+const EnterpriseAdminPage = lazy(() => import('@/pages/admin/enterprise-admin'));
 const AdminUserDetailPage = lazy(() => import('@/pages/admin/admin-user-detail'));
 const AdminUsersManagementPage = lazy(() => import('@/pages/admin/admin-users-management'));
 const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
@@ -88,7 +88,7 @@ export default function App() {
               path="/dashboard/enterprises"
               element={
                 <RequireRole role="admin">
-                  <AdminPemudaPage />
+                  <EnterpriseAdminPage />
                 </RequireRole>
               }
             />
