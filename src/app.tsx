@@ -14,8 +14,9 @@ import { LoaderCircle } from 'lucide-react';
 
 const AboutPage = lazy(() => import('@/pages/about'));
 const AdminPemudaPage = lazy(() => import('@/pages/admin-pemuda'));
-const AdminPendaftaranPage = lazy(() => import('@/pages/admin-pendaftaran'));
 const AdminProgramPage = lazy(() => import('@/pages/admin-program'));
+const AdminUserDetailPage = lazy(() => import('@/pages/admin/admin-user-detail'));
+const AdminUsersManagementPage = lazy(() => import('@/pages/admin/admin-users-management'));
 const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
 const DashboardPasswordPage = lazy(() => import('@/pages/dashboard-password'));
 const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
@@ -79,7 +80,6 @@ export default function App() {
               element={<Navigate to="/dashboard/enterprises" replace />}
             />
             <Route path="/admin/program" element={<Navigate to="/dashboard/trainings" replace />} />
-            <Route path="/admin/pendaftaran" element={<Navigate to="/dashboard/users" replace />} />
             <Route path="/dashboard" element={<DashboardIndexPage />} />
             <Route path="/dashboard/program" element={<DashboardProgramPage />} />
             <Route path="/dashboard/my-trainings" element={<DashboardProgramSayaPage />} />
@@ -106,7 +106,15 @@ export default function App() {
               path="/dashboard/users"
               element={
                 <RequireRole role="admin">
-                  <AdminPendaftaranPage />
+                  <AdminUsersManagementPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/admin/users/:publicId"
+              element={
+                <RequireRole role="admin">
+                  <AdminUserDetailPage />
                 </RequireRole>
               }
             />
