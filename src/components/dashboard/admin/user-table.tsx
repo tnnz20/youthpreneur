@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { DateTime } from 'luxon';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
@@ -21,7 +22,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -41,6 +41,9 @@ import {
 import type { UserState } from '@/hooks/use-users';
 
 import type { User, UserGender } from '@/types/users';
+
+import { KECAMATAN } from '@/constants/site';
+import { GENDER_LABELS, GENDER_OPTIONS } from '@/constants/users';
 
 import {
   ChevronLeft,
@@ -66,22 +69,8 @@ const LABEL_CLASS =
 
 const HEAD_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
 
-const GENDER_LABELS: Record<UserGender, string> = {
-  male: 'Laki-laki',
-  female: 'Perempuan',
-};
-
-const GENDER_OPTIONS: { value: UserGender | 'all'; label: string }[] = [
-  { value: 'all', label: 'Semua Gender' },
-  { value: 'male', label: 'Laki-laki' },
-  { value: 'female', label: 'Perempuan' },
-];
-
 function formatTimestamp(value: number): string {
-  return new Intl.DateTimeFormat('id-ID', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value));
+  return DateTime.fromSeconds(value).setLocale('id').toFormat('dd LLL yyyy, HH:mm');
 }
 
 function renderValue(value: string | null | undefined) {
@@ -150,14 +139,19 @@ export function UserTable({ state }: UserTableProps) {
             <label htmlFor="user-district" className={LABEL_CLASS}>
               Kecamatan
             </label>
-            <Input
-              id="user-district"
-              type="text"
-              value={filters.district}
-              onChange={(event) => setDistrict(event.target.value)}
-              placeholder="Cari kecamatan..."
-              className="text-dash-fg focus-visible:border-dash-fg border-dash-border bg-dash-surface-2 h-11 rounded-2xl px-3.5 text-base focus-visible:ring-0 sm:text-sm"
-            />
+            <Select value={filters.district} onValueChange={(value) => setDistrict(value ?? '')}>
+              <SelectTrigger id="user-district" className={selectClassName}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">Semua Kecamatan</SelectItem>
+                {KECAMATAN.map((name) => (
+                  <SelectItem key={name} value={name}>
+                    {name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="md:col-span-3">
@@ -266,7 +260,7 @@ export function UserTable({ state }: UserTableProps) {
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           disabled={isMutating}
-                          className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors focus:outline-none disabled:opacity-50"
+                          className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg inline-flex h-9 w-9 items-center justify-center rounded-full border px-2 py-2 transition-colors focus:outline-none disabled:opacity-50"
                           aria-label={`Aksi untuk ${user.profile?.full_name ?? user.email}`}
                         >
                           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
