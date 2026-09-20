@@ -37,7 +37,7 @@ export default function LoginPage() {
 
     try {
       const user = await loginUser(result.data);
-      markAuthenticated();
+      markAuthenticated(user);
       const name = user.profile.full_name ?? user.email;
       toast.success(`Berhasil masuk! Selamat datang kembali, ${name}.`);
       navigate('/dashboard');

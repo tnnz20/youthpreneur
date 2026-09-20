@@ -4,6 +4,8 @@ import { Navigate } from 'react-router';
 
 import { useSession } from '@/hooks/use-session';
 
+import type { UserRole } from '@/types/auth';
+
 import { LoaderCircle } from 'lucide-react';
 
 function SessionFallback() {
@@ -41,6 +43,29 @@ export function RedirectIfAuthenticated({ children }: AuthGuardProps) {
   }
 
   if (status === 'authenticated') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
+}
+
+interface RequireRoleProps {
+  role: UserRole;
+  children: ReactNode;
+}
+
+export function RequireRole({ role, children }: RequireRoleProps) {
+  const { status, role: currentRole } = useSession();
+
+  if (status === 'loading') {
+    return <SessionFallback />;
+  }
+
+  if (status === 'anonymous') {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  if (currentRole !== role) {
     return <Navigate to="/dashboard" replace />;
   }
 

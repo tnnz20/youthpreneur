@@ -1,3 +1,4 @@
+import type { UserRole } from '@/types/auth';
 import type {
   CurrentUser,
   DashboardStat,
@@ -9,15 +10,7 @@ import type {
 } from '@/types/dashboard';
 
 import type { LucideIcon } from 'lucide-react';
-import {
-  BookOpen,
-  ClipboardCheck,
-  ClipboardList,
-  GraduationCap,
-  LayoutDashboard,
-  UserRound,
-  Users,
-} from 'lucide-react';
+import { BriefcaseBusiness, GraduationCap, LayoutDashboard, UserRound, Users } from 'lucide-react';
 
 export const PROGRAM_CATEGORY_OPTIONS: { value: ProgramCategory; label: string; badge: string }[] =
   [
@@ -339,16 +332,31 @@ export const DASHBOARD_STATS: DashboardStat[] = [
   { label: 'Pemuda Punya NIB', value: '412', detail: '32% dari total', tone: 'mint' },
 ];
 
-export const ADMIN_NAV: { label: string; to: string; icon: LucideIcon }[] = [
-  { label: 'Dashboard', to: '/admin', icon: LayoutDashboard },
-  { label: 'Data Pemuda', to: '/admin/pemuda', icon: Users },
-  { label: 'Program Pelatihan', to: '/admin/program', icon: BookOpen },
-  { label: 'Pendaftaran', to: '/admin/pendaftaran', icon: ClipboardCheck },
+export interface DashboardNavItem {
+  label: string;
+  to: string;
+  icon: LucideIcon;
+}
+
+export const ADMIN_NAV: DashboardNavItem[] = [
+  { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
+  { label: 'Kelola Wirausaha', to: '/dashboard/enterprises', icon: BriefcaseBusiness },
+  { label: 'Kelola Pelatihan', to: '/dashboard/trainings', icon: GraduationCap },
+  { label: 'Kelola Pengguna', to: '/dashboard/users', icon: Users },
 ];
 
-export const USER_NAV: { label: string; to: string; icon: LucideIcon }[] = [
+export const MEMBER_NAV: DashboardNavItem[] = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
-  { label: 'Katalog Program', to: '/dashboard/program', icon: GraduationCap },
-  { label: 'Program Saya', to: '/dashboard/program-saya', icon: ClipboardList },
-  { label: 'Profil Usaha', to: '/dashboard/profil', icon: UserRound },
+  { label: 'Pelatihan Saya', to: '/dashboard/my-trainings', icon: GraduationCap },
+  { label: 'Wirausaha Saya', to: '/dashboard/my-enterprises', icon: UserRound },
 ];
+
+export const ROLE_LABEL: Record<UserRole, string> = {
+  admin: 'Admin Dispora',
+  member: 'Pemuda Wirausaha',
+};
+
+export const DASHBOARD_NAV_BY_ROLE: Record<UserRole, DashboardNavItem[]> = {
+  admin: ADMIN_NAV,
+  member: MEMBER_NAV,
+};

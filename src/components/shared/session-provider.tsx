@@ -2,9 +2,11 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react
 
 import { toast } from 'sonner';
 
-import { refreshSession } from '@/lib/api/auth';
+import { getCurrentUser, refreshSession } from '@/lib/api/auth';
 
 import { SessionContext, type SessionStatus } from '@/hooks/use-session';
+
+import type { AuthUser } from '@/types/auth';
 
 interface SessionProviderProps {
   children: ReactNode;
@@ -12,18 +14,31 @@ interface SessionProviderProps {
 
 export function SessionProvider({ children }: SessionProviderProps) {
   const [status, setStatus] = useState<SessionStatus>('loading');
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
     let active = true;
 
     refreshSession()
-      .then((authenticated) => {
+      .then(async (authenticated) => {
+        if (!active) return;
+
+        if (!authenticated) {
+          setUser(null);
+          setStatus('anonymous');
+          return;
+        }
+
+        const currentUser = await getCurrentUser();
+
         if (active) {
-          setStatus(authenticated ? 'authenticated' : 'anonymous');
+          setUser(currentUser);
+          setStatus('authenticated');
         }
       })
       .catch(() => {
         if (active) {
+          setUser(null);
           setStatus('anonymous');
           toast.error('Gagal memeriksa sesi. Silakan muat ulang halaman.');
         }
@@ -34,11 +49,19 @@ export function SessionProvider({ children }: SessionProviderProps) {
     };
   }, []);
 
-  const markAuthenticated = useCallback(() => setStatus('authenticated'), []);
-  const markAnonymous = useCallback(() => setStatus('anonymous'), []);
+  const markAuthenticated = useCallback((authenticatedUser: AuthUser) => {
+    setUser(authenticatedUser);
+    setStatus('authenticated');
+  }, []);
+
+  const markAnonymous = useCallback(() => {
+    setUser(null);
+    setStatus('anonymous');
+  }, []);
+
   const value = useMemo(
-    () => ({ status, markAuthenticated, markAnonymous }),
-    [markAnonymous, markAuthenticated, status]
+    () => ({ status, user, role: user?.role ?? null, markAuthenticated, markAnonymous }),
+    [markAnonymous, markAuthenticated, status, user]
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

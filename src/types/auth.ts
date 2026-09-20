@@ -17,16 +17,13 @@ export interface RegisterRequest {
   address: string;
 }
 
+export type UserRole = 'member' | 'admin';
+
 export interface AuthUser {
   public_id: string;
   email: string;
-  role: string;
-  is_active: boolean;
-  created_at: number;
-  updated_at: number;
+  role: UserRole;
   profile: {
     full_name?: string;
-    district?: string;
-    phone?: string;
   };
 }
