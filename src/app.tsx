@@ -20,7 +20,8 @@ const AdminUsersManagementPage = lazy(() => import('@/pages/admin/admin-users-ma
 const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
 const DashboardPasswordPage = lazy(() => import('@/pages/dashboard-password'));
 const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
-const DashboardProfilPage = lazy(() => import('@/pages/dashboard-profil'));
+const EnterpriseDetailPage = lazy(() => import('@/pages/enterprise-detail'));
+const EnterprisesUserPage = lazy(() => import('@/pages/enterprises-user'));
 const DashboardProgramPage = lazy(() => import('@/pages/dashboard-program'));
 const DashboardProgramSayaPage = lazy(() => import('@/pages/dashboard-program-saya'));
 const DatabasePage = lazy(() => import('@/pages/database'));
@@ -83,7 +84,8 @@ export default function App() {
             <Route path="/dashboard" element={<DashboardIndexPage />} />
             <Route path="/dashboard/program" element={<DashboardProgramPage />} />
             <Route path="/dashboard/my-trainings" element={<DashboardProgramSayaPage />} />
-            <Route path="/dashboard/my-enterprises" element={<DashboardProfilPage />} />
+            <Route path="/dashboard/my-enterprises" element={<EnterprisesUserPage />} />
+            <Route path="/dashboard/my-enterprises/:publicId" element={<EnterpriseDetailPage />} />
             <Route path="/dashboard/profile" element={<DashboardProfilePage />} />
             <Route path="/dashboard/password" element={<DashboardPasswordPage />} />
             <Route
