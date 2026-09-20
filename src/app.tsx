@@ -76,10 +76,6 @@ export default function App() {
             }
           >
             <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
-            <Route
-              path="/admin/pemuda"
-              element={<Navigate to="/dashboard/enterprises" replace />}
-            />
             <Route path="/admin/program" element={<Navigate to="/dashboard/trainings" replace />} />
             <Route path="/dashboard" element={<DashboardIndexPage />} />
             <Route path="/dashboard/program" element={<DashboardProgramPage />} />
