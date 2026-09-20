@@ -111,7 +111,7 @@ export default function App() {
               }
             />
             <Route
-              path="/admin/users/:publicId"
+              path="/dashboard/users/:publicId"
               element={
                 <RequireRole role="admin">
                   <AdminUserDetailPage />

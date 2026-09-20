@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { getUser } from '@/lib/api/users';
-import { formatUnixDateTime } from '@/lib/utils';
+import { formatDateOnly, formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 
 import type { User } from '@/types/users';
+
+import { GENDER_LABELS } from '@/constants/users';
 
 import { ArrowLeft, LoaderCircle } from 'lucide-react';
 
@@ -16,15 +18,6 @@ const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow
 const LABEL_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
 
 const VALUE_CLASS = 'text-dash-fg mt-1 text-sm font-semibold';
-
-const GENDER_LABELS: Record<string, string> = {
-  male: 'Laki-laki',
-  female: 'Perempuan',
-};
-
-function renderValue(value: string | null | undefined) {
-  return value ? value : '—';
-}
 
 export default function AdminUserDetailPage() {
   const { publicId } = useParams<{ publicId: string }>();
@@ -46,9 +39,7 @@ export default function AdminUserDetailPage() {
       })
       .catch((loadError: unknown) => {
         setUser(null);
-        setError(
-          loadError instanceof Error ? loadError.message : 'Terjadi kesalahan yang tidak diketahui.'
-        );
+        setError(toErrorMessage(loadError));
         setLoading(false);
       });
   }, [publicId]);
@@ -79,7 +70,9 @@ export default function AdminUserDetailPage() {
     return (
       <div className={`${CARD} space-y-4 text-center`}>
         <h1 className="text-dash-fg text-xl font-extrabold">Gagal Memuat Pengguna</h1>
-        <p className="text-dash-muted text-sm">{error ?? 'Pengguna tidak ditemukan.'}</p>
+        <p role="alert" className="text-dash-muted text-sm">
+          {error ?? 'Pengguna tidak ditemukan.'}
+        </p>
         {backButton}
       </div>
     );
@@ -128,6 +121,16 @@ export default function AdminUserDetailPage() {
           <div>
             <p className={LABEL_CLASS}>Telepon</p>
             <p className={VALUE_CLASS}>{renderValue(user.profile?.phone)}</p>
+          </div>
+          <div>
+            <p className={LABEL_CLASS}>Tanggal Lahir</p>
+            <p className={VALUE_CLASS}>
+              {user.profile?.birth_date ? formatDateOnly(user.profile.birth_date) : '—'}
+            </p>
+          </div>
+          <div>
+            <p className={LABEL_CLASS}>Terdaftar</p>
+            <p className={VALUE_CLASS}>{formatUnixDateTime(user.created_at)}</p>
           </div>
           <div>
             <p className={LABEL_CLASS}>Terakhir Diperbarui</p>

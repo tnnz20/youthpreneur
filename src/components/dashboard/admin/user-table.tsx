@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
-import { formatUnixDateTime } from '@/lib/utils';
+import { formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
 
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import {
@@ -63,7 +63,7 @@ import type { User, UserGender } from '@/types/users';
 import { KECAMATAN } from '@/constants/site';
 import { GENDER_LABELS, GENDER_OPTIONS, USER_PAGE_SIZE_OPTIONS } from '@/constants/users';
 
-import { Eye, MoreHorizontal, RotateCcw, SearchX, Trash2, UserX } from 'lucide-react';
+import { Eye, MoreHorizontal, RotateCcw, SearchX, Trash2, UserCheck, UserX } from 'lucide-react';
 
 interface UserTableProps {
   state: UserState;
@@ -72,7 +72,7 @@ interface UserTableProps {
 const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow-bento';
 
 const selectClassName =
-  'text-dash-fg focus-visible:border-dash-fg h-11 w-full rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
+  'text-dash-fg focus-visible:border-dash-fg w-full rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
 
 const inputClassName =
   'text-dash-fg focus-visible:border-dash-fg h-11 rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 text-sm focus-visible:ring-0';
@@ -82,13 +82,12 @@ const LABEL_CLASS =
 
 const HEAD_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
 
-function renderValue(value: string | null | undefined) {
-  return value ? value : '—';
-}
+const TABLE_COLUMN_COUNT = 8;
 
 export function UserTable({ state }: UserTableProps) {
   const navigate = useNavigate();
   const [pendingDeactivate, setPendingDeactivate] = useState<User | null>(null);
+  const [pendingActivate, setPendingActivate] = useState<User | null>(null);
   const [pendingDelete, setPendingDelete] = useState<User | null>(null);
 
   const {
@@ -99,6 +98,7 @@ export function UserTable({ state }: UserTableProps) {
     loading,
     mutatingId,
     error,
+    hasCursor,
     hasNextPage,
     hasPreviousPage,
     setSearch,
@@ -108,7 +108,9 @@ export function UserTable({ state }: UserTableProps) {
     resetFilters,
     nextPage,
     previousPage,
+    goToFirstPage,
     deactivate,
+    activate,
     remove,
   } = state;
 
@@ -126,8 +128,24 @@ export function UserTable({ state }: UserTableProps) {
     try {
       await deactivate(target.public_id);
       toast.success(`Pengguna ${target.email} dinonaktifkan.`);
-    } catch {
-      toast.error('Gagal menonaktifkan pengguna.');
+    } catch (mutationError: unknown) {
+      toast.error(toErrorMessage(mutationError));
+    }
+  };
+
+  const confirmActivate = async () => {
+    if (!pendingActivate) {
+      return;
+    }
+
+    const target = pendingActivate;
+    setPendingActivate(null);
+
+    try {
+      await activate(target.public_id);
+      toast.success(`Pengguna ${target.email} diaktifkan.`);
+    } catch (mutationError: unknown) {
+      toast.error(toErrorMessage(mutationError));
     }
   };
 
@@ -142,8 +160,8 @@ export function UserTable({ state }: UserTableProps) {
     try {
       await remove(target.public_id);
       toast.success(`Pengguna ${target.email} dihapus.`);
-    } catch {
-      toast.error('Gagal menghapus pengguna.');
+    } catch (mutationError: unknown) {
+      toast.error(toErrorMessage(mutationError));
     }
   };
 
@@ -235,7 +253,12 @@ export function UserTable({ state }: UserTableProps) {
       </div>
 
       <div className={`${CARD} dash-reveal overflow-hidden`}>
-        <Table>
+        {loading && (
+          <span role="status" className="sr-only">
+            Memuat pengguna...
+          </span>
+        )}
+        <Table aria-busy={loading}>
           <TableHeader className="bg-dash-surface-2">
             <TableRow className="border-dash-border hover:bg-transparent">
               <TableHead className={`${HEAD_CLASS} pl-6 sm:pl-8`}>Nama</TableHead>
@@ -251,8 +274,12 @@ export function UserTable({ state }: UserTableProps) {
           <TableBody>
             {loading &&
               Array.from({ length: 5 }).map((_, index) => (
-                <TableRow key={`skeleton-${index}`} className="border-dash-border">
-                  {Array.from({ length: 8 }).map((__, cellIndex) => (
+                <TableRow
+                  key={`skeleton-${index}`}
+                  className="border-dash-border"
+                  aria-hidden="true"
+                >
+                  {Array.from({ length: TABLE_COLUMN_COUNT }).map((__, cellIndex) => (
                     <TableCell key={`skeleton-${index}-${cellIndex}`}>
                       <Skeleton className="bg-dash-surface-2 h-3.5 w-full rounded-full" />
                     </TableCell>
@@ -294,27 +321,38 @@ export function UserTable({ state }: UserTableProps) {
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           disabled={isMutating}
-                          className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors focus:outline-none disabled:opacity-50"
+                          className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg focus-visible:border-dash-fg focus-visible:ring-dash-fg/40 inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
                           aria-label={`Aksi untuk ${user.profile?.full_name ?? user.email}`}
                         >
                           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-52">
                           <DropdownMenuItem
-                            onClick={() => navigate(`/admin/users/${user.public_id}`)}
+                            onClick={() => navigate(`/dashboard/users/${user.public_id}`)}
                             className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >
                             <Eye className="h-4 w-4" aria-hidden="true" />
                             Lihat Detail
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            disabled={isMutating || !user.is_active}
-                            onClick={() => setPendingDeactivate(user)}
-                            className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
-                          >
-                            <UserX className="h-4 w-4" aria-hidden="true" />
-                            Non Aktifkan Pengguna
-                          </DropdownMenuItem>
+                          {user.is_active ? (
+                            <DropdownMenuItem
+                              disabled={isMutating}
+                              onClick={() => setPendingDeactivate(user)}
+                              className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
+                            >
+                              <UserX className="h-4 w-4" aria-hidden="true" />
+                              Non Aktifkan Pengguna
+                            </DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem
+                              disabled={isMutating}
+                              onClick={() => setPendingActivate(user)}
+                              className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
+                            >
+                              <UserCheck className="h-4 w-4" aria-hidden="true" />
+                              Aktifkan Pengguna
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem
                             disabled={isMutating}
                             variant="destructive"
@@ -340,15 +378,21 @@ export function UserTable({ state }: UserTableProps) {
                 <SearchX aria-hidden="true" />
               </EmptyMedia>
               <EmptyTitle>
-                {filtersActive ? 'Pengguna Tidak Ditemukan' : 'Belum Ada Pengguna'}
+                {filtersActive
+                  ? 'Pengguna Tidak Ditemukan'
+                  : hasCursor
+                    ? 'Halaman Tidak Tersedia'
+                    : 'Belum Ada Pengguna'}
               </EmptyTitle>
               <EmptyDescription>
                 {filtersActive
                   ? 'Tidak ada pengguna yang cocok dengan filter.'
-                  : 'Belum ada pengguna terdaftar.'}
+                  : hasCursor
+                    ? 'Halaman ini sudah tidak berisi data.'
+                    : 'Belum ada pengguna terdaftar.'}
               </EmptyDescription>
             </EmptyHeader>
-            {filtersActive && (
+            {filtersActive ? (
               <EmptyContent>
                 <Button
                   type="button"
@@ -361,6 +405,21 @@ export function UserTable({ state }: UserTableProps) {
                   Reset Filter
                 </Button>
               </EmptyContent>
+            ) : (
+              hasCursor && (
+                <EmptyContent>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={goToFirstPage}
+                    className="border-dash-border rounded-full"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                    Kembali ke halaman pertama
+                  </Button>
+                </EmptyContent>
+              )
             )}
           </Empty>
         )}
@@ -389,34 +448,18 @@ export function UserTable({ state }: UserTableProps) {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  href="#"
                   text="Sebelumnya"
-                  aria-disabled={loading || !hasPreviousPage}
-                  className={
-                    loading || !hasPreviousPage
-                      ? 'pointer-events-none rounded-full opacity-50'
-                      : 'rounded-full'
-                  }
-                  onClick={(event) => {
-                    event.preventDefault();
-                    previousPage();
-                  }}
+                  disabled={loading || !hasPreviousPage}
+                  className="rounded-full"
+                  onClick={previousPage}
                 />
               </PaginationItem>
               <PaginationItem>
                 <PaginationNext
-                  href="#"
                   text="Berikutnya"
-                  aria-disabled={loading || !hasNextPage}
-                  className={
-                    loading || !hasNextPage
-                      ? 'pointer-events-none rounded-full opacity-50'
-                      : 'rounded-full'
-                  }
-                  onClick={(event) => {
-                    event.preventDefault();
-                    nextPage();
-                  }}
+                  disabled={loading || !hasNextPage}
+                  className="rounded-full"
+                  onClick={nextPage}
                 />
               </PaginationItem>
             </PaginationContent>
@@ -444,6 +487,25 @@ export function UserTable({ state }: UserTableProps) {
       </AlertDialog>
 
       <AlertDialog
+        open={pendingActivate !== null}
+        onOpenChange={(open) => !open && setPendingActivate(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Aktifkan Pengguna</AlertDialogTitle>
+            <AlertDialogDescription>
+              Aktifkan {pendingActivate?.profile?.full_name ?? pendingActivate?.email}? Pengguna
+              akan dapat masuk kembali.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmActivate}>Aktifkan</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
         open={pendingDelete !== null}
         onOpenChange={(open) => !open && setPendingDelete(null)}
       >
@@ -457,10 +519,7 @@ export function UserTable({ state }: UserTableProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
+            <AlertDialogAction variant="destructive" onClick={confirmDelete}>
               Hapus
             </AlertDialogAction>
           </AlertDialogFooter>

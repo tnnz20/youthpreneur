@@ -1,3 +1,5 @@
+import type { UserRole } from '@/types/auth';
+
 export type UserGender = 'male' | 'female';
 
 export interface UserProfile {
@@ -13,7 +15,7 @@ export interface UserProfile {
 export interface User {
   public_id: string;
   email: string;
-  role: string;
+  role: UserRole;
   is_active: boolean;
   created_at: number;
   updated_at: number;

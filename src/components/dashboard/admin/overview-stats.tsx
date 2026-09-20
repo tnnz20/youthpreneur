@@ -224,7 +224,7 @@ export function OverviewStats() {
               to="/dashboard/users"
               className="text-dash-muted hover:text-dash-fg flex items-center gap-1 text-xs font-semibold transition-colors"
             >
-              Lihat semua <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              Kelola Pengguna <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
             </Link>
           </div>
           <div className="space-y-3">

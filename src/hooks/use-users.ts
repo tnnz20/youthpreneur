@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router';
 
 import { deleteUser, listUsers, updateUserStatus } from '@/lib/api/users';
+import { toErrorMessage } from '@/lib/utils';
 
 import type { User, UserGender, UserListResponse } from '@/types/users';
 
@@ -21,7 +22,7 @@ export interface UserState {
   loading: boolean;
   mutatingId: string | null;
   error: string | null;
-  nextCursor: string | null;
+  hasCursor: boolean;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
   setSearch: (search: string) => void;
@@ -31,8 +32,9 @@ export interface UserState {
   resetFilters: () => void;
   nextPage: () => void;
   previousPage: () => void;
-  refresh: () => void;
+  goToFirstPage: () => void;
   deactivate: (publicId: string) => Promise<void>;
+  activate: (publicId: string) => Promise<void>;
   remove: (publicId: string) => Promise<void>;
 }
 
@@ -45,10 +47,6 @@ function parseLimit(value: string | null): number {
 
 function parseGender(value: string | null): UserGender | 'all' {
   return value === 'male' || value === 'female' ? value : 'all';
-}
-
-function toErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Terjadi kesalahan yang tidak diketahui.';
 }
 
 export function useUsers(): UserState {
@@ -73,27 +71,35 @@ export function useUsers(): UserState {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestIdRef = useRef(0);
 
-  useEffect(() => {
+  const clearDebounce = useCallback(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
+      debounceRef.current = null;
     }
+  }, []);
+
+  useEffect(() => {
+    clearDebounce();
 
     debounceRef.current = setTimeout(() => {
       setDebouncedSearch(search);
     }, 300);
 
-    return () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    };
-  }, [search]);
+    return clearDebounce;
+  }, [clearDebounce, search]);
 
   const applyResponse = useCallback((response: UserListResponse) => {
     setUsers(response.users);
     setNextCursor(response.next_cursor ?? null);
     setError(null);
     setLoading(false);
+  }, []);
+
+  const goToFirstPage = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    setCursorHistory([]);
+    setCursor(null);
   }, []);
 
   const applyError = useCallback((loadError: unknown) => {
@@ -126,16 +132,32 @@ export function useUsers(): UserState {
 
     fetchPage(cursor, filters, debouncedSearch, limit)
       .then((response) => {
-        if (requestId === requestIdRef.current) {
-          applyResponse(response);
+        if (requestId !== requestIdRef.current) {
+          return;
         }
+
+        if (response.users.length === 0 && cursor !== null) {
+          goToFirstPage();
+          return;
+        }
+
+        applyResponse(response);
       })
       .catch((loadError: unknown) => {
         if (requestId === requestIdRef.current) {
           applyError(loadError);
         }
       });
-  }, [applyError, applyResponse, cursor, fetchPage, filters, debouncedSearch, limit]);
+  }, [
+    applyError,
+    applyResponse,
+    cursor,
+    fetchPage,
+    filters,
+    goToFirstPage,
+    debouncedSearch,
+    limit,
+  ]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -171,31 +193,44 @@ export function useUsers(): UserState {
     setSearch(value);
   }, []);
 
-  const setDistrict = useCallback((district: string) => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setFilters((current) => ({ ...current, district }));
-  }, []);
+  const setDistrict = useCallback(
+    (district: string) => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((current) => ({ ...current, district }));
+    },
+    [clearDebounce]
+  );
 
-  const setGender = useCallback((gender: UserGender | 'all') => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setFilters((current) => ({ ...current, gender }));
-  }, []);
+  const setGender = useCallback(
+    (gender: UserGender | 'all') => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((current) => ({ ...current, gender }));
+    },
+    [clearDebounce]
+  );
 
-  const setLimit = useCallback((nextLimit: number) => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setLimitState(nextLimit);
-  }, []);
+  const setLimit = useCallback(
+    (nextLimit: number) => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setLimitState(nextLimit);
+    },
+    [clearDebounce]
+  );
 
   const resetFilters = useCallback(() => {
+    clearDebounce();
     setLoading(true);
     setError(null);
     setCursor(null);
@@ -203,7 +238,7 @@ export function useUsers(): UserState {
     setSearch('');
     setDebouncedSearch('');
     setFilters({ district: '', gender: 'all' });
-  }, []);
+  }, [clearDebounce]);
 
   const nextPage = useCallback(() => {
     if (loading || !nextCursor) {
@@ -227,28 +262,26 @@ export function useUsers(): UserState {
     setCursor(cursorHistory[cursorHistory.length - 1]);
   }, [cursorHistory, loading]);
 
-  const refresh = useCallback(() => {
-    setLoading(true);
-    setError(null);
-    fetchPage(cursor, filters, debouncedSearch, limit).then(applyResponse).catch(applyError);
-  }, [applyError, applyResponse, cursor, fetchPage, filters, debouncedSearch, limit]);
-
-  const deactivate = useCallback(
-    async (publicId: string) => {
+  const updateStatus = useCallback(
+    async (publicId: string, isActive: boolean) => {
       setMutatingId(publicId);
 
       try {
-        await updateUserStatus(publicId, false);
+        await updateUserStatus(publicId, isActive);
         await fetchPage(cursor, filters, debouncedSearch, limit).then(applyResponse, applyError);
-      } catch (mutationError) {
-        setError(toErrorMessage(mutationError));
-        throw mutationError;
       } finally {
         setMutatingId(null);
       }
     },
     [applyError, applyResponse, cursor, fetchPage, filters, debouncedSearch, limit]
   );
+
+  const deactivate = useCallback(
+    (publicId: string) => updateStatus(publicId, false),
+    [updateStatus]
+  );
+
+  const activate = useCallback((publicId: string) => updateStatus(publicId, true), [updateStatus]);
 
   const remove = useCallback(
     async (publicId: string) => {
@@ -257,9 +290,6 @@ export function useUsers(): UserState {
       try {
         await deleteUser(publicId);
         await fetchPage(cursor, filters, debouncedSearch, limit).then(applyResponse, applyError);
-      } catch (mutationError) {
-        setError(toErrorMessage(mutationError));
-        throw mutationError;
       } finally {
         setMutatingId(null);
       }
@@ -275,7 +305,7 @@ export function useUsers(): UserState {
     loading,
     mutatingId,
     error,
-    nextCursor,
+    hasCursor: cursor !== null,
     hasNextPage: nextCursor !== null,
     hasPreviousPage: cursorHistory.length > 0,
     setSearch: setSearchValue,
@@ -285,8 +315,9 @@ export function useUsers(): UserState {
     resetFilters,
     nextPage,
     previousPage,
-    refresh,
+    goToFirstPage,
     deactivate,
+    activate,
     remove,
   };
 }
