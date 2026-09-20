@@ -56,7 +56,7 @@ export function useUsers(): UserState {
 
   const [users, setUsers] = useState<User[]>([]);
   const [filters, setFilters] = useState<UserFilters>(() => ({
-    district: initialParams.get('district') ?? '',
+    district: initialParams.get('district')?.toUpperCase() ?? '',
     gender: parseGender(initialParams.get('gender')),
   }));
   const [search, setSearch] = useState(initialSearch);

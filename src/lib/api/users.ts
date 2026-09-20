@@ -14,7 +14,7 @@ export function listUsers(params: UserListParams): Promise<UserListResponse> {
   }
 
   if (params.district) {
-    search.set('district', params.district);
+    search.set('district', params.district.toUpperCase());
   }
 
   if (params.gender) {

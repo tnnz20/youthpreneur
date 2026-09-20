@@ -58,7 +58,7 @@ export function UserTableFilters({ state }: UserTableFiltersProps) {
             onValueChange={(value) => setDistrict(value ?? '')}
             items={[
               { label: 'Semua Kecamatan', value: null },
-              ...KECAMATAN.map((name) => ({ label: name, value: name })),
+              ...KECAMATAN.map((name) => ({ label: name, value: name.toUpperCase() })),
             ]}
           >
             <SelectTrigger id="user-district" className={SELECT_CLASS}>
@@ -67,7 +67,7 @@ export function UserTableFilters({ state }: UserTableFiltersProps) {
             <SelectContent>
               <SelectItem value={null}>Semua Kecamatan</SelectItem>
               {KECAMATAN.map((name) => (
-                <SelectItem key={name} value={name}>
+                <SelectItem key={name} value={name.toUpperCase()}>
                   {name}
                 </SelectItem>
               ))}
