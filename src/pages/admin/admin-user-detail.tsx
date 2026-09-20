@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router';
 
 import { getUser } from '@/lib/api/users';
 import { formatDateOnly, formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
 
+import { UserActionCard } from '@/components/dashboard/admin/user-action-card';
 import { Button } from '@/components/ui/button';
 
 import type { User } from '@/types/users';
@@ -26,7 +27,7 @@ export default function AdminUserDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadUser = useCallback(() => {
     if (!publicId) {
       return;
     }
@@ -35,14 +36,16 @@ export default function AdminUserDetailPage() {
       .then((result) => {
         setUser(result);
         setError(null);
-        setLoading(false);
       })
       .catch((loadError: unknown) => {
-        setUser(null);
         setError(toErrorMessage(loadError));
-        setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   }, [publicId]);
+
+  useEffect(() => {
+    loadUser();
+  }, [loadUser]);
 
   const backButton = (
     <Button
@@ -90,57 +93,68 @@ export default function AdminUserDetailPage() {
         {backButton}
       </div>
 
-      <div className={CARD}>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <div>
-            <p className={LABEL_CLASS}>Nama Lengkap</p>
-            <p className={VALUE_CLASS}>{renderValue(user.profile?.full_name)}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Email</p>
-            <p className={VALUE_CLASS}>{user.email}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Status</p>
-            <p className={VALUE_CLASS}>{user.is_active ? 'Aktif' : 'Non Aktif'}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>NIK</p>
-            <p className={VALUE_CLASS}>{renderValue(user.profile?.nik)}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Gender</p>
-            <p className={VALUE_CLASS}>
-              {user.profile?.gender ? GENDER_LABELS[user.profile.gender] : '—'}
-            </p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Kecamatan</p>
-            <p className={VALUE_CLASS}>{renderValue(user.profile?.district)}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Telepon</p>
-            <p className={VALUE_CLASS}>{renderValue(user.profile?.phone)}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Tanggal Lahir</p>
-            <p className={VALUE_CLASS}>
-              {user.profile?.birth_date ? formatDateOnly(user.profile.birth_date) : '—'}
-            </p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Terdaftar</p>
-            <p className={VALUE_CLASS}>{formatUnixDateTime(user.created_at)}</p>
-          </div>
-          <div>
-            <p className={LABEL_CLASS}>Terakhir Diperbarui</p>
-            <p className={VALUE_CLASS}>{formatUnixDateTime(user.updated_at)}</p>
-          </div>
-          <div className="sm:col-span-2">
-            <p className={LABEL_CLASS}>Alamat</p>
-            <p className={VALUE_CLASS}>{renderValue(user.profile?.address)}</p>
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(20rem,1fr)] xl:items-start">
+        <div className={CARD}>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div>
+              <p className={LABEL_CLASS}>Nama Lengkap</p>
+              <p className={VALUE_CLASS}>{renderValue(user.profile?.full_name)}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Email</p>
+              <p className={VALUE_CLASS}>{user.email}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Status</p>
+              <p className={VALUE_CLASS}>{user.is_active ? 'Aktif' : 'Non Aktif'}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>NIK</p>
+              <p className={VALUE_CLASS}>{renderValue(user.profile?.nik)}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Gender</p>
+              <p className={VALUE_CLASS}>
+                {user.profile?.gender ? GENDER_LABELS[user.profile.gender] : '—'}
+              </p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Kecamatan</p>
+              <p className={VALUE_CLASS}>{renderValue(user.profile?.district)}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Telepon</p>
+              <p className={VALUE_CLASS}>{renderValue(user.profile?.phone)}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Tanggal Lahir</p>
+              <p className={VALUE_CLASS}>
+                {user.profile?.birth_date ? formatDateOnly(user.profile.birth_date) : '—'}
+              </p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Terdaftar</p>
+              <p className={VALUE_CLASS}>{formatUnixDateTime(user.created_at)}</p>
+            </div>
+            <div>
+              <p className={LABEL_CLASS}>Terakhir Diperbarui</p>
+              <p className={VALUE_CLASS}>{formatUnixDateTime(user.updated_at)}</p>
+            </div>
+            <div className="sm:col-span-2">
+              <p className={LABEL_CLASS}>Alamat</p>
+              <p className={VALUE_CLASS}>{renderValue(user.profile?.address)}</p>
+            </div>
           </div>
         </div>
+
+        <UserActionCard
+          user={user}
+          onUpdated={(updated) => {
+            setUser(updated);
+            loadUser();
+          }}
+          onDeleted={() => setUser(null)}
+        />
       </div>
     </div>
   );
