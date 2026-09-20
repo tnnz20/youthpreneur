@@ -4,6 +4,8 @@ import { Navigate } from 'react-router';
 
 import { useSession } from '@/hooks/use-session';
 
+import type { UserRole } from '@/types/auth';
+
 import { LoaderCircle } from 'lucide-react';
 
 function SessionFallback() {
@@ -48,7 +50,7 @@ export function RedirectIfAuthenticated({ children }: AuthGuardProps) {
 }
 
 interface RequireRoleProps {
-  role: 'admin' | 'member';
+  role: UserRole;
   children: ReactNode;
 }
 

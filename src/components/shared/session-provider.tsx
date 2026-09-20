@@ -29,19 +29,11 @@ export function SessionProvider({ children }: SessionProviderProps) {
           return;
         }
 
-        try {
-          const currentUser = await getCurrentUser();
+        const currentUser = await getCurrentUser();
 
-          if (active) {
-            setUser(currentUser);
-            setStatus('authenticated');
-          }
-        } catch {
-          if (active) {
-            setUser(null);
-            setStatus('anonymous');
-            toast.error('Gagal memuat data akun. Silakan muat ulang halaman.');
-          }
+        if (active) {
+          setUser(currentUser);
+          setStatus('authenticated');
         }
       })
       .catch(() => {

@@ -10,7 +10,6 @@ export type { DashboardNavItem };
 
 interface SidebarNavProps {
   items: DashboardNavItem[];
-  badges?: Record<string, number>;
   onNavigate?: () => void;
 }
 

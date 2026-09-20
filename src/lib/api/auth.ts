@@ -1,6 +1,6 @@
 import type { AuthUser, LoginRequest, RegisterRequest } from '@/types/auth';
 
-import { API_BASE_URL, apiRequest } from './client';
+import { API_BASE_URL, ApiError, apiRequest } from './client';
 
 export function loginUser(input: LoginRequest): Promise<AuthUser> {
   return apiRequest<AuthUser>('/auth/login', {
@@ -43,8 +43,16 @@ export function refreshSession(): Promise<boolean> {
   return refreshInFlight;
 }
 
-export function getCurrentUser(): Promise<AuthUser> {
-  return apiRequest<AuthUser>('/auth/me');
+export async function getCurrentUser(): Promise<AuthUser | null> {
+  try {
+    return await apiRequest<AuthUser>('/auth/me');
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export function logoutUser(): Promise<void> {

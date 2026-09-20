@@ -2,10 +2,7 @@ import { SectionHeading } from '@/components/dashboard/shared/section-heading';
 
 import { useSession } from '@/hooks/use-session';
 
-const ROLE_LABEL: Record<string, string> = {
-  admin: 'Admin Dispora',
-  member: 'Pemuda Wirausaha',
-};
+import { ROLE_LABEL } from '@/constants/dashboard';
 
 export default function DashboardProfilePage() {
   const { user } = useSession();
@@ -13,7 +10,7 @@ export default function DashboardProfilePage() {
   const rows = [
     { label: 'Nama Lengkap', value: user?.profile.full_name ?? '-' },
     { label: 'Email', value: user?.email ?? '-' },
-    { label: 'Peran', value: ROLE_LABEL[user?.role ?? ''] ?? '-' },
+    { label: 'Peran', value: user?.role ? ROLE_LABEL[user.role] : '-' },
     { label: 'ID Pengguna', value: user?.public_id ?? '-' },
   ];
 

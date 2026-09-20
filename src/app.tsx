@@ -25,6 +25,7 @@ const DashboardProgramSayaPage = lazy(() => import('@/pages/dashboard-program-sa
 const DatabasePage = lazy(() => import('@/pages/database'));
 const HomePage = lazy(() => import('@/pages/home'));
 const LoginPage = lazy(() => import('@/pages/auth/login'));
+const NotFoundPage = lazy(() => import('@/pages/not-found'));
 const RegisterPage = lazy(() => import('@/pages/auth/register'));
 
 function PageFallback() {
@@ -110,6 +111,7 @@ export default function App() {
               }
             />
           </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </SessionProvider>
