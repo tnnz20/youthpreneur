@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 
 import type { Enterprise } from '@/types/enterprises';
 
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, User } from 'lucide-react';
 
 import { AdminEnterpriseEditDialog } from './admin-enterprise-edit-dialog';
 
@@ -65,6 +65,21 @@ export function AdminEnterpriseActionCard({
       <h2 className="text-dash-fg text-base font-bold">Aksi Wirausaha</h2>
 
       <div className="flex flex-col gap-3">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            if (enterprise.user_public_id) {
+              navigate(`/dashboard/users/${enterprise.user_public_id}`);
+            }
+          }}
+          disabled={deleting || !enterprise.user_public_id}
+          className="border-dash-border h-auto rounded-full px-5 py-3"
+        >
+          <User className="h-4 w-4" aria-hidden="true" />
+          Lihat Pengguna
+        </Button>
+
         <Button
           type="button"
           variant="outline"
