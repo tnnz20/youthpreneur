@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -24,6 +25,8 @@ import { Plus, RotateCcw } from 'lucide-react';
 const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow-bento';
 const SELECT_CLASS =
   'text-dash-fg focus-visible:border-dash-fg w-full rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
+const INPUT_CLASS =
+  'text-dash-fg focus-visible:border-dash-fg h-11 rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 text-sm focus-visible:ring-0';
 const LABEL_CLASS =
   'text-dash-muted mb-1.5 block text-[11px] font-semibold tracking-wide uppercase';
 
@@ -35,7 +38,9 @@ interface EnterpriseTableFiltersProps {
 export function EnterpriseTableFilters({ state, onOpenCreate }: EnterpriseTableFiltersProps) {
   const {
     filters,
+    search,
     error,
+    setSearch,
     setDistrict,
     setStatus,
     setBusinessSector,
@@ -46,7 +51,21 @@ export function EnterpriseTableFilters({ state, onOpenCreate }: EnterpriseTableF
 
   return (
     <div className={`${CARD} space-y-4 p-5`}>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div>
+          <label htmlFor="ent-filter-search" className={LABEL_CLASS}>
+            Cari Usaha
+          </label>
+          <Input
+            id="ent-filter-search"
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Cari nama usaha..."
+            className={INPUT_CLASS}
+          />
+        </div>
+
         <div>
           <label htmlFor="ent-filter-district" className={LABEL_CLASS}>
             Kecamatan

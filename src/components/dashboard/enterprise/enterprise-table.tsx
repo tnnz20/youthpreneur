@@ -21,9 +21,10 @@ export function EnterpriseTable() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const { filters, remove, create } = state;
+  const { filters, search, remove, create } = state;
 
   const filtersActive =
+    search.trim() !== '' ||
     filters.district.trim() !== '' ||
     filters.status !== 'all' ||
     filters.business_sector.trim() !== '' ||
@@ -40,7 +41,9 @@ export function EnterpriseTable() {
 
     try {
       await remove(target.public_id);
-      toast.success(`Wirausaha ${target.name ?? target.business_sector} berhasil dihapus.`);
+      toast.success(
+        `Usaha ${target.enterprise_name ?? target.name ?? target.business_sector} berhasil dihapus.`
+      );
       setPendingDelete(null);
     } catch (mutationError: unknown) {
       toast.error(toErrorMessage(mutationError));

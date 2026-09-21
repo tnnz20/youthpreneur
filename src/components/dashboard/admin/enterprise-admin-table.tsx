@@ -20,6 +20,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import { Input } from '@/components/ui/input';
 import {
   Pagination,
   PaginationContent,
@@ -68,6 +69,8 @@ const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow
 const HEAD_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
 const SELECT_CLASS =
   'text-dash-fg focus-visible:border-dash-fg w-full rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
+const INPUT_CLASS =
+  'text-dash-fg focus-visible:border-dash-fg h-11 rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 text-sm focus-visible:ring-0';
 const LABEL_CLASS =
   'text-dash-muted mb-1.5 block text-[11px] font-semibold tracking-wide uppercase';
 const COLUMN_COUNT = 9;
@@ -85,6 +88,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
   const {
     enterprises,
     filters,
+    search,
     limit,
     loading,
     mutatingId,
@@ -92,6 +96,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
     hasCursor,
     hasNextPage,
     hasPreviousPage,
+    setSearch,
     setDistrict,
     setStatus,
     setBusinessSector,
@@ -105,6 +110,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
   } = state;
 
   const filtersActive =
+    search.trim() !== '' ||
     filters.district.trim() !== '' ||
     filters.status !== 'all' ||
     filters.business_sector.trim() !== '' ||
@@ -114,7 +120,21 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
   return (
     <div className="space-y-5">
       <div className={`${CARD} space-y-4 p-5`}>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div>
+            <label htmlFor="ent-admin-search" className={LABEL_CLASS}>
+              Cari Wirausaha / Pemilik
+            </label>
+            <Input
+              id="ent-admin-search"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Cari wirausaha / pemilik..."
+              className={INPUT_CLASS}
+            />
+          </div>
+
           <div>
             <label htmlFor="ent-admin-district" className={LABEL_CLASS}>
               Kecamatan
@@ -327,7 +347,12 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                     className="border-dash-border hover:bg-dash-surface-2/60"
                   >
                     <TableCell className="py-3.5 pl-6 font-bold sm:pl-8">
-                      {renderValue(enterprise.name)}
+                      <div>{renderValue(enterprise.enterprise_name ?? enterprise.name)}</div>
+                      {enterprise.full_name && (
+                        <div className="text-dash-muted text-[11px] font-normal">
+                          {enterprise.full_name}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
                       {renderValue(enterprise.business_sector)}
@@ -365,7 +390,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                         <DropdownMenuTrigger
                           disabled={loading || isMutating}
                           className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg focus-visible:border-dash-fg focus-visible:ring-dash-fg/40 inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
-                          aria-label={`Aksi untuk ${enterprise.name ?? enterprise.business_sector}`}
+                          aria-label={`Aksi untuk ${enterprise.enterprise_name ?? enterprise.name ?? enterprise.business_sector}`}
                         >
                           <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                         </DropdownMenuTrigger>

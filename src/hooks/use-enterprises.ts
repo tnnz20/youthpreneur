@@ -33,6 +33,7 @@ export interface EnterpriseFilters {
 export interface EnterpriseState {
   enterprises: Enterprise[];
   filters: EnterpriseFilters;
+  search: string;
   limit: number;
   loading: boolean;
   creating: boolean;
@@ -41,6 +42,7 @@ export interface EnterpriseState {
   hasCursor: boolean;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+  setSearch: (search: string) => void;
   setDistrict: (district: string) => void;
   setStatus: (status: EnterpriseStatus | 'all') => void;
   setBusinessSector: (sector: string) => void;
@@ -79,6 +81,7 @@ function parseMentoringStatus(value: string | null): ProcessStatus | 'all' {
 export function useEnterprises(): EnterpriseState {
   const [, setSearchParams] = useSearchParams();
   const [initialParams] = useState(() => new URLSearchParams(window.location.search));
+  const initialSearch = initialParams.get('search')?.trim() ?? '';
 
   const [enterprises, setEnterprises] = useState<Enterprise[]>([]);
   const [filters, setFilters] = useState<EnterpriseFilters>(() => ({
@@ -88,6 +91,8 @@ export function useEnterprises(): EnterpriseState {
     legal_status: parseLegalStatus(initialParams.get('legal_status')),
     mentoring_status: parseMentoringStatus(initialParams.get('mentoring_status')),
   }));
+  const [search, setSearch] = useState(initialSearch);
+  const [debouncedSearch, setDebouncedSearch] = useState(initialSearch);
   const [limit, setLimitState] = useState(() => parseLimit(initialParams.get('limit')));
   const [cursor, setCursor] = useState<string | null>(initialParams.get('cursor'));
   const [cursorHistory, setCursorHistory] = useState<(string | null)[]>([]);
@@ -97,7 +102,25 @@ export function useEnterprises(): EnterpriseState {
   const [mutatingId, setMutatingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fetchTrigger, setFetchTrigger] = useState(0);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestIdRef = useRef(0);
+
+  const clearDebounce = useCallback(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    clearDebounce();
+
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return clearDebounce;
+  }, [clearDebounce, search]);
 
   const applyResponse = useCallback((response: EnterpriseListResponse) => {
     setEnterprises(response.enterprises);
@@ -122,7 +145,12 @@ export function useEnterprises(): EnterpriseState {
   }, []);
 
   const fetchPage = useCallback(
-    (targetCursor: string | null, activeFilters: EnterpriseFilters, pageSize: number) => {
+    (
+      targetCursor: string | null,
+      activeFilters: EnterpriseFilters,
+      activeSearch: string,
+      pageSize: number
+    ) => {
       return listEnterprises({
         cursor: targetCursor ?? undefined,
         limit: pageSize,
@@ -132,6 +160,7 @@ export function useEnterprises(): EnterpriseState {
         legal_status: activeFilters.legal_status === 'all' ? undefined : activeFilters.legal_status,
         mentoring_status:
           activeFilters.mentoring_status === 'all' ? undefined : activeFilters.mentoring_status,
+        search: activeSearch.trim() || undefined,
       });
     },
     []
@@ -140,7 +169,7 @@ export function useEnterprises(): EnterpriseState {
   useEffect(() => {
     const requestId = ++requestIdRef.current;
 
-    fetchPage(cursor, filters, limit)
+    fetchPage(cursor, filters, debouncedSearch, limit)
       .then((response) => {
         if (requestId !== requestIdRef.current) {
           return;
@@ -158,10 +187,24 @@ export function useEnterprises(): EnterpriseState {
           applyError(loadError);
         }
       });
-  }, [applyError, applyResponse, cursor, fetchPage, filters, goToFirstPage, limit, fetchTrigger]);
+  }, [
+    applyError,
+    applyResponse,
+    cursor,
+    fetchPage,
+    filters,
+    debouncedSearch,
+    goToFirstPage,
+    limit,
+    fetchTrigger,
+  ]);
 
   useEffect(() => {
     const params = new URLSearchParams();
+
+    if (debouncedSearch.trim()) {
+      params.set('search', debouncedSearch.trim());
+    }
 
     if (filters.district.trim()) {
       params.set('district', filters.district.trim());
@@ -192,47 +235,75 @@ export function useEnterprises(): EnterpriseState {
     }
 
     setSearchParams(params, { replace: true });
-  }, [cursor, filters, limit, setSearchParams]);
+  }, [cursor, debouncedSearch, filters, limit, setSearchParams]);
 
-  const setDistrict = useCallback((district: string) => {
+  const setSearchValue = useCallback((value: string) => {
     setLoading(true);
     setError(null);
     setCursor(null);
     setCursorHistory([]);
-    setFilters((prev) => ({ ...prev, district }));
+    setSearch(value);
   }, []);
 
-  const setStatus = useCallback((status: EnterpriseStatus | 'all') => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setFilters((prev) => ({ ...prev, status }));
-  }, []);
+  const setDistrict = useCallback(
+    (district: string) => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((prev) => ({ ...prev, district }));
+    },
+    [clearDebounce]
+  );
 
-  const setBusinessSector = useCallback((sector: string) => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setFilters((prev) => ({ ...prev, business_sector: sector }));
-  }, []);
+  const setStatus = useCallback(
+    (status: EnterpriseStatus | 'all') => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((prev) => ({ ...prev, status }));
+    },
+    [clearDebounce]
+  );
 
-  const setLegalStatus = useCallback((legal_status: LegalStatus | 'all') => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setFilters((prev) => ({ ...prev, legal_status }));
-  }, []);
+  const setBusinessSector = useCallback(
+    (sector: string) => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((prev) => ({ ...prev, business_sector: sector }));
+    },
+    [clearDebounce]
+  );
 
-  const setMentoringStatus = useCallback((mentoring_status: ProcessStatus | 'all') => {
-    setLoading(true);
-    setError(null);
-    setCursor(null);
-    setCursorHistory([]);
-    setFilters((prev) => ({ ...prev, mentoring_status }));
-  }, []);
+  const setLegalStatus = useCallback(
+    (legal_status: LegalStatus | 'all') => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((prev) => ({ ...prev, legal_status }));
+    },
+    [clearDebounce]
+  );
+
+  const setMentoringStatus = useCallback(
+    (mentoring_status: ProcessStatus | 'all') => {
+      clearDebounce();
+      setLoading(true);
+      setError(null);
+      setCursor(null);
+      setCursorHistory([]);
+      setFilters((prev) => ({ ...prev, mentoring_status }));
+    },
+    [clearDebounce]
+  );
 
   const setLimit = useCallback((newLimit: number) => {
     setLoading(true);
@@ -243,10 +314,13 @@ export function useEnterprises(): EnterpriseState {
   }, []);
 
   const resetFilters = useCallback(() => {
+    clearDebounce();
     setLoading(true);
     setError(null);
     setCursor(null);
     setCursorHistory([]);
+    setSearch('');
+    setDebouncedSearch('');
     setFilters({
       district: '',
       status: 'all',
@@ -255,7 +329,7 @@ export function useEnterprises(): EnterpriseState {
       mentoring_status: 'all',
     });
     setLimitState(DEFAULT_LIMIT);
-  }, []);
+  }, [clearDebounce]);
 
   const nextPage = useCallback(() => {
     if (!nextCursor) {
@@ -284,12 +358,12 @@ export function useEnterprises(): EnterpriseState {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchPage(cursor, filters, limit);
+      const response = await fetchPage(cursor, filters, debouncedSearch, limit);
       applyResponse(response);
     } catch (loadError: unknown) {
       applyError(loadError);
     }
-  }, [applyError, applyResponse, cursor, fetchPage, filters, limit]);
+  }, [applyError, applyResponse, cursor, debouncedSearch, fetchPage, filters, limit]);
 
   const create = useCallback(
     async (input: CreateEnterpriseInput): Promise<Enterprise> => {
@@ -299,7 +373,7 @@ export function useEnterprises(): EnterpriseState {
         setCursorHistory([]);
         setCursor(null);
         try {
-          const response = await fetchPage(null, filters, limit);
+          const response = await fetchPage(null, filters, debouncedSearch, limit);
           applyResponse(response);
         } catch (loadError: unknown) {
           applyError(loadError);
@@ -309,7 +383,7 @@ export function useEnterprises(): EnterpriseState {
         setCreating(false);
       }
     },
-    [applyError, applyResponse, fetchPage, filters, limit]
+    [applyError, applyResponse, debouncedSearch, fetchPage, filters, limit]
   );
 
   const update = useCallback(
@@ -333,7 +407,7 @@ export function useEnterprises(): EnterpriseState {
       setMutatingId(publicId);
       try {
         await deleteEnterprise(publicId);
-        const response = await fetchPage(cursor, filters, limit);
+        const response = await fetchPage(cursor, filters, debouncedSearch, limit);
         if (response.enterprises.length === 0 && cursor !== null) {
           goToFirstPage();
         } else {
@@ -343,12 +417,13 @@ export function useEnterprises(): EnterpriseState {
         setMutatingId(null);
       }
     },
-    [applyResponse, cursor, fetchPage, filters, goToFirstPage, limit]
+    [applyResponse, cursor, debouncedSearch, fetchPage, filters, goToFirstPage, limit]
   );
 
   return {
     enterprises,
     filters,
+    search,
     limit,
     loading,
     creating,
@@ -357,6 +432,7 @@ export function useEnterprises(): EnterpriseState {
     hasCursor: cursor !== null,
     hasNextPage: nextCursor !== null,
     hasPreviousPage: cursorHistory.length > 0,
+    setSearch: setSearchValue,
     setDistrict,
     setStatus,
     setBusinessSector,
