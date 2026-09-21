@@ -43,8 +43,6 @@ import { KECAMATAN } from '@/constants/site';
 
 import { LoaderCircle, X } from 'lucide-react';
 
-const KECAMATAN_ITEMS = KECAMATAN.map((kec) => ({ label: kec, value: kec }));
-
 interface EnterpriseFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -240,7 +238,6 @@ export function EnterpriseFormDialog({ open, onOpenChange, onSubmit }: Enterpris
               <Select
                 value={form.district || null}
                 onValueChange={(val) => setForm({ ...form, district: val ?? '' })}
-                items={KECAMATAN_ITEMS}
                 disabled={submitting}
               >
                 <SelectTrigger id="ent-district" className={selectClassName}>

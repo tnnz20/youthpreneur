@@ -76,8 +76,6 @@ interface FormState {
   partnership: string;
 }
 
-const KECAMATAN_ITEMS = KECAMATAN.map((kec) => ({ label: kec, value: kec }));
-
 const selectClassName =
   'text-dash-fg focus-visible:border-dash-fg border-dash-border bg-dash-surface-2 h-11 w-full rounded-2xl px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
 
@@ -254,7 +252,6 @@ function AdminEnterpriseEditForm({
             <Select
               value={form.district || null}
               onValueChange={(val) => setForm({ ...form, district: val ?? '' })}
-              items={KECAMATAN_ITEMS}
               disabled={submitting}
             >
               <SelectTrigger id="admin-ent-district" className={selectClassName}>
