@@ -3,6 +3,8 @@ import { apiRequest } from '@/lib/api/client';
 import type {
   CreateEnterpriseInput,
   Enterprise,
+  EnterpriseAuditLogParams,
+  EnterpriseAuditLogResponse,
   EnterpriseListParams,
   EnterpriseListResponse,
   PublicEnterpriseListParams,
@@ -129,4 +131,25 @@ export function updateEnterprise(
 
 export function deleteEnterprise(publicId: string): Promise<void> {
   return apiRequest<void>(`/enterprises/${publicId}`, { method: 'DELETE' });
+}
+
+export function listEnterpriseAuditLogs(
+  publicId: string,
+  params: EnterpriseAuditLogParams = {}
+): Promise<EnterpriseAuditLogResponse> {
+  const search = new URLSearchParams();
+
+  if (params.cursor) {
+    search.set('cursor', params.cursor);
+  }
+
+  if (params.limit !== undefined) {
+    search.set('limit', String(params.limit));
+  }
+
+  const query = search.toString();
+
+  return apiRequest<EnterpriseAuditLogResponse>(
+    `/enterprises/${encodeURIComponent(publicId)}/audit-logs${query ? `?${query}` : ''}`
+  );
 }

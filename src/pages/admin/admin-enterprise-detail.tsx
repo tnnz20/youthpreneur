@@ -6,6 +6,7 @@ import { getEnterprise } from '@/lib/api/enterprises';
 import { cn, formatCurrency, formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
 
 import { AdminEnterpriseActionCard } from '@/components/dashboard/admin/admin-enterprise-action-card';
+import { EnterpriseAuditLogsCard } from '@/components/dashboard/enterprise/enterprise-audit-logs-card';
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -303,11 +304,14 @@ export default function AdminEnterpriseDetailPage() {
           </Card>
         </div>
 
-        <AdminEnterpriseActionCard
-          enterprise={enterprise}
-          onUpdated={(updated) => setEnterprise(updated)}
-          onDeleted={() => setEnterprise(null)}
-        />
+        <div className="space-y-6">
+          <AdminEnterpriseActionCard
+            enterprise={enterprise}
+            onUpdated={(updated) => setEnterprise(updated)}
+            onDeleted={() => setEnterprise(null)}
+          />
+          <EnterpriseAuditLogsCard enterprisePublicId={enterprise.public_id} />
+        </div>
       </div>
     </div>
   );

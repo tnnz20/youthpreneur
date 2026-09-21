@@ -135,3 +135,25 @@ export interface UpdateEnterpriseInput {
   district?: string | null;
   status?: EnterpriseStatus;
 }
+
+export type EnterpriseAuditAction = 'create' | 'update' | 'delete' | string;
+
+export interface EnterpriseAuditEvent {
+  id: number;
+  actor_public_id: string | null;
+  actor_email: string | null;
+  actor_name: string | null;
+  action: EnterpriseAuditAction;
+  changed_fields: Record<string, unknown> | null;
+  created_at: number;
+}
+
+export interface EnterpriseAuditLogResponse {
+  events: EnterpriseAuditEvent[];
+  next_cursor?: string | null;
+}
+
+export interface EnterpriseAuditLogParams {
+  cursor?: string;
+  limit?: number;
+}

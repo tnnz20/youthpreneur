@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { getEnterprise } from '@/lib/api/enterprises';
 import { cn, formatCurrency, formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
 
+import { EnterpriseAuditLogsCard } from '@/components/dashboard/enterprise/enterprise-audit-logs-card';
 import { UserEnterpriseActionCard } from '@/components/dashboard/enterprise/user-enterprise-action-card';
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import { Button } from '@/components/ui/button';
@@ -268,11 +269,14 @@ export default function EnterpriseDetailPage() {
           </Card>
         </div>
 
-        <UserEnterpriseActionCard
-          enterprise={enterprise}
-          onUpdated={(updated) => setEnterprise(updated)}
-          onDeleted={() => setEnterprise(null)}
-        />
+        <div className="space-y-6">
+          <UserEnterpriseActionCard
+            enterprise={enterprise}
+            onUpdated={(updated) => setEnterprise(updated)}
+            onDeleted={() => setEnterprise(null)}
+          />
+          <EnterpriseAuditLogsCard enterprisePublicId={enterprise.public_id} />
+        </div>
       </div>
     </div>
   );
