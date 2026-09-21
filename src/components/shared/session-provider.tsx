@@ -49,6 +49,18 @@ export function SessionProvider({ children }: SessionProviderProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      setUser(null);
+      setStatus('anonymous');
+    };
+
+    window.addEventListener('auth:expired', handleAuthExpired);
+    return () => {
+      window.removeEventListener('auth:expired', handleAuthExpired);
+    };
+  }, []);
+
   const markAuthenticated = useCallback((authenticatedUser: AuthUser) => {
     setUser(authenticatedUser);
     setStatus('authenticated');

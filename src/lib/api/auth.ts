@@ -1,6 +1,8 @@
 import type { AuthUser, LoginRequest, RegisterRequest } from '@/types/auth';
 
-import { API_BASE_URL, ApiError, apiRequest } from './client';
+import { ApiError, apiRequest, refreshSession } from './client';
+
+export { refreshSession };
 
 export function loginUser(input: LoginRequest): Promise<AuthUser> {
   return apiRequest<AuthUser>('/auth/login', {
@@ -14,33 +16,6 @@ export function registerUser(input: RegisterRequest): Promise<AuthUser> {
     method: 'POST',
     body: JSON.stringify(input),
   });
-}
-
-let refreshInFlight: Promise<boolean> | null = null;
-
-async function requestSessionRefresh(): Promise<boolean> {
-  const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-    method: 'POST',
-    credentials: 'include',
-  });
-
-  if (response.status === 204) {
-    return true;
-  }
-
-  if (response.status === 401 || response.status === 429) {
-    return false;
-  }
-
-  throw new Error(`Pemeriksaan sesi gagal (${response.status}).`);
-}
-
-export function refreshSession(): Promise<boolean> {
-  refreshInFlight ??= requestSessionRefresh().finally(() => {
-    refreshInFlight = null;
-  });
-
-  return refreshInFlight;
 }
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
