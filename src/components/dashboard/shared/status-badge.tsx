@@ -19,6 +19,29 @@ const TONE_CLASSES: Record<string, { badge: string; dot: string; pulse?: boolean
     badge: 'border border-dash-border bg-dash-surface-2 text-dash-muted',
     dot: 'bg-rose-400',
   },
+  'Tidak Aktif': {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-muted',
+    dot: 'bg-rose-400',
+  },
+  Lengkap: { badge: 'bg-dash-accent/40 text-dash-fg', dot: 'bg-emerald-500' },
+  'Dalam Proses': {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-fg',
+    dot: 'bg-amber-400',
+    pulse: true,
+  },
+  'Belum Ada': {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-muted',
+    dot: 'bg-dash-muted',
+  },
+  'Sedang Berjalan': {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-fg',
+    dot: 'bg-sky-400',
+    pulse: true,
+  },
+  Direncanakan: {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-muted',
+    dot: 'bg-dash-muted',
+  },
 };
 
 interface StatusBadgeProps {

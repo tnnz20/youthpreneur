@@ -13,14 +13,16 @@ import { Toaster } from '@/components/ui/sonner';
 import { LoaderCircle } from 'lucide-react';
 
 const AboutPage = lazy(() => import('@/pages/about'));
-const AdminPemudaPage = lazy(() => import('@/pages/admin-pemuda'));
 const AdminProgramPage = lazy(() => import('@/pages/admin-program'));
+const EnterpriseAdminPage = lazy(() => import('@/pages/admin/enterprise-admin'));
+const AdminEnterpriseDetailPage = lazy(() => import('@/pages/admin/admin-enterprise-detail'));
 const AdminUserDetailPage = lazy(() => import('@/pages/admin/admin-user-detail'));
 const AdminUsersManagementPage = lazy(() => import('@/pages/admin/admin-users-management'));
 const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
 const DashboardPasswordPage = lazy(() => import('@/pages/dashboard-password'));
 const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
-const DashboardProfilPage = lazy(() => import('@/pages/dashboard-profil'));
+const EnterpriseDetailPage = lazy(() => import('@/pages/enterprise/enterprise-detail'));
+const EnterprisesUserPage = lazy(() => import('@/pages/enterprise/enterprises-user'));
 const DashboardProgramPage = lazy(() => import('@/pages/dashboard-program'));
 const DashboardProgramSayaPage = lazy(() => import('@/pages/dashboard-program-saya'));
 const DatabasePage = lazy(() => import('@/pages/database'));
@@ -75,22 +77,27 @@ export default function App() {
             }
           >
             <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
-            <Route
-              path="/admin/pemuda"
-              element={<Navigate to="/dashboard/enterprises" replace />}
-            />
             <Route path="/admin/program" element={<Navigate to="/dashboard/trainings" replace />} />
             <Route path="/dashboard" element={<DashboardIndexPage />} />
             <Route path="/dashboard/program" element={<DashboardProgramPage />} />
             <Route path="/dashboard/my-trainings" element={<DashboardProgramSayaPage />} />
-            <Route path="/dashboard/my-enterprises" element={<DashboardProfilPage />} />
+            <Route path="/dashboard/my-enterprises" element={<EnterprisesUserPage />} />
+            <Route path="/dashboard/my-enterprises/:publicId" element={<EnterpriseDetailPage />} />
             <Route path="/dashboard/profile" element={<DashboardProfilePage />} />
             <Route path="/dashboard/password" element={<DashboardPasswordPage />} />
             <Route
               path="/dashboard/enterprises"
               element={
                 <RequireRole role="admin">
-                  <AdminPemudaPage />
+                  <EnterpriseAdminPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/dashboard/enterprises/:publicId"
+              element={
+                <RequireRole role="admin">
+                  <AdminEnterpriseDetailPage />
                 </RequireRole>
               }
             />

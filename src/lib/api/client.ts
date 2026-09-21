@@ -10,7 +10,51 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+let refreshInFlight: Promise<boolean> | null = null;
+
+async function requestSessionRefresh(): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (response.status === 204 || response.ok) {
+      return true;
+    }
+
+    if (response.status === 401 || response.status === 429) {
+      return false;
+    }
+
+    throw new Error(`Pemeriksaan sesi gagal (${response.status}).`);
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('Pemeriksaan sesi gagal')) {
+      throw error;
+    }
+
+    return false;
+  }
+}
+
+export function refreshSession(): Promise<boolean> {
+  refreshInFlight ??= requestSessionRefresh().finally(() => {
+    refreshInFlight = null;
+  });
+
+  return refreshInFlight;
+}
+
+export async function apiRequest<T>(path: string, init?: RequestInit, retry = true): Promise<T> {
+  if (
+    refreshInFlight &&
+    !path.startsWith('/auth/refresh') &&
+    !path.startsWith('/auth/login') &&
+    !path.startsWith('/auth/logout')
+  ) {
+    await refreshInFlight.catch(() => false);
+  }
+
   const headers = new Headers(init?.headers);
 
   if (init?.body !== undefined && !headers.has('Content-Type')) {
@@ -22,6 +66,24 @@ export async function apiRequest<T>(path: string, init?: RequestInit): Promise<T
     headers,
     credentials: 'include',
   });
+
+  if (
+    response.status === 401 &&
+    retry &&
+    !path.startsWith('/auth/refresh') &&
+    !path.startsWith('/auth/login') &&
+    !path.startsWith('/auth/logout')
+  ) {
+    const refreshed = await refreshSession().catch(() => false);
+
+    if (refreshed) {
+      return apiRequest<T>(path, init, false);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('auth:expired'));
+    }
+  }
 
   if (!response.ok) {
     let message = `Permintaan gagal (${response.status}).`;
