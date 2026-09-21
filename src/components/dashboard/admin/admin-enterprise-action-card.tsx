@@ -48,7 +48,9 @@ export function AdminEnterpriseActionCard({
 
     try {
       await deleteEnterprise(enterprise.public_id);
-      toast.success(`Wirausaha ${enterprise.name ?? enterprise.business_sector} berhasil dihapus.`);
+      toast.success(
+        `Wirausaha ${enterprise.enterprise_name ?? enterprise.name ?? enterprise.business_sector} berhasil dihapus.`
+      );
       onDeleted?.();
       navigate('/dashboard/enterprises');
     } catch (mutationError: unknown) {
@@ -100,7 +102,7 @@ export function AdminEnterpriseActionCard({
             <AlertDialogDescription>
               Apakah Anda yakin ingin menghapus wirausaha{' '}
               <span className="text-dash-fg font-semibold">
-                {enterprise.name ?? enterprise.business_sector}
+                {enterprise.enterprise_name ?? enterprise.name ?? enterprise.business_sector}
               </span>
               ? Tindakan ini dapat dibatalkan melalui pemulihan data sistem.
             </AlertDialogDescription>

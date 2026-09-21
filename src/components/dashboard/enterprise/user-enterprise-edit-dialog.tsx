@@ -39,7 +39,7 @@ interface UserEnterpriseEditDialogProps {
 }
 
 interface FormState {
-  name: string;
+  enterprise_name: string;
   business_sector: string;
   initial_turnover: string;
   current_turnover: string;
@@ -56,7 +56,7 @@ const LABEL_CLASS = 'text-dash-fg mb-1 text-xs font-semibold';
 function toFormState(enterprise: Enterprise | null): FormState {
   if (!enterprise) {
     return {
-      name: '',
+      enterprise_name: '',
       business_sector: '',
       initial_turnover: '0',
       current_turnover: '0',
@@ -64,7 +64,7 @@ function toFormState(enterprise: Enterprise | null): FormState {
   }
 
   return {
-    name: enterprise.name ?? '',
+    enterprise_name: enterprise.enterprise_name ?? enterprise.name ?? '',
     business_sector: enterprise.business_sector,
     initial_turnover: enterprise.initial_turnover,
     current_turnover: enterprise.current_turnover,
@@ -96,7 +96,7 @@ function UserEnterpriseEditForm({
     }
 
     const rawInput = {
-      name: form.name.trim() || null,
+      enterprise_name: form.enterprise_name.trim(),
       business_sector: form.business_sector.trim(),
       initial_turnover: form.initial_turnover.trim() || '0',
       current_turnover: form.current_turnover.trim() || '0',
@@ -122,7 +122,7 @@ function UserEnterpriseEditForm({
 
     try {
       const updatePayload: UpdateEnterpriseInput = {
-        name: parseResult.data.name,
+        enterprise_name: parseResult.data.enterprise_name,
         business_sector: parseResult.data.business_sector as BusinessSector,
         initial_turnover: parseResult.data.initial_turnover,
         current_turnover: parseResult.data.current_turnover,
@@ -168,14 +168,14 @@ function UserEnterpriseEditForm({
           </Label>
           <Input
             id="user-ent-name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            value={form.enterprise_name}
+            onChange={(e) => setForm({ ...form, enterprise_name: e.target.value })}
             placeholder="Nama usaha Anda"
             className={fieldClassName}
             disabled={submitting}
           />
-          {errors.name && (
-            <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.name}</p>
+          {errors.enterprise_name && (
+            <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.enterprise_name}</p>
           )}
         </div>
 

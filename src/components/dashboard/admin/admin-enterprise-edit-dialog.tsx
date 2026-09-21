@@ -212,7 +212,8 @@ function AdminEnterpriseEditForm({
           Edit Data Wirausaha
         </DialogTitle>
         <DialogDescription className="text-dash-muted text-xs leading-relaxed">
-          Perbarui data asesmen dan status wirausaha {enterprise?.name ?? enterprise?.public_id}.
+          Perbarui data asesmen dan status wirausaha{' '}
+          {enterprise?.enterprise_name ?? enterprise?.name ?? enterprise?.public_id}.
         </DialogDescription>
       </div>
 

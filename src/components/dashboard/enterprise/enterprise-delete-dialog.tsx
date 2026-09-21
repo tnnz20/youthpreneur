@@ -32,7 +32,10 @@ export function EnterpriseDeleteDialog({
           <AlertDialogDescription>
             Hapus wirausaha{' '}
             <span className="text-dash-fg font-semibold">
-              {pendingDelete?.name ?? pendingDelete?.business_sector ?? 'ini'}
+              {pendingDelete?.enterprise_name ??
+                pendingDelete?.name ??
+                pendingDelete?.business_sector ??
+                'ini'}
             </span>{' '}
             secara permanen? Tindakan ini tidak dapat dibatalkan.
           </AlertDialogDescription>

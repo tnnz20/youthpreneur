@@ -152,7 +152,7 @@ export function EnterpriseTableContent({
                   className="border-dash-border hover:bg-dash-surface-2/60"
                 >
                   <TableCell className="py-3.5 pl-6 font-bold sm:pl-8">
-                    {renderValue(enterprise.name)}
+                    {renderValue(enterprise.enterprise_name ?? enterprise.name)}
                   </TableCell>
                   <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
                     {renderValue(enterprise.business_sector)}
@@ -190,7 +190,7 @@ export function EnterpriseTableContent({
                       <DropdownMenuTrigger
                         disabled={isMutating}
                         className="border-dash-border text-dash-muted hover:bg-dash-surface-2 hover:text-dash-fg focus-visible:border-dash-fg focus-visible:ring-dash-fg/40 inline-flex h-7 w-7 items-center justify-center rounded-full border transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
-                        aria-label={`Aksi untuk ${enterprise.name ?? enterprise.business_sector}`}
+                        aria-label={`Aksi untuk ${enterprise.enterprise_name ?? enterprise.name ?? enterprise.business_sector}`}
                       >
                         <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                       </DropdownMenuTrigger>

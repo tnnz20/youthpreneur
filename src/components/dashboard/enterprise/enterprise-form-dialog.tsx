@@ -52,8 +52,11 @@ interface EnterpriseFormDialogProps {
 }
 
 interface FormState {
-  name: string;
+  enterprise_name: string;
   business_sector: string;
+  description: string;
+  address: string;
+  focus_commodity: string;
   district: string;
   legal_status: string;
   business_digitization: string;
@@ -67,8 +70,11 @@ interface FormState {
 }
 
 const EMPTY_FORM: FormState = {
-  name: '',
+  enterprise_name: '',
   business_sector: '',
+  description: '',
+  address: '',
+  focus_commodity: '',
   district: '',
   legal_status: '',
   business_digitization: '',
@@ -106,8 +112,11 @@ export function EnterpriseFormDialog({ open, onOpenChange, onSubmit }: Enterpris
     event.preventDefault();
 
     const rawInput = {
-      name: form.name.trim() || null,
+      enterprise_name: form.enterprise_name.trim(),
       business_sector: form.business_sector.trim(),
+      description: form.description.trim() || null,
+      address: form.address.trim() || null,
+      focus_commodity: form.focus_commodity.trim() || null,
       district: form.district.trim() || null,
       legal_status: form.legal_status || null,
       business_digitization: form.business_digitization || null,
@@ -177,18 +186,20 @@ export function EnterpriseFormDialog({ open, onOpenChange, onSubmit }: Enterpris
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <Label htmlFor="ent-name" className={LABEL_CLASS}>
-                Nama Usaha
+                Nama Usaha *
               </Label>
               <Input
                 id="ent-name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                value={form.enterprise_name}
+                onChange={(e) => setForm({ ...form, enterprise_name: e.target.value })}
                 placeholder="Contoh: Sambal Hiyung Barokah"
                 className={fieldClassName}
                 disabled={submitting}
               />
-              {errors.name && (
-                <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.name}</p>
+              {errors.enterprise_name && (
+                <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                  {errors.enterprise_name}
+                </p>
               )}
             </div>
 
