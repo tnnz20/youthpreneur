@@ -15,6 +15,7 @@ import { LoaderCircle } from 'lucide-react';
 const AboutPage = lazy(() => import('@/pages/about'));
 const AdminProgramPage = lazy(() => import('@/pages/admin-program'));
 const EnterpriseAdminPage = lazy(() => import('@/pages/admin/enterprise-admin'));
+const AdminEnterpriseDetailPage = lazy(() => import('@/pages/admin/admin-enterprise-detail'));
 const AdminUserDetailPage = lazy(() => import('@/pages/admin/admin-user-detail'));
 const AdminUsersManagementPage = lazy(() => import('@/pages/admin/admin-users-management'));
 const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
@@ -89,6 +90,14 @@ export default function App() {
               element={
                 <RequireRole role="admin">
                   <EnterpriseAdminPage />
+                </RequireRole>
+              }
+            />
+            <Route
+              path="/dashboard/enterprises/:publicId"
+              element={
+                <RequireRole role="admin">
+                  <AdminEnterpriseDetailPage />
                 </RequireRole>
               }
             />

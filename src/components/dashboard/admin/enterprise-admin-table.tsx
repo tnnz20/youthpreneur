@@ -299,7 +299,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                         <DropdownMenuContent align="end" className="w-44">
                           <DropdownMenuItem
                             onClick={() =>
-                              navigate(`/dashboard/my-enterprises/${enterprise.public_id}`)
+                              navigate(`/dashboard/enterprises/${enterprise.public_id}`)
                             }
                             className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >
