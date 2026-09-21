@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 
 import { getEnterprise } from '@/lib/api/enterprises';
 import { cn, formatCurrency, formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
@@ -102,13 +102,13 @@ export default function AdminEnterpriseDetailPage() {
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-dash-fg text-2xl font-bold tracking-tight">
-                {enterprise.name ?? enterprise.business_sector}
+                {enterprise.enterprise_name ?? enterprise.name ?? enterprise.business_sector}
               </h1>
               <StatusBadge
                 label={ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
               />
             </div>
-            <p className="text-dash-muted text-xs">ID Wirausaha: {enterprise.public_id}</p>
+            <p className="text-dash-muted text-xs">ID: {enterprise.public_id}</p>
           </div>
         </div>
         <div>{backButton}</div>
@@ -125,11 +125,52 @@ export default function AdminEnterpriseDetailPage() {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <span className={LABEL_CLASS}>Nama Usaha</span>
-                    <p className={VALUE_CLASS}>{renderValue(enterprise.name)}</p>
+                    <p className={VALUE_CLASS}>
+                      {renderValue(enterprise.enterprise_name ?? enterprise.name)}
+                    </p>
                   </div>
                   <div>
                     <span className={LABEL_CLASS}>Sektor Usaha</span>
                     <p className={VALUE_CLASS}>{renderValue(enterprise.business_sector)}</p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Pemilik</span>
+                    {enterprise.full_name ? (
+                      <div>
+                        {enterprise.user_public_id ? (
+                          <Link
+                            to={`/dashboard/users/${enterprise.user_public_id}`}
+                            className={cn(
+                              VALUE_CLASS,
+                              'hover:text-brand-dark inline-block hover:underline'
+                            )}
+                          >
+                            {enterprise.full_name}
+                          </Link>
+                        ) : (
+                          <p className={VALUE_CLASS}>{enterprise.full_name}</p>
+                        )}
+                        {enterprise.user_public_id && (
+                          <p className="text-dash-muted text-xs">ID: {enterprise.user_public_id}</p>
+                        )}
+                      </div>
+                    ) : enterprise.user_public_id ? (
+                      <Link
+                        to={`/dashboard/users/${enterprise.user_public_id}`}
+                        className={cn(
+                          VALUE_CLASS,
+                          'hover:text-brand-dark inline-block hover:underline'
+                        )}
+                      >
+                        {enterprise.user_public_id}
+                      </Link>
+                    ) : (
+                      <p className={VALUE_CLASS}>—</p>
+                    )}
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Komoditas Fokus</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.focus_commodity)}</p>
                   </div>
                   <div>
                     <span className={LABEL_CLASS}>Kecamatan</span>
@@ -140,6 +181,10 @@ export default function AdminEnterpriseDetailPage() {
                     <p className={VALUE_CLASS}>
                       {ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
                     </p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <span className={LABEL_CLASS}>Alamat</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.address)}</p>
                   </div>
                   <div>
                     <span className={LABEL_CLASS}>Omzet Awal</span>
@@ -217,6 +262,20 @@ export default function AdminEnterpriseDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
+              {enterprise.description && (
+                <div className="border-dash-border border-b pb-3">
+                  <span className={LABEL_CLASS}>Deskripsi Usaha</span>
+                  <p className={`${VALUE_CLASS} mt-1 leading-relaxed`}>{enterprise.description}</p>
+                </div>
+              )}
+              {enterprise.dispora_support && (
+                <div className="border-dash-border border-b pb-3">
+                  <span className={LABEL_CLASS}>Dukungan Dispora</span>
+                  <p className={`${VALUE_CLASS} mt-1 leading-relaxed`}>
+                    {enterprise.dispora_support}
+                  </p>
+                </div>
+              )}
               <div>
                 <span className={LABEL_CLASS}>Kebutuhan Intervensi Usaha</span>
                 <p className={`${VALUE_CLASS} mt-2 leading-relaxed`}>

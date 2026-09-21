@@ -102,7 +102,7 @@ export default function EnterpriseDetailPage() {
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-dash-fg text-2xl font-bold tracking-tight">
-                {enterprise.name ?? enterprise.business_sector}
+                {enterprise.enterprise_name ?? enterprise.name ?? enterprise.business_sector}
               </h1>
               <StatusBadge
                 label={ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
@@ -125,15 +125,25 @@ export default function EnterpriseDetailPage() {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <span className={LABEL_CLASS}>Nama Usaha</span>
-                    <p className={VALUE_CLASS}>{renderValue(enterprise.name)}</p>
+                    <p className={VALUE_CLASS}>
+                      {renderValue(enterprise.enterprise_name ?? enterprise.name)}
+                    </p>
                   </div>
                   <div>
                     <span className={LABEL_CLASS}>Sektor Usaha</span>
                     <p className={VALUE_CLASS}>{renderValue(enterprise.business_sector)}</p>
                   </div>
                   <div>
+                    <span className={LABEL_CLASS}>Komoditas Fokus</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.focus_commodity)}</p>
+                  </div>
+                  <div>
                     <span className={LABEL_CLASS}>Kecamatan</span>
                     <p className={VALUE_CLASS}>{renderValue(enterprise.district)}</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <span className={LABEL_CLASS}>Alamat</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.address)}</p>
                   </div>
                   <div>
                     <span className={LABEL_CLASS}>Status Usaha</span>
@@ -217,6 +227,20 @@ export default function EnterpriseDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
+              {enterprise.description && (
+                <div className="border-dash-border border-b pb-3">
+                  <span className={LABEL_CLASS}>Deskripsi Usaha</span>
+                  <p className={`${VALUE_CLASS} mt-1 leading-relaxed`}>{enterprise.description}</p>
+                </div>
+              )}
+              {enterprise.dispora_support && (
+                <div className="border-dash-border border-b pb-3">
+                  <span className={LABEL_CLASS}>Dukungan Dispora</span>
+                  <p className={`${VALUE_CLASS} mt-1 leading-relaxed`}>
+                    {enterprise.dispora_support}
+                  </p>
+                </div>
+              )}
               <div>
                 <span className={LABEL_CLASS}>Kebutuhan Intervensi Usaha</span>
                 <p className={`${VALUE_CLASS} mt-2 leading-relaxed`}>
