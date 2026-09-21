@@ -61,6 +61,13 @@ export const PROCESS_STATUS_OPTIONS: { value: ProcessStatus | null; label: strin
   { value: 'completed', label: 'Selesai' },
 ];
 
+export const MENTORING_STATUS_OPTIONS: { value: ProcessStatus | null; label: string }[] = [
+  { value: null, label: 'Semua Pendampingan' },
+  { value: 'planned', label: 'Direncanakan' },
+  { value: 'ongoing', label: 'Sedang Berjalan' },
+  { value: 'completed', label: 'Selesai' },
+];
+
 export const GENERAL_STATUS_LABELS: Record<GeneralStatus, string> = {
   yes: 'Ya',
   no: 'Tidak',

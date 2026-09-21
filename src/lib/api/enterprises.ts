@@ -5,6 +5,7 @@ import type {
   Enterprise,
   EnterpriseListParams,
   EnterpriseListResponse,
+  UpdateEnterpriseInput,
 } from '@/types/enterprises';
 
 export function listEnterprises(
@@ -72,6 +73,16 @@ export function getEnterprise(publicId: string): Promise<Enterprise> {
 export function createEnterprise(input: CreateEnterpriseInput): Promise<Enterprise> {
   return apiRequest<Enterprise>('/enterprises', {
     method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export function updateEnterprise(
+  publicId: string,
+  input: UpdateEnterpriseInput
+): Promise<Enterprise> {
+  return apiRequest<Enterprise>(`/enterprises/${publicId}`, {
+    method: 'PATCH',
     body: JSON.stringify(input),
   });
 }

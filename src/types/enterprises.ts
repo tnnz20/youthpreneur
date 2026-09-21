@@ -75,3 +75,19 @@ export interface CreateEnterpriseInput {
   current_turnover?: string;
   district?: string | null;
 }
+
+export interface UpdateEnterpriseInput {
+  name?: string | null;
+  business_sector?: BusinessSector;
+  legal_status?: LegalStatus | null;
+  business_digitization?: BusinessDigitization | null;
+  intervention_needs?: InterventionNeeds | null;
+  training_status?: ProcessStatus | null;
+  mentoring_status?: ProcessStatus | null;
+  capital_access?: GeneralStatus | null;
+  partnership?: GeneralStatus | null;
+  initial_turnover?: string;
+  current_turnover?: string;
+  district?: string | null;
+  status?: EnterpriseStatus;
+}

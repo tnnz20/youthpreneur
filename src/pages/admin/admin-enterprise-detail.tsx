@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { getEnterprise } from '@/lib/api/enterprises';
 import { cn, formatCurrency, formatUnixDateTime, renderValue, toErrorMessage } from '@/lib/utils';
 
+import { AdminEnterpriseActionCard } from '@/components/dashboard/admin/admin-enterprise-action-card';
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -113,132 +114,142 @@ export default function AdminEnterpriseDetailPage() {
         <div>{backButton}</div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className={cn(CARD, 'space-y-5')}>
-          <CardHeader className="border-dash-border border-b p-0 pb-3">
-            <CardTitle className="text-dash-fg text-base font-bold">Informasi Usaha</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <span className={LABEL_CLASS}>Nama Usaha</span>
-                <p className={VALUE_CLASS}>{renderValue(enterprise.name)}</p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Sektor Usaha</span>
-                <p className={VALUE_CLASS}>{renderValue(enterprise.business_sector)}</p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Kecamatan</span>
-                <p className={VALUE_CLASS}>{renderValue(enterprise.district)}</p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Status Usaha</span>
-                <p className={VALUE_CLASS}>
-                  {ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
-                </p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Omzet Awal</span>
-                <p className={VALUE_CLASS}>{formatCurrency(enterprise.initial_turnover)}</p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Omzet Saat Ini</span>
-                <p className={VALUE_CLASS}>{formatCurrency(enterprise.current_turnover)}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(20rem,1fr)] xl:items-start">
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Card className={cn(CARD, 'space-y-5')}>
+              <CardHeader className="border-dash-border border-b p-0 pb-3">
+                <CardTitle className="text-dash-fg text-base font-bold">Informasi Usaha</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <span className={LABEL_CLASS}>Nama Usaha</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.name)}</p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Sektor Usaha</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.business_sector)}</p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Kecamatan</span>
+                    <p className={VALUE_CLASS}>{renderValue(enterprise.district)}</p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Status Usaha</span>
+                    <p className={VALUE_CLASS}>
+                      {ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
+                    </p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Omzet Awal</span>
+                    <p className={VALUE_CLASS}>{formatCurrency(enterprise.initial_turnover)}</p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Omzet Saat Ini</span>
+                    <p className={VALUE_CLASS}>{formatCurrency(enterprise.current_turnover)}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card className={cn(CARD, 'space-y-5')}>
-          <CardHeader className="border-dash-border border-b p-0 pb-3">
-            <CardTitle className="text-dash-fg text-base font-bold">
-              Legalitas & Asesmen Program
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Card className={cn(CARD, 'space-y-5')}>
+              <CardHeader className="border-dash-border border-b p-0 pb-3">
+                <CardTitle className="text-dash-fg text-base font-bold">
+                  Legalitas & Asesmen Program
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <span className={LABEL_CLASS}>Status Legalitas</span>
+                    <p className={VALUE_CLASS}>
+                      {enterprise.legal_status ? LEGAL_STATUS_LABELS[enterprise.legal_status] : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Tingkat Digitalisasi</span>
+                    <p className={VALUE_CLASS}>
+                      {enterprise.business_digitization
+                        ? BUSINESS_DIGITIZATION_LABELS[enterprise.business_digitization]
+                        : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Status Pelatihan</span>
+                    <p className={VALUE_CLASS}>
+                      {enterprise.training_status
+                        ? PROCESS_STATUS_LABELS[enterprise.training_status]
+                        : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Status Pendampingan</span>
+                    <p className={VALUE_CLASS}>
+                      {enterprise.mentoring_status
+                        ? PROCESS_STATUS_LABELS[enterprise.mentoring_status]
+                        : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Akses Modal</span>
+                    <p className={VALUE_CLASS}>
+                      {enterprise.capital_access
+                        ? GENERAL_STATUS_LABELS[enterprise.capital_access]
+                        : '—'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className={LABEL_CLASS}>Kemitraan</span>
+                    <p className={VALUE_CLASS}>
+                      {enterprise.partnership ? GENERAL_STATUS_LABELS[enterprise.partnership] : '—'}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className={cn(CARD, 'space-y-4')}>
+            <CardHeader className="border-dash-border border-b p-0 pb-3">
+              <CardTitle className="text-dash-fg text-base font-bold">
+                Kebutuhan Intervensi & Riwayat Data
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
               <div>
-                <span className={LABEL_CLASS}>Status Legalitas</span>
-                <p className={VALUE_CLASS}>
-                  {enterprise.legal_status ? LEGAL_STATUS_LABELS[enterprise.legal_status] : '—'}
-                </p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Tingkat Digitalisasi</span>
-                <p className={VALUE_CLASS}>
-                  {enterprise.business_digitization
-                    ? BUSINESS_DIGITIZATION_LABELS[enterprise.business_digitization]
+                <span className={LABEL_CLASS}>Kebutuhan Intervensi Usaha</span>
+                <p className={`${VALUE_CLASS} mt-2 leading-relaxed`}>
+                  {enterprise.intervention_needs
+                    ? (INTERVENTION_NEEDS_LABELS[enterprise.intervention_needs] ??
+                      enterprise.intervention_needs)
                     : '—'}
                 </p>
               </div>
-              <div>
-                <span className={LABEL_CLASS}>Status Pelatihan</span>
-                <p className={VALUE_CLASS}>
-                  {enterprise.training_status
-                    ? PROCESS_STATUS_LABELS[enterprise.training_status]
-                    : '—'}
-                </p>
+              <div className="border-dash-border mt-4 grid grid-cols-1 gap-4 border-t pt-4 sm:grid-cols-2">
+                <div>
+                  <span className={LABEL_CLASS}>Waktu Pendaftaran</span>
+                  <p className="text-dash-muted mt-1 text-xs font-medium">
+                    {formatUnixDateTime(enterprise.created_at)}
+                  </p>
+                </div>
+                <div>
+                  <span className={LABEL_CLASS}>Terakhir Diperbarui</span>
+                  <p className="text-dash-muted mt-1 text-xs font-medium">
+                    {formatUnixDateTime(enterprise.updated_at)}
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className={LABEL_CLASS}>Status Pendampingan</span>
-                <p className={VALUE_CLASS}>
-                  {enterprise.mentoring_status
-                    ? PROCESS_STATUS_LABELS[enterprise.mentoring_status]
-                    : '—'}
-                </p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Akses Modal</span>
-                <p className={VALUE_CLASS}>
-                  {enterprise.capital_access
-                    ? GENERAL_STATUS_LABELS[enterprise.capital_access]
-                    : '—'}
-                </p>
-              </div>
-              <div>
-                <span className={LABEL_CLASS}>Kemitraan</span>
-                <p className={VALUE_CLASS}>
-                  {enterprise.partnership ? GENERAL_STATUS_LABELS[enterprise.partnership] : '—'}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
+
+        <AdminEnterpriseActionCard
+          enterprise={enterprise}
+          onUpdated={(updated) => setEnterprise(updated)}
+          onDeleted={() => setEnterprise(null)}
+        />
       </div>
-
-      <Card className={cn(CARD, 'space-y-4')}>
-        <CardHeader className="border-dash-border border-b p-0 pb-3">
-          <CardTitle className="text-dash-fg text-base font-bold">
-            Kebutuhan Intervensi & Riwayat Data
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div>
-            <span className={LABEL_CLASS}>Kebutuhan Intervensi Usaha</span>
-            <p className={`${VALUE_CLASS} mt-2 leading-relaxed`}>
-              {enterprise.intervention_needs
-                ? (INTERVENTION_NEEDS_LABELS[enterprise.intervention_needs] ??
-                  enterprise.intervention_needs)
-                : '—'}
-            </p>
-          </div>
-          <div className="border-dash-border mt-4 grid grid-cols-1 gap-4 border-t pt-4 sm:grid-cols-2">
-            <div>
-              <span className={LABEL_CLASS}>Waktu Pendaftaran</span>
-              <p className="text-dash-muted mt-1 text-xs font-medium">
-                {formatUnixDateTime(enterprise.created_at)}
-              </p>
-            </div>
-            <div>
-              <span className={LABEL_CLASS}>Terakhir Diperbarui</span>
-              <p className="text-dash-muted mt-1 text-xs font-medium">
-                {formatUnixDateTime(enterprise.updated_at)}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

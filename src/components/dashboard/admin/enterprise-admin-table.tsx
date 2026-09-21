@@ -1,6 +1,8 @@
+import { useState } from 'react';
+
 import { useNavigate } from 'react-router';
 
-import { formatCurrency, formatUnixDateTime, renderValue } from '@/lib/utils';
+import { formatCurrency, renderValue } from '@/lib/utils';
 
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import { Button } from '@/components/ui/button';
@@ -44,17 +46,23 @@ import {
 
 import { type EnterpriseState, useEnterprises } from '@/hooks/use-enterprises';
 
-import type { EnterpriseStatus } from '@/types/enterprises';
+import type { Enterprise, EnterpriseStatus, LegalStatus, ProcessStatus } from '@/types/enterprises';
 
 import {
   BUSINESS_SECTOR_OPTIONS,
   ENTERPRISE_PAGE_SIZE_OPTIONS,
   ENTERPRISE_STATUS_LABELS,
   ENTERPRISE_STATUS_OPTIONS,
+  LEGAL_STATUS_LABELS,
+  LEGAL_STATUS_OPTIONS,
+  MENTORING_STATUS_OPTIONS,
+  PROCESS_STATUS_LABELS,
 } from '@/constants/enterprises';
 import { KECAMATAN } from '@/constants/site';
 
-import { Eye, MoreHorizontal, RotateCcw, SearchX } from 'lucide-react';
+import { Eye, MoreHorizontal, Pencil, RotateCcw, SearchX } from 'lucide-react';
+
+import { AdminEnterpriseEditDialog } from './admin-enterprise-edit-dialog';
 
 const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow-bento';
 const HEAD_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
@@ -62,7 +70,7 @@ const SELECT_CLASS =
   'text-dash-fg focus-visible:border-dash-fg w-full rounded-2xl border border-dash-border bg-dash-surface-2 px-3.5 py-0 text-xs focus-visible:ring-0 data-[size=default]:h-11 sm:text-sm';
 const LABEL_CLASS =
   'text-dash-muted mb-1.5 block text-[11px] font-semibold tracking-wide uppercase';
-const COLUMN_COUNT = 8;
+const COLUMN_COUNT = 9;
 
 interface EnterpriseAdminTableProps {
   state?: EnterpriseState;
@@ -72,6 +80,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
   const defaultState = useEnterprises();
   const state = customState ?? defaultState;
   const navigate = useNavigate();
+  const [editingEnterprise, setEditingEnterprise] = useState<Enterprise | null>(null);
 
   const {
     enterprises,
@@ -86,6 +95,8 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
     setDistrict,
     setStatus,
     setBusinessSector,
+    setLegalStatus,
+    setMentoringStatus,
     setLimit,
     resetFilters,
     nextPage,
@@ -96,13 +107,15 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
   const filtersActive =
     filters.district.trim() !== '' ||
     filters.status !== 'all' ||
-    filters.business_sector.trim() !== '';
+    filters.business_sector.trim() !== '' ||
+    filters.legal_status !== 'all' ||
+    filters.mentoring_status !== 'all';
 
   return (
     <div className="space-y-5">
       <div className={`${CARD} space-y-4 p-5`}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
-          <div className="md:col-span-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div>
             <label htmlFor="ent-admin-district" className={LABEL_CLASS}>
               Kecamatan
             </label>
@@ -128,7 +141,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
             </Select>
           </div>
 
-          <div className="md:col-span-4">
+          <div>
             <label htmlFor="ent-admin-sector" className={LABEL_CLASS}>
               Sektor Usaha
             </label>
@@ -157,7 +170,53 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
             </Select>
           </div>
 
-          <div className="md:col-span-4">
+          <div>
+            <label htmlFor="ent-admin-legal" className={LABEL_CLASS}>
+              Legalitas
+            </label>
+            <Select
+              value={filters.legal_status === 'all' ? null : filters.legal_status}
+              onValueChange={(value) => setLegalStatus((value ?? 'all') as LegalStatus | 'all')}
+              items={LEGAL_STATUS_OPTIONS}
+            >
+              <SelectTrigger id="ent-admin-legal" className={SELECT_CLASS}>
+                <SelectValue placeholder="Semua Legalitas" />
+              </SelectTrigger>
+              <SelectContent>
+                {LEGAL_STATUS_OPTIONS.map((option) => (
+                  <SelectItem key={option.label} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label htmlFor="ent-admin-mentoring" className={LABEL_CLASS}>
+              Pendampingan
+            </label>
+            <Select
+              value={filters.mentoring_status === 'all' ? null : filters.mentoring_status}
+              onValueChange={(value) =>
+                setMentoringStatus((value ?? 'all') as ProcessStatus | 'all')
+              }
+              items={MENTORING_STATUS_OPTIONS}
+            >
+              <SelectTrigger id="ent-admin-mentoring" className={SELECT_CLASS}>
+                <SelectValue placeholder="Semua Pendampingan" />
+              </SelectTrigger>
+              <SelectContent>
+                {MENTORING_STATUS_OPTIONS.map((option) => (
+                  <SelectItem key={option.label} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
             <label htmlFor="ent-admin-status" className={LABEL_CLASS}>
               Status Wirausaha
             </label>
@@ -223,7 +282,10 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                 Kecamatan
               </TableHead>
               <TableHead scope="col" className={HEAD_CLASS}>
-                Status
+                Legalitas
+              </TableHead>
+              <TableHead scope="col" className={HEAD_CLASS}>
+                Pendampingan
               </TableHead>
               <TableHead scope="col" className={HEAD_CLASS}>
                 Omzet Awal
@@ -232,7 +294,7 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                 Omzet Saat Ini
               </TableHead>
               <TableHead scope="col" className={HEAD_CLASS}>
-                Diperbarui
+                Status
               </TableHead>
               <TableHead scope="col" className={`${HEAD_CLASS} pr-6 text-right sm:pr-8`}>
                 Aksi
@@ -274,9 +336,18 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                       {renderValue(enterprise.district)}
                     </TableCell>
                     <TableCell className="py-3.5">
-                      <StatusBadge
-                        label={ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
-                      />
+                      {enterprise.legal_status ? (
+                        <StatusBadge label={LEGAL_STATUS_LABELS[enterprise.legal_status]} />
+                      ) : (
+                        <span className="text-dash-muted text-xs">—</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="py-3.5">
+                      {enterprise.mentoring_status ? (
+                        <StatusBadge label={PROCESS_STATUS_LABELS[enterprise.mentoring_status]} />
+                      ) : (
+                        <span className="text-dash-muted text-xs">—</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
                       {formatCurrency(enterprise.initial_turnover)}
@@ -284,8 +355,10 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                     <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
                       {formatCurrency(enterprise.current_turnover)}
                     </TableCell>
-                    <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
-                      {formatUnixDateTime(enterprise.updated_at)}
+                    <TableCell className="py-3.5">
+                      <StatusBadge
+                        label={ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
+                      />
                     </TableCell>
                     <TableCell className="py-3.5 pr-6 text-right sm:pr-8">
                       <DropdownMenu>
@@ -305,6 +378,13 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
                           >
                             <Eye className="h-4 w-4" aria-hidden="true" />
                             Lihat Detail
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setEditingEnterprise(enterprise)}
+                            className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
+                          >
+                            <Pencil className="h-4 w-4" aria-hidden="true" />
+                            Edit Wirausaha
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -408,6 +488,16 @@ export function EnterpriseAdminTable({ state: customState }: EnterpriseAdminTabl
           </Pagination>
         </div>
       </div>
+
+      <AdminEnterpriseEditDialog
+        enterprise={editingEnterprise}
+        open={editingEnterprise !== null}
+        onOpenChange={(open) => !open && setEditingEnterprise(null)}
+        onSubmit={(input) =>
+          editingEnterprise ? state.update(editingEnterprise.public_id, input) : Promise.reject()
+        }
+        onSuccess={() => setEditingEnterprise(null)}
+      />
     </div>
   );
 }

@@ -9,9 +9,14 @@ import {
 
 import type { EnterpriseState } from '@/hooks/use-enterprises';
 
-import type { EnterpriseStatus } from '@/types/enterprises';
+import type { EnterpriseStatus, LegalStatus, ProcessStatus } from '@/types/enterprises';
 
-import { BUSINESS_SECTOR_OPTIONS, ENTERPRISE_STATUS_OPTIONS } from '@/constants/enterprises';
+import {
+  BUSINESS_SECTOR_OPTIONS,
+  ENTERPRISE_STATUS_OPTIONS,
+  LEGAL_STATUS_OPTIONS,
+  MENTORING_STATUS_OPTIONS,
+} from '@/constants/enterprises';
 import { KECAMATAN } from '@/constants/site';
 
 import { Plus, RotateCcw } from 'lucide-react';
@@ -28,12 +33,21 @@ interface EnterpriseTableFiltersProps {
 }
 
 export function EnterpriseTableFilters({ state, onOpenCreate }: EnterpriseTableFiltersProps) {
-  const { filters, error, setDistrict, setStatus, setBusinessSector, resetFilters } = state;
+  const {
+    filters,
+    error,
+    setDistrict,
+    setStatus,
+    setBusinessSector,
+    setLegalStatus,
+    setMentoringStatus,
+    resetFilters,
+  } = state;
 
   return (
     <div className={`${CARD} space-y-4 p-5`}>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
-        <div className="md:col-span-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div>
           <label htmlFor="ent-filter-district" className={LABEL_CLASS}>
             Kecamatan
           </label>
@@ -59,7 +73,7 @@ export function EnterpriseTableFilters({ state, onOpenCreate }: EnterpriseTableF
           </Select>
         </div>
 
-        <div className="md:col-span-4">
+        <div>
           <label htmlFor="ent-filter-sector" className={LABEL_CLASS}>
             Sektor Usaha
           </label>
@@ -85,7 +99,51 @@ export function EnterpriseTableFilters({ state, onOpenCreate }: EnterpriseTableF
           </Select>
         </div>
 
-        <div className="md:col-span-4">
+        <div>
+          <label htmlFor="ent-filter-legal" className={LABEL_CLASS}>
+            Legalitas
+          </label>
+          <Select
+            value={filters.legal_status === 'all' ? null : filters.legal_status}
+            onValueChange={(value) => setLegalStatus((value ?? 'all') as LegalStatus | 'all')}
+            items={LEGAL_STATUS_OPTIONS}
+          >
+            <SelectTrigger id="ent-filter-legal" className={SELECT_CLASS}>
+              <SelectValue placeholder="Semua Legalitas" />
+            </SelectTrigger>
+            <SelectContent>
+              {LEGAL_STATUS_OPTIONS.map((option) => (
+                <SelectItem key={option.label} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <label htmlFor="ent-filter-mentoring" className={LABEL_CLASS}>
+            Pendampingan
+          </label>
+          <Select
+            value={filters.mentoring_status === 'all' ? null : filters.mentoring_status}
+            onValueChange={(value) => setMentoringStatus((value ?? 'all') as ProcessStatus | 'all')}
+            items={MENTORING_STATUS_OPTIONS}
+          >
+            <SelectTrigger id="ent-filter-mentoring" className={SELECT_CLASS}>
+              <SelectValue placeholder="Semua Pendampingan" />
+            </SelectTrigger>
+            <SelectContent>
+              {MENTORING_STATUS_OPTIONS.map((option) => (
+                <SelectItem key={option.label} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
           <label htmlFor="ent-filter-status" className={LABEL_CLASS}>
             Status Wirausaha
           </label>

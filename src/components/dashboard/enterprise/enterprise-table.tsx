@@ -12,10 +12,12 @@ import { EnterpriseDeleteDialog } from './enterprise-delete-dialog';
 import { EnterpriseFormDialog } from './enterprise-form-dialog';
 import { EnterpriseTableContent } from './enterprise-table-content';
 import { EnterpriseTableFilters } from './enterprise-table-filters';
+import { UserEnterpriseEditDialog } from './user-enterprise-edit-dialog';
 
 export function EnterpriseTable() {
   const state = useEnterprises();
   const [pendingDelete, setPendingDelete] = useState<Enterprise | null>(null);
+  const [pendingEdit, setPendingEdit] = useState<Enterprise | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -24,7 +26,9 @@ export function EnterpriseTable() {
   const filtersActive =
     filters.district.trim() !== '' ||
     filters.status !== 'all' ||
-    filters.business_sector.trim() !== '';
+    filters.business_sector.trim() !== '' ||
+    filters.legal_status !== 'all' ||
+    filters.mentoring_status !== 'all';
 
   const confirmDelete = async () => {
     if (!pendingDelete) {
@@ -53,6 +57,7 @@ export function EnterpriseTable() {
         state={state}
         filtersActive={filtersActive}
         onRequestDelete={setPendingDelete}
+        onRequestEdit={setPendingEdit}
         onOpenCreate={() => setCreateDialogOpen(true)}
       />
 
@@ -67,6 +72,16 @@ export function EnterpriseTable() {
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
         onSubmit={create}
+      />
+
+      <UserEnterpriseEditDialog
+        enterprise={pendingEdit}
+        open={pendingEdit !== null}
+        onOpenChange={(open) => !open && setPendingEdit(null)}
+        onSubmit={(input) =>
+          pendingEdit ? state.update(pendingEdit.public_id, input) : Promise.reject()
+        }
+        onSuccess={() => setPendingEdit(null)}
       />
     </div>
   );

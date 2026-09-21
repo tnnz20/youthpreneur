@@ -2,7 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSearchParams } from 'react-router';
 
-import { createEnterprise, deleteEnterprise, listEnterprises } from '@/lib/api/enterprises';
+import {
+  createEnterprise,
+  deleteEnterprise,
+  listEnterprises,
+  updateEnterprise,
+} from '@/lib/api/enterprises';
 import { toErrorMessage } from '@/lib/utils';
 
 import type {
@@ -10,6 +15,9 @@ import type {
   Enterprise,
   EnterpriseListResponse,
   EnterpriseStatus,
+  LegalStatus,
+  ProcessStatus,
+  UpdateEnterpriseInput,
 } from '@/types/enterprises';
 
 import { ENTERPRISE_PAGE_SIZE_OPTIONS } from '@/constants/enterprises';
@@ -18,6 +26,8 @@ export interface EnterpriseFilters {
   district: string;
   status: EnterpriseStatus | 'all';
   business_sector: string;
+  legal_status: LegalStatus | 'all';
+  mentoring_status: ProcessStatus | 'all';
 }
 
 export interface EnterpriseState {
@@ -34,6 +44,8 @@ export interface EnterpriseState {
   setDistrict: (district: string) => void;
   setStatus: (status: EnterpriseStatus | 'all') => void;
   setBusinessSector: (sector: string) => void;
+  setLegalStatus: (legalStatus: LegalStatus | 'all') => void;
+  setMentoringStatus: (mentoringStatus: ProcessStatus | 'all') => void;
   setLimit: (limit: number) => void;
   resetFilters: () => void;
   nextPage: () => void;
@@ -41,6 +53,7 @@ export interface EnterpriseState {
   goToFirstPage: () => void;
   refresh: () => Promise<void>;
   create: (input: CreateEnterpriseInput) => Promise<Enterprise>;
+  update: (publicId: string, input: UpdateEnterpriseInput) => Promise<Enterprise>;
   remove: (publicId: string) => Promise<void>;
 }
 
@@ -55,6 +68,14 @@ function parseStatus(value: string | null): EnterpriseStatus | 'all' {
   return value === 'active' || value === 'inactive' ? value : 'all';
 }
 
+function parseLegalStatus(value: string | null): LegalStatus | 'all' {
+  return value === 'complete' || value === 'in_progress' || value === 'none' ? value : 'all';
+}
+
+function parseMentoringStatus(value: string | null): ProcessStatus | 'all' {
+  return value === 'completed' || value === 'ongoing' || value === 'planned' ? value : 'all';
+}
+
 export function useEnterprises(): EnterpriseState {
   const [, setSearchParams] = useSearchParams();
   const [initialParams] = useState(() => new URLSearchParams(window.location.search));
@@ -64,6 +85,8 @@ export function useEnterprises(): EnterpriseState {
     district: initialParams.get('district')?.trim() ?? '',
     status: parseStatus(initialParams.get('status')),
     business_sector: initialParams.get('business_sector')?.trim() ?? '',
+    legal_status: parseLegalStatus(initialParams.get('legal_status')),
+    mentoring_status: parseMentoringStatus(initialParams.get('mentoring_status')),
   }));
   const [limit, setLimitState] = useState(() => parseLimit(initialParams.get('limit')));
   const [cursor, setCursor] = useState<string | null>(initialParams.get('cursor'));
@@ -106,6 +129,9 @@ export function useEnterprises(): EnterpriseState {
         district: activeFilters.district.trim() || undefined,
         status: activeFilters.status === 'all' ? undefined : activeFilters.status,
         business_sector: activeFilters.business_sector.trim() || undefined,
+        legal_status: activeFilters.legal_status === 'all' ? undefined : activeFilters.legal_status,
+        mentoring_status:
+          activeFilters.mentoring_status === 'all' ? undefined : activeFilters.mentoring_status,
       });
     },
     []
@@ -149,6 +175,14 @@ export function useEnterprises(): EnterpriseState {
       params.set('business_sector', filters.business_sector.trim());
     }
 
+    if (filters.legal_status !== 'all') {
+      params.set('legal_status', filters.legal_status);
+    }
+
+    if (filters.mentoring_status !== 'all') {
+      params.set('mentoring_status', filters.mentoring_status);
+    }
+
     if (limit !== DEFAULT_LIMIT) {
       params.set('limit', String(limit));
     }
@@ -184,6 +218,22 @@ export function useEnterprises(): EnterpriseState {
     setFilters((prev) => ({ ...prev, business_sector: sector }));
   }, []);
 
+  const setLegalStatus = useCallback((legal_status: LegalStatus | 'all') => {
+    setLoading(true);
+    setError(null);
+    setCursor(null);
+    setCursorHistory([]);
+    setFilters((prev) => ({ ...prev, legal_status }));
+  }, []);
+
+  const setMentoringStatus = useCallback((mentoring_status: ProcessStatus | 'all') => {
+    setLoading(true);
+    setError(null);
+    setCursor(null);
+    setCursorHistory([]);
+    setFilters((prev) => ({ ...prev, mentoring_status }));
+  }, []);
+
   const setLimit = useCallback((newLimit: number) => {
     setLoading(true);
     setError(null);
@@ -201,6 +251,8 @@ export function useEnterprises(): EnterpriseState {
       district: '',
       status: 'all',
       business_sector: '',
+      legal_status: 'all',
+      mentoring_status: 'all',
     });
     setLimitState(DEFAULT_LIMIT);
   }, []);
@@ -260,6 +312,22 @@ export function useEnterprises(): EnterpriseState {
     [applyError, applyResponse, fetchPage, filters, limit]
   );
 
+  const update = useCallback(
+    async (publicId: string, input: UpdateEnterpriseInput): Promise<Enterprise> => {
+      setMutatingId(publicId);
+      try {
+        const updated = await updateEnterprise(publicId, input);
+        setEnterprises((prev) =>
+          prev.map((item) => (item.public_id === publicId ? updated : item))
+        );
+        return updated;
+      } finally {
+        setMutatingId(null);
+      }
+    },
+    []
+  );
+
   const remove = useCallback(
     async (publicId: string): Promise<void> => {
       setMutatingId(publicId);
@@ -292,6 +360,8 @@ export function useEnterprises(): EnterpriseState {
     setDistrict,
     setStatus,
     setBusinessSector,
+    setLegalStatus,
+    setMentoringStatus,
     setLimit,
     resetFilters,
     nextPage,
@@ -299,6 +369,7 @@ export function useEnterprises(): EnterpriseState {
     goToFirstPage,
     refresh,
     create,
+    update,
     remove,
   };
 }

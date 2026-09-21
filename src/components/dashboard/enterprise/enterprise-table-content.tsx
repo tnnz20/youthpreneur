@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 
-import { formatCurrency, formatUnixDateTime, renderValue } from '@/lib/utils';
+import { formatCurrency, renderValue } from '@/lib/utils';
 
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import { Button } from '@/components/ui/button';
@@ -46,18 +46,24 @@ import type { EnterpriseState } from '@/hooks/use-enterprises';
 
 import type { Enterprise } from '@/types/enterprises';
 
-import { ENTERPRISE_PAGE_SIZE_OPTIONS, ENTERPRISE_STATUS_LABELS } from '@/constants/enterprises';
+import {
+  ENTERPRISE_PAGE_SIZE_OPTIONS,
+  ENTERPRISE_STATUS_LABELS,
+  LEGAL_STATUS_LABELS,
+  PROCESS_STATUS_LABELS,
+} from '@/constants/enterprises';
 
-import { Eye, MoreHorizontal, Plus, RotateCcw, SearchX, Trash2 } from 'lucide-react';
+import { Eye, MoreHorizontal, Pencil, Plus, RotateCcw, SearchX, Trash2 } from 'lucide-react';
 
 const CARD = 'rounded-[2rem] border border-dash-border/60 bg-dash-surface shadow-bento';
 const HEAD_CLASS = 'text-dash-muted text-[11px] font-semibold tracking-wide uppercase';
-const COLUMN_COUNT = 8;
+const COLUMN_COUNT = 9;
 
 interface EnterpriseTableContentProps {
   state: EnterpriseState;
   filtersActive: boolean;
   onRequestDelete: (enterprise: Enterprise) => void;
+  onRequestEdit: (enterprise: Enterprise) => void;
   onOpenCreate: () => void;
 }
 
@@ -65,6 +71,7 @@ export function EnterpriseTableContent({
   state,
   filtersActive,
   onRequestDelete,
+  onRequestEdit,
   onOpenCreate,
 }: EnterpriseTableContentProps) {
   const navigate = useNavigate();
@@ -104,7 +111,10 @@ export function EnterpriseTableContent({
               Kecamatan
             </TableHead>
             <TableHead scope="col" className={HEAD_CLASS}>
-              Status
+              Legalitas
+            </TableHead>
+            <TableHead scope="col" className={HEAD_CLASS}>
+              Pendampingan
             </TableHead>
             <TableHead scope="col" className={HEAD_CLASS}>
               Omzet Awal
@@ -113,7 +123,7 @@ export function EnterpriseTableContent({
               Omzet Saat Ini
             </TableHead>
             <TableHead scope="col" className={HEAD_CLASS}>
-              Diperbarui
+              Status
             </TableHead>
             <TableHead scope="col" className={`${HEAD_CLASS} pr-6 text-right sm:pr-8`}>
               Aksi
@@ -151,9 +161,18 @@ export function EnterpriseTableContent({
                     {renderValue(enterprise.district)}
                   </TableCell>
                   <TableCell className="py-3.5">
-                    <StatusBadge
-                      label={ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
-                    />
+                    {enterprise.legal_status ? (
+                      <StatusBadge label={LEGAL_STATUS_LABELS[enterprise.legal_status]} />
+                    ) : (
+                      <span className="text-dash-muted text-xs">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="py-3.5">
+                    {enterprise.mentoring_status ? (
+                      <StatusBadge label={PROCESS_STATUS_LABELS[enterprise.mentoring_status]} />
+                    ) : (
+                      <span className="text-dash-muted text-xs">—</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
                     {formatCurrency(enterprise.initial_turnover)}
@@ -161,8 +180,10 @@ export function EnterpriseTableContent({
                   <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
                     {formatCurrency(enterprise.current_turnover)}
                   </TableCell>
-                  <TableCell className="text-dash-muted py-3.5 text-xs font-medium">
-                    {formatUnixDateTime(enterprise.updated_at)}
+                  <TableCell className="py-3.5">
+                    <StatusBadge
+                      label={ENTERPRISE_STATUS_LABELS[enterprise.status] ?? enterprise.status}
+                    />
                   </TableCell>
                   <TableCell className="py-3.5 pr-6 text-right sm:pr-8">
                     <DropdownMenu>
@@ -182,6 +203,13 @@ export function EnterpriseTableContent({
                         >
                           <Eye className="h-4 w-4" aria-hidden="true" />
                           Lihat Detail
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => onRequestEdit(enterprise)}
+                          className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
+                        >
+                          <Pencil className="h-4 w-4" aria-hidden="true" />
+                          Edit Usaha
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           disabled={isMutating}
