@@ -21,8 +21,8 @@ const AdminUsersManagementPage = lazy(() => import('@/pages/admin/admin-users-ma
 const DashboardIndexPage = lazy(() => import('@/pages/dashboard-index'));
 const DashboardPasswordPage = lazy(() => import('@/pages/dashboard-password'));
 const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
-const EnterpriseDetailPage = lazy(() => import('@/pages/enterprise-detail'));
-const EnterprisesUserPage = lazy(() => import('@/pages/enterprises-user'));
+const EnterpriseDetailPage = lazy(() => import('@/pages/enterprise/enterprise-detail'));
+const EnterprisesUserPage = lazy(() => import('@/pages/enterprise/enterprises-user'));
 const DashboardProgramPage = lazy(() => import('@/pages/dashboard-program'));
 const DashboardProgramSayaPage = lazy(() => import('@/pages/dashboard-program-saya'));
 const DatabasePage = lazy(() => import('@/pages/database'));
