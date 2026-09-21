@@ -24,8 +24,15 @@ export type GeneralStatus = 'yes' | 'no' | 'in_progress';
 
 export interface Enterprise {
   public_id: string;
-  name: string | null;
+  user_public_id: string;
+  full_name: string | null;
+  enterprise_name: string;
+  name?: string | null;
   business_sector: BusinessSector;
+  description: string | null;
+  address: string | null;
+  focus_commodity: string | null;
+  dispora_support: string | null;
   legal_status: LegalStatus | null;
   business_digitization: BusinessDigitization | null;
   intervention_needs: InterventionNeeds | null;
@@ -41,6 +48,33 @@ export interface Enterprise {
   updated_at: number;
 }
 
+export interface PublicEnterprise {
+  public_id: string;
+  enterprise_name: string;
+  full_name: string | null;
+  business_sector: BusinessSector;
+  district: string | null;
+  description: string | null;
+  focus_commodity: string | null;
+  dispora_support: string | null;
+  intervention_needs: InterventionNeeds | null;
+  created_at: number;
+}
+
+export interface PublicEnterpriseListResponse {
+  enterprises: PublicEnterprise[];
+  next_cursor?: string;
+}
+
+export interface PublicEnterpriseListParams {
+  cursor?: string;
+  limit?: number;
+  search?: string;
+  district?: string;
+  intervention_needs?: InterventionNeeds | string;
+  business_sector?: BusinessSector | string;
+}
+
 export interface EnterpriseListResponse {
   enterprises: Enterprise[];
   next_cursor?: string;
@@ -49,6 +83,7 @@ export interface EnterpriseListResponse {
 export interface EnterpriseListParams {
   cursor?: string;
   limit?: number;
+  search?: string;
   district?: string;
   status?: EnterpriseStatus;
   business_sector?: BusinessSector | string;
@@ -62,8 +97,12 @@ export interface EnterpriseListParams {
 }
 
 export interface CreateEnterpriseInput {
+  enterprise_name: string;
   name?: string | null;
   business_sector: BusinessSector;
+  description?: string | null;
+  address?: string | null;
+  focus_commodity?: string | null;
   legal_status?: LegalStatus | null;
   business_digitization?: BusinessDigitization | null;
   intervention_needs?: InterventionNeeds | null;
@@ -77,8 +116,13 @@ export interface CreateEnterpriseInput {
 }
 
 export interface UpdateEnterpriseInput {
+  enterprise_name?: string;
   name?: string | null;
   business_sector?: BusinessSector;
+  description?: string | null;
+  address?: string | null;
+  focus_commodity?: string | null;
+  dispora_support?: string | null;
   legal_status?: LegalStatus | null;
   business_digitization?: BusinessDigitization | null;
   intervention_needs?: InterventionNeeds | null;

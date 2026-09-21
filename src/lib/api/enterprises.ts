@@ -5,6 +5,8 @@ import type {
   Enterprise,
   EnterpriseListParams,
   EnterpriseListResponse,
+  PublicEnterpriseListParams,
+  PublicEnterpriseListResponse,
   UpdateEnterpriseInput,
 } from '@/types/enterprises';
 
@@ -19,6 +21,10 @@ export function listEnterprises(
 
   if (params.limit !== undefined) {
     search.set('limit', String(params.limit));
+  }
+
+  if (params.search?.trim()) {
+    search.set('search', params.search.trim());
   }
 
   if (params.district?.trim()) {
@@ -64,6 +70,40 @@ export function listEnterprises(
   const query = search.toString();
 
   return apiRequest<EnterpriseListResponse>(`/enterprises${query ? `?${query}` : ''}`);
+}
+
+export function listPublicEnterprises(
+  params: PublicEnterpriseListParams = {}
+): Promise<PublicEnterpriseListResponse> {
+  const search = new URLSearchParams();
+
+  if (params.cursor) {
+    search.set('cursor', params.cursor);
+  }
+
+  if (params.limit !== undefined) {
+    search.set('limit', String(params.limit));
+  }
+
+  if (params.search?.trim()) {
+    search.set('search', params.search.trim());
+  }
+
+  if (params.district?.trim()) {
+    search.set('district', params.district.trim());
+  }
+
+  if (params.intervention_needs?.trim()) {
+    search.set('intervention_needs', params.intervention_needs.trim());
+  }
+
+  if (params.business_sector?.trim()) {
+    search.set('business_sector', params.business_sector.trim());
+  }
+
+  const query = search.toString();
+
+  return apiRequest<PublicEnterpriseListResponse>(`/enterprises/public${query ? `?${query}` : ''}`);
 }
 
 export function getEnterprise(publicId: string): Promise<Enterprise> {
