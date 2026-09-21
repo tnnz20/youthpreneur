@@ -81,6 +81,15 @@ export const GENERAL_STATUS_OPTIONS: { value: GeneralStatus | null; label: strin
   { value: 'in_progress', label: 'Dalam Proses' },
 ];
 
+export const BUSINESS_SECTORS = [
+  'Kuliner',
+  'Perdagangan Ritel',
+  'Agribisnis & Ketahanan Pangan',
+  'Jasa & Layanan Publik',
+  'Fashion & Konveksi',
+  'E-Commerce & Ekonomi Kreatif',
+] as const;
+
 export const BUSINESS_SECTOR_LABELS: Record<BusinessSector, string> = {
   Kuliner: 'Kuliner',
   'Perdagangan Ritel': 'Perdagangan Ritel',
@@ -90,14 +99,18 @@ export const BUSINESS_SECTOR_LABELS: Record<BusinessSector, string> = {
   'E-Commerce & Ekonomi Kreatif': 'E-Commerce & Ekonomi Kreatif',
 };
 
-export const BUSINESS_SECTOR_OPTIONS: { value: BusinessSector; label: string }[] = [
-  { value: 'Kuliner', label: 'Kuliner' },
-  { value: 'Perdagangan Ritel', label: 'Perdagangan Ritel' },
-  { value: 'Agribisnis & Ketahanan Pangan', label: 'Agribisnis & Ketahanan Pangan' },
-  { value: 'Jasa & Layanan Publik', label: 'Jasa & Layanan Publik' },
-  { value: 'Fashion & Konveksi', label: 'Fashion & Konveksi' },
-  { value: 'E-Commerce & Ekonomi Kreatif', label: 'E-Commerce & Ekonomi Kreatif' },
-];
+export const BUSINESS_SECTOR_OPTIONS: { value: BusinessSector; label: string }[] =
+  BUSINESS_SECTORS.map((sector) => ({ value: sector, label: sector }));
+
+export const INTERVENTION_NEEDS = [
+  'Pelatihan',
+  'Mentoring',
+  'Digitalisasi',
+  'Legalitas',
+  'Permodalan',
+  'Kemitraan',
+  'Pemasaran',
+] as const;
 
 export const INTERVENTION_NEEDS_LABELS: Record<InterventionNeeds, string> = {
   Pelatihan: 'Pelatihan',
@@ -114,13 +127,7 @@ export const INTERVENTION_NEEDS_OPTIONS: {
   label: string;
 }[] = [
   { value: null, label: 'Pilih Kebutuhan Intervensi' },
-  { value: 'Pelatihan', label: 'Pelatihan' },
-  { value: 'Mentoring', label: 'Mentoring' },
-  { value: 'Digitalisasi', label: 'Digitalisasi' },
-  { value: 'Legalitas', label: 'Legalitas' },
-  { value: 'Permodalan', label: 'Permodalan' },
-  { value: 'Kemitraan', label: 'Kemitraan' },
-  { value: 'Pemasaran', label: 'Pemasaran' },
+  ...INTERVENTION_NEEDS.map((need) => ({ value: need, label: need })),
 ];
 
 export const ENTERPRISE_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];

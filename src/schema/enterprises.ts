@@ -1,25 +1,10 @@
 import { z } from 'zod';
 
+import { BUSINESS_SECTORS, INTERVENTION_NEEDS } from '@/constants/enterprises';
+
 const turnoverRegex = /^\d+(\.\d+)?$/;
 
-export const BUSINESS_SECTORS = [
-  'Kuliner',
-  'Perdagangan Ritel',
-  'Agribisnis & Ketahanan Pangan',
-  'Jasa & Layanan Publik',
-  'Fashion & Konveksi',
-  'E-Commerce & Ekonomi Kreatif',
-] as const;
-
-export const INTERVENTION_NEEDS = [
-  'Pelatihan',
-  'Mentoring',
-  'Digitalisasi',
-  'Legalitas',
-  'Permodalan',
-  'Kemitraan',
-  'Pemasaran',
-] as const;
+export { BUSINESS_SECTORS, INTERVENTION_NEEDS };
 
 export const createEnterpriseSchema = z.object({
   enterprise_name: z
