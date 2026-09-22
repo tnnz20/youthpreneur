@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Meter } from '@/components/dashboard/shared/meter';
 import { StatusBadge } from '@/components/dashboard/shared/status-badge';
 import { ProgramDetailDialog } from '@/components/dashboard/user/program-detail-dialog';
+import { TrainingThumbnail } from '@/components/shared/training-thumbnail';
 import { Button } from '@/components/ui/button';
 
 import type { TrainingProgram } from '@/types/dashboard';
@@ -29,7 +30,14 @@ export function ProgramCard({ program, registered, onRegister }: ProgramCardProp
 
   return (
     <>
-      <div className="border-dash-border/60 bg-dash-surface shadow-bento hover:shadow-bento-lg flex flex-col justify-between overflow-hidden rounded-[2rem] border transition-all duration-300 hover:-translate-y-1">
+      <div className="group border-dash-border/60 bg-dash-surface shadow-bento hover:shadow-bento-lg flex flex-col justify-between overflow-hidden rounded-[2rem] border transition-all duration-300 hover:-translate-y-1">
+        <TrainingThumbnail
+          src={program.image}
+          alt={program.judul}
+          category={program.kategori}
+          aspectRatioClassName="h-44"
+          className="border-dash-border/60 border-b"
+        />
         <div className="p-5">
           <div className="mb-3 flex items-start justify-between gap-2">
             <span
