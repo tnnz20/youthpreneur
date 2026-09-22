@@ -7,7 +7,7 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
     title: 'Menu',
     links: [
       { label: 'Kategori Usaha', to: '/#kategori' },
-      { label: 'Program Pelatihan', to: '/#kursus' },
+      { label: 'Program Pelatihan', to: '/training-catalog' },
     ],
     actions: [
       {
