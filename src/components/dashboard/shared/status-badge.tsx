@@ -11,7 +11,13 @@ const TONE_CLASSES: Record<string, { badge: string; dot: string; pulse?: boolean
     dot: 'bg-amber-400',
     pulse: true,
   },
+  'Menunggu Konfirmasi': {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-fg',
+    dot: 'bg-amber-400',
+    pulse: true,
+  },
   Disetujui: { badge: 'bg-dash-accent text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
+  Diterima: { badge: 'bg-dash-accent text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
   Ditolak: { badge: 'bg-dash-fg text-dash-bg', dot: 'bg-rose-400' },
   Selesai: { badge: 'bg-dash-accent/60 text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
   Aktif: { badge: 'bg-dash-accent text-dash-accent-fg', dot: 'bg-dash-accent-fg' },

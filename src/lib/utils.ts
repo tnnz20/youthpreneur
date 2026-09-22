@@ -1,6 +1,24 @@
 import { DateTime } from 'luxon';
 
+import { API_BASE_URL } from '@/lib/api/client';
+
 export { cn } from 'cn';
+
+export function resolveImageUrl(url: string | null | undefined): string {
+  if (!url || !url.trim()) return '';
+  const trimmed = url.trim();
+  if (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('data:') ||
+    trimmed.startsWith('blob:')
+  ) {
+    return trimmed;
+  }
+  const base = API_BASE_URL.replace(/\/+$/, '');
+  const path = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  return `${base}${path}`;
+}
 
 export function formatUnixDateTime(value: number): string {
   return DateTime.fromSeconds(value).setLocale('id').toFormat('dd LLL yyyy, HH:mm');
