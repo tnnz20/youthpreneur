@@ -71,7 +71,7 @@ export function useTrainingCatalog() {
     return () => {
       cancelled = true;
     };
-  }, [authStatus]);
+  }, [authStatus, refreshKey]);
 
   // Fetch training catalog data from GET /training-catalog
   useEffect(() => {

@@ -183,7 +183,7 @@ export function UserTrainingTableContent({
           {!loading &&
             enrollments.map((item) => {
               const catalogTitle = item.catalog?.title ?? item.catalog?.name ?? 'Program Pelatihan';
-              const isCancelled = Boolean(item.deleted_at);
+              const isCancelled = Boolean(item.deleted_at || item.status === 'cancelled');
               const displayStatus = getDisplayStatus(item);
               const trainingStatusLabel = item.catalog?.training_status
                 ? (TRAINING_STATUS_LABELS[item.catalog.training_status] ??
