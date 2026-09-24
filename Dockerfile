@@ -10,7 +10,13 @@ RUN npm ci
 # Copy full source tree
 COPY . .
 
-# Build-time argument for API URL, defaulting to /api for reverse-proxied deployments
+# Build-time arguments for environment and API URL
+ARG NODE_ENV=production
+ENV NODE_ENV=$NODE_ENV
+
+ARG VITE_APP_ENV=production
+ENV VITE_APP_ENV=$VITE_APP_ENV
+
 ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
