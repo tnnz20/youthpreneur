@@ -7,7 +7,7 @@ export type TrainingCategory =
 
 export type TrainingStatus = 'planned' | 'ongoing' | 'completed';
 
-export type EnrollmentStatus = 'pending' | 'accepted' | 'rejected';
+export type EnrollmentStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled';
 
 export interface TrainingCatalog {
   public_id: string;
@@ -74,6 +74,7 @@ export interface TrainingCatalogListResponse {
 export interface EnrollmentCatalogSummary {
   public_id: string;
   title?: string | null;
+  name?: string | null;
   category?: TrainingCategory | null;
   max_slots?: number | null;
   registered_count?: number;
@@ -88,6 +89,7 @@ export interface TrainingEnrollment {
   status: EnrollmentStatus;
   created_at: number;
   updated_at: number;
+  deleted_at?: number | null;
   catalog?: EnrollmentCatalogSummary | null;
 }
 

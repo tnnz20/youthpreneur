@@ -30,6 +30,7 @@ export const ENROLLMENT_STATUS_LABELS: Record<EnrollmentStatus, string> = {
   pending: 'Menunggu Konfirmasi',
   accepted: 'Diterima',
   rejected: 'Ditolak',
+  cancelled: 'Dibatalkan',
 };
 
 export const ENROLLMENT_STATUS_OPTIONS: { value: EnrollmentStatus | null; label: string }[] = [
@@ -37,6 +38,7 @@ export const ENROLLMENT_STATUS_OPTIONS: { value: EnrollmentStatus | null; label:
   { value: 'pending', label: 'Menunggu Konfirmasi' },
   { value: 'accepted', label: 'Diterima' },
   { value: 'rejected', label: 'Ditolak' },
+  { value: 'cancelled', label: 'Dibatalkan' },
 ];
 
 export const TRAINING_PAGE_SIZE_OPTIONS = [10, 20, 50, 100];

@@ -29,7 +29,7 @@ const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
 const EnterpriseDetailPage = lazy(() => import('@/pages/enterprise/enterprise-detail'));
 const EnterprisesUserPage = lazy(() => import('@/pages/enterprise/enterprises-user'));
 const DashboardProgramPage = lazy(() => import('@/pages/dashboard-program'));
-const DashboardProgramSayaPage = lazy(() => import('@/pages/dashboard-program-saya'));
+const TrainingUserPage = lazy(() => import('@/pages/training/training-user'));
 const DatabasePage = lazy(() => import('@/pages/database'));
 const TrainingCatalogPage = lazy(() => import('@/pages/training-catalog'));
 const HomePage = lazy(() => import('@/pages/home'));
@@ -91,7 +91,7 @@ export default function App() {
               />
               <Route path="/dashboard" element={<DashboardIndexPage />} />
               <Route path="/dashboard/program" element={<DashboardProgramPage />} />
-              <Route path="/dashboard/my-trainings" element={<DashboardProgramSayaPage />} />
+              <Route path="/dashboard/my-trainings" element={<TrainingUserPage />} />
               <Route path="/dashboard/my-enterprises" element={<EnterprisesUserPage />} />
               <Route
                 path="/dashboard/my-enterprises/:publicId"

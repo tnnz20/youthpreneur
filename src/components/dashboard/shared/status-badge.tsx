@@ -19,6 +19,10 @@ const TONE_CLASSES: Record<string, { badge: string; dot: string; pulse?: boolean
   Disetujui: { badge: 'bg-dash-accent text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
   Diterima: { badge: 'bg-dash-accent text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
   Ditolak: { badge: 'bg-dash-fg text-dash-bg', dot: 'bg-rose-400' },
+  Dibatalkan: {
+    badge: 'border border-dash-border bg-dash-surface-2 text-dash-muted',
+    dot: 'bg-rose-400',
+  },
   Selesai: { badge: 'bg-dash-accent/60 text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
   Aktif: { badge: 'bg-dash-accent text-dash-accent-fg', dot: 'bg-dash-accent-fg' },
   'Non Aktif': {
