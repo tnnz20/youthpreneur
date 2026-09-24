@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 import { registerUser } from '@/lib/api/auth';
-import { ApiError } from '@/lib/api/client';
+import { toErrorMessage } from '@/lib/utils';
 
 import { RegisterCredentialsStep } from '@/components/auth/register-credentials-step';
 import { RegisterProfileStep } from '@/components/auth/register-profile-step';
@@ -79,7 +79,7 @@ export default function RegisterPage() {
       toast.success(`Akun berhasil dibuat! Silahkan masuk dengan akun yang dibuat.`);
       navigate('/auth/login');
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : 'Pendaftaran gagal. Coba lagi.');
+      toast.error(toErrorMessage(error));
     } finally {
       setSubmitting(false);
     }

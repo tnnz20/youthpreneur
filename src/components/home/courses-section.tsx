@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { SectionHeading } from '@/components/shared/section-heading';
 import { SmartImage } from '@/components/shared/smart-image';
 import { Badge } from '@/components/ui/badge';
@@ -99,13 +101,12 @@ export function CoursesSection() {
         </div>
 
         <div className="mt-12 text-center">
-          <Button
-            type="button"
-            onClick={() => openModal('Katalog 60+ Program Wirausaha Daerah')}
-            className="bg-brand-dark h-auto rounded-full px-8 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:bg-black active:scale-95"
+          <Link
+            to="/training-catalog"
+            className="bg-brand-dark inline-block h-auto rounded-full px-8 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:bg-black active:scale-95"
           >
             Lihat Semua Program Pelatihan
-          </Button>
+          </Link>
         </div>
       </div>
     </section>

@@ -21,6 +21,7 @@ export interface TrainingProgram {
   kuota: number;
   terdaftar: number;
   status: ProgramStatus;
+  image?: string;
 }
 
 export interface ProgramRegistration {

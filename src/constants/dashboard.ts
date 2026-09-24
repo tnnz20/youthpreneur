@@ -68,6 +68,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 30,
     terdaftar: 24,
     status: 'Dibuka',
+    image:
+      'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-002',
@@ -82,6 +84,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 40,
     terdaftar: 37,
     status: 'Dibuka',
+    image:
+      'https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-003',
@@ -96,6 +100,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 25,
     terdaftar: 25,
     status: 'Ditutup',
+    image:
+      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-004',
@@ -110,6 +116,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 20,
     terdaftar: 9,
     status: 'Segera',
+    image:
+      'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-005',
@@ -124,6 +132,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 25,
     terdaftar: 14,
     status: 'Dibuka',
+    image:
+      'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-006',
@@ -138,6 +148,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 30,
     terdaftar: 11,
     status: 'Dibuka',
+    image:
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-007',
@@ -152,6 +164,8 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 20,
     terdaftar: 20,
     status: 'Ditutup',
+    image:
+      'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'PRG-008',
@@ -166,6 +180,7 @@ export const TRAINING_PROGRAMS: TrainingProgram[] = [
     kuota: 35,
     terdaftar: 18,
     status: 'Segera',
+    // Intentionally no image here to demonstrate default category placeholder banner!
   },
 ];
 
@@ -332,16 +347,29 @@ export const DASHBOARD_STATS: DashboardStat[] = [
   { label: 'Pemuda Punya NIB', value: '412', detail: '32% dari total', tone: 'mint' },
 ];
 
-export interface DashboardNavItem {
+export interface DashboardNavSubItem {
   label: string;
   to: string;
+}
+
+export interface DashboardNavItem {
+  label: string;
+  to?: string;
   icon: LucideIcon;
+  children?: DashboardNavSubItem[];
 }
 
 export const ADMIN_NAV: DashboardNavItem[] = [
   { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
   { label: 'Kelola Wirausaha', to: '/dashboard/enterprises', icon: BriefcaseBusiness },
-  { label: 'Kelola Pelatihan', to: '/dashboard/trainings', icon: GraduationCap },
+  {
+    label: 'Kelola Pelatihan',
+    icon: GraduationCap,
+    children: [
+      { label: 'Program Pelatihan', to: '/dashboard/trainings' },
+      { label: 'Data Peserta', to: '/dashboard/trainings/participants' },
+    ],
+  },
   { label: 'Kelola Pengguna', to: '/dashboard/users', icon: Users },
 ];
 
