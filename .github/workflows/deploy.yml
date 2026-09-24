@@ -1,0 +1,98 @@
+name: Deploy Frontend
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Customize tag to deploy (e.g. v1.0.0 or latest)'
+        required: false
+        default: 'latest'
+        type: string
+      api_base_url:
+        description: 'Customize VITE_API_BASE_URL (defaults to repository variable or /api)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  build-and-push:
+    name: Build and Push Image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine image tags and build args
+        id: meta
+        run: |
+          TAG="${{ inputs.tag || github.ref_name }}"
+          REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${REPO}/frontend"
+          API_URL="${{ inputs.api_base_url || vars.VITE_API_BASE_URL || '/api' }}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "vite_api_base_url=${API_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          build-args: |
+            VITE_API_BASE_URL=${{ steps.meta.outputs.vite_api_base_url }}
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}
+            ${{ steps.meta.outputs.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy image
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+
+            # Export the version tag and full image path for the session
+            export VERSION_TAG=${{ inputs.tag || github.ref_name }}
+            export FRONTEND_IMAGE=ghcr.io/${{ github.repository }}/frontend:$VERSION_TAG
+
+            # Pull the new Image
+            podman compose -p youthpreneur pull frontend
+
+            # Stop and remove ONLY the frontend service using compose
+            podman compose -p youthpreneur stop frontend
+            podman compose -p youthpreneur rm -f frontend
+
+            # Start the updated frontend container isolated from backend
+            podman compose -p youthpreneur up -d --no-deps frontend
+
+            # Clean up old images
+            podman image prune -f
