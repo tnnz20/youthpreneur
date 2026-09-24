@@ -35,6 +35,7 @@ export function useTrainingCatalog() {
   const [enrolledCatalogIds, setEnrolledCatalogIds] = useState<Set<string>>(() => new Set());
   const [enrollingId, setEnrollingId] = useState<string | null>(null);
   const [selectedCatalog, setSelectedCatalog] = useState<TrainingCatalog | null>(null);
+  const [pendingEnrollCatalog, setPendingEnrollCatalog] = useState<TrainingCatalog | null>(null);
 
   // Debounce search by 300ms
   useEffect(() => {
@@ -54,7 +55,8 @@ export function useTrainingCatalog() {
           if (!cancelled) {
             const ids = new Set<string>();
             for (const item of res.training_enrollments ?? []) {
-              if (item.catalog?.public_id) {
+              const isCancelled = item.status === 'cancelled' || Boolean(item.deleted_at);
+              if (item.catalog?.public_id && !isCancelled) {
                 ids.add(item.catalog.public_id);
               }
             }
@@ -168,27 +170,46 @@ export function useTrainingCatalog() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleEnroll = async (item: TrainingCatalog) => {
+  const handleEnroll = (item: TrainingCatalog) => {
     if (authStatus !== 'authenticated') {
       toast.info('Silakan masuk ke akun Anda terlebih dahulu untuk mendaftar pelatihan.');
       navigate('/auth/login');
       return;
     }
 
+    if (selectedCatalog?.public_id === item.public_id) {
+      setSelectedCatalog(null);
+    }
+    setPendingEnrollCatalog(item);
+  };
+
+  const handleConfirmEnroll = async () => {
+    if (!pendingEnrollCatalog) return;
+
+    const item = pendingEnrollCatalog;
     setEnrollingId(item.public_id);
     try {
       await enrollTraining({ catalog_public_id: item.public_id });
       setEnrolledCatalogIds((prev) => new Set([...prev, item.public_id]));
+      setCatalogs((prev) =>
+        prev.map((c) =>
+          c.public_id === item.public_id ? { ...c, registered_count: c.registered_count + 1 } : c
+        )
+      );
       toast.success(
         `Pendaftaran untuk "${item.title ?? 'Program'}" berhasil dikirim. Menunggu verifikasi tim Dispora Tapin.`
       );
-      if (selectedCatalog?.public_id === item.public_id) {
-        setSelectedCatalog(null);
-      }
+      setPendingEnrollCatalog(null);
     } catch (err: unknown) {
       toast.error(toErrorMessage(err));
     } finally {
       setEnrollingId(null);
+    }
+  };
+
+  const handleCloseEnrollDialog = (open: boolean) => {
+    if (!open && !enrollingId) {
+      setPendingEnrollCatalog(null);
     }
   };
 
@@ -215,6 +236,7 @@ export function useTrainingCatalog() {
     enrollingId,
     selectedCatalog,
     setSelectedCatalog,
+    pendingEnrollCatalog,
     handleSearchChange,
     handleCategoryChange,
     handleStatusChange,
@@ -224,5 +246,7 @@ export function useTrainingCatalog() {
     handleNextPage,
     handlePreviousPage,
     handleEnroll,
+    handleConfirmEnroll,
+    handleCloseEnrollDialog,
   };
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 import { listCatalogEnrollments, updateEnrollmentStatus } from '@/lib/api/trainings';
@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -78,6 +79,8 @@ export function TrainingEnrollmentTable({
   catalogPublicId,
   onEnrollmentUpdated,
 }: TrainingEnrollmentTableProps) {
+  const navigate = useNavigate();
+
   const [enrollments, setEnrollments] = useState<TrainingEnrollment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -195,7 +198,7 @@ export function TrainingEnrollmentTable({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex w-full items-center gap-3 sm:w-auto">
             <Select
               value={status === 'semua' ? null : status}
               onValueChange={(val) =>
@@ -203,7 +206,7 @@ export function TrainingEnrollmentTable({
               }
               items={ENROLLMENT_STATUS_OPTIONS}
             >
-              <SelectTrigger className="h-10 w-[200px] rounded-2xl" size="sm">
+              <SelectTrigger className="h-10 w-full rounded-2xl sm:w-[260px]" size="sm">
                 <SelectValue placeholder="Semua Status Pendaftaran" />
               </SelectTrigger>
               <SelectContent>
@@ -221,7 +224,7 @@ export function TrainingEnrollmentTable({
               size="sm"
               onClick={handleReload}
               disabled={loading}
-              className="border-dash-border h-10 w-10 rounded-2xl p-0"
+              className="border-dash-border h-10 w-10 shrink-0 rounded-2xl p-0"
               aria-label="Muat ulang pendaftar"
             >
               <RotateCcw className={cn('h-4 w-4', loading && 'animate-spin')} aria-hidden="true" />
@@ -327,9 +330,19 @@ export function TrainingEnrollmentTable({
                             <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
                           )}
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
+                        <DropdownMenuContent align="end" className="w-52">
                           <DropdownMenuItem
-                            disabled={item.status === 'accepted'}
+                            onClick={() => navigate(`/dashboard/users/${item.user_public_id}`)}
+                            className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
+                          >
+                            <User className="h-4 w-4" aria-hidden="true" />
+                            Lihat Pengguna
+                          </DropdownMenuItem>
+
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuItem
+                            disabled={item.status === 'cancelled' || item.status === 'accepted'}
                             onClick={() => handleStatusChange(item, 'accepted')}
                             className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >
@@ -337,7 +350,7 @@ export function TrainingEnrollmentTable({
                             Terima Pendaftaran
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            disabled={item.status === 'rejected'}
+                            disabled={item.status === 'cancelled' || item.status === 'rejected'}
                             variant="destructive"
                             onClick={() => handleStatusChange(item, 'rejected')}
                             className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
@@ -346,7 +359,7 @@ export function TrainingEnrollmentTable({
                             Tolak Pendaftaran
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            disabled={item.status === 'pending'}
+                            disabled={item.status === 'cancelled' || item.status === 'pending'}
                             onClick={() => handleStatusChange(item, 'pending')}
                             className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                           >

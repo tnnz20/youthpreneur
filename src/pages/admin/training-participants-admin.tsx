@@ -13,6 +13,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -441,11 +442,13 @@ export default function TrainingParticipantsAdminPage() {
                               className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                             >
                               <User className="h-4 w-4" aria-hidden="true" />
-                              Lihat Profil Pengguna
+                              Lihat Pengguna
                             </DropdownMenuItem>
 
+                            <DropdownMenuSeparator />
+
                             <DropdownMenuItem
-                              disabled={item.status === 'accepted'}
+                              disabled={item.status === 'cancelled' || item.status === 'accepted'}
                               onClick={() => handleStatusChange(item, 'accepted')}
                               className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                             >
@@ -457,7 +460,7 @@ export default function TrainingParticipantsAdminPage() {
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
-                              disabled={item.status === 'rejected'}
+                              disabled={item.status === 'cancelled' || item.status === 'rejected'}
                               variant="destructive"
                               onClick={() => handleStatusChange(item, 'rejected')}
                               className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
@@ -467,7 +470,7 @@ export default function TrainingParticipantsAdminPage() {
                             </DropdownMenuItem>
 
                             <DropdownMenuItem
-                              disabled={item.status === 'pending'}
+                              disabled={item.status === 'cancelled' || item.status === 'pending'}
                               onClick={() => handleStatusChange(item, 'pending')}
                               className="text-dash-fg hover:bg-dash-surface-2 cursor-pointer py-2 text-sm font-medium"
                             >

@@ -1,6 +1,7 @@
 import { CatalogCard } from '@/components/training-catalog/catalog-card';
 import { CatalogDetailDialog } from '@/components/training-catalog/catalog-detail-dialog';
 import { CatalogEmptyState } from '@/components/training-catalog/catalog-empty-state';
+import { CatalogEnrollDialog } from '@/components/training-catalog/catalog-enroll-dialog';
 import { CatalogFilterBar } from '@/components/training-catalog/catalog-filter-bar';
 import { CatalogSkeletonGrid } from '@/components/training-catalog/catalog-skeleton';
 import {
@@ -29,6 +30,7 @@ export default function TrainingCatalogPage() {
     enrollingId,
     selectedCatalog,
     setSelectedCatalog,
+    pendingEnrollCatalog,
     handleSearchChange,
     handleCategoryChange,
     handleStatusChange,
@@ -38,6 +40,8 @@ export default function TrainingCatalogPage() {
     handleNextPage,
     handlePreviousPage,
     handleEnroll,
+    handleConfirmEnroll,
+    handleCloseEnrollDialog,
   } = useTrainingCatalog();
 
   return (
@@ -155,6 +159,15 @@ export default function TrainingCatalogPage() {
         isEnrolled={selectedCatalog !== null && enrolledCatalogIds.has(selectedCatalog.public_id)}
         isEnrolling={selectedCatalog !== null && enrollingId === selectedCatalog.public_id}
         onEnroll={handleEnroll}
+      />
+
+      {/* Program Registration Confirmation Dialog */}
+      <CatalogEnrollDialog
+        catalog={pendingEnrollCatalog}
+        open={pendingEnrollCatalog !== null}
+        onOpenChange={handleCloseEnrollDialog}
+        loading={enrollingId !== null}
+        onConfirm={handleConfirmEnroll}
       />
     </div>
   );
