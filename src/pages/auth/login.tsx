@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 import { loginUser } from '@/lib/api/auth';
-import { ApiError } from '@/lib/api/client';
+import { toErrorMessage } from '@/lib/utils';
 
 import { authInputClass } from '@/components/auth/auth-form';
 import { Button } from '@/components/ui/button';
@@ -42,7 +42,7 @@ export default function LoginPage() {
       toast.success(`Berhasil masuk! Selamat datang kembali, ${name}.`);
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : 'Gagal masuk. Coba lagi.');
+      toast.error(toErrorMessage(error));
     } finally {
       setSubmitting(false);
     }

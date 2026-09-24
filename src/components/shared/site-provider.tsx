@@ -2,8 +2,6 @@ import { type ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Toaster } from '@/components/ui/sonner';
-
 import { SiteContext } from '@/hooks/use-site';
 
 import { ActionModal } from './action-modal';
@@ -48,7 +46,6 @@ export function SiteProvider({ children }: SiteProviderProps) {
         onClose={closeModal}
         onSubmitted={handleSubmitted}
       />
-      <Toaster />
     </SiteContext.Provider>
   );
 }
