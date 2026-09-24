@@ -211,7 +211,7 @@ export default function DashboardPage() {
 
           <div className="mt-5">
             <Link
-              to="/dashboard/program"
+              to="/training-catalog"
               className="bg-dash-fg text-dash-bg flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-xs font-bold transition-opacity hover:opacity-90"
             >
               Jelajahi Program Lainnya

@@ -1,6 +1,6 @@
 import { Suspense, lazy } from 'react';
 
-import { Navigate, Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router';
 
 import AuthLayout from '@/layouts/auth-layout';
 import DashboardLayout from '@/layouts/dashboard-layout';
@@ -28,7 +28,6 @@ const DashboardPasswordPage = lazy(() => import('@/pages/dashboard-password'));
 const DashboardProfilePage = lazy(() => import('@/pages/dashboard-profile'));
 const EnterpriseDetailPage = lazy(() => import('@/pages/enterprise/enterprise-detail'));
 const EnterprisesUserPage = lazy(() => import('@/pages/enterprise/enterprises-user'));
-const DashboardProgramPage = lazy(() => import('@/pages/dashboard-program'));
 const TrainingUserPage = lazy(() => import('@/pages/training/training-user'));
 const DatabasePage = lazy(() => import('@/pages/database'));
 const TrainingCatalogPage = lazy(() => import('@/pages/training-catalog'));
@@ -84,21 +83,7 @@ export default function App() {
                 </RequireAuth>
               }
             >
-              <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
-              <Route
-                path="/admin/program"
-                element={<Navigate to="/dashboard/trainings" replace />}
-              />
-              <Route path="/dashboard" element={<DashboardIndexPage />} />
-              <Route path="/dashboard/program" element={<DashboardProgramPage />} />
-              <Route path="/dashboard/my-trainings" element={<TrainingUserPage />} />
-              <Route path="/dashboard/my-enterprises" element={<EnterprisesUserPage />} />
-              <Route
-                path="/dashboard/my-enterprises/:publicId"
-                element={<EnterpriseDetailPage />}
-              />
-              <Route path="/dashboard/profile" element={<DashboardProfilePage />} />
-              <Route path="/dashboard/password" element={<DashboardPasswordPage />} />
+              {/* Admin Routes */}
               <Route
                 path="/dashboard/enterprises"
                 element={
@@ -155,6 +140,17 @@ export default function App() {
                   </RequireRole>
                 }
               />
+
+              {/* User / Member Routes */}
+              <Route path="/dashboard" element={<DashboardIndexPage />} />
+              <Route path="/dashboard/my-trainings" element={<TrainingUserPage />} />
+              <Route path="/dashboard/my-enterprises" element={<EnterprisesUserPage />} />
+              <Route
+                path="/dashboard/my-enterprises/:publicId"
+                element={<EnterpriseDetailPage />}
+              />
+              <Route path="/dashboard/profile" element={<DashboardProfilePage />} />
+              <Route path="/dashboard/password" element={<DashboardPasswordPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
