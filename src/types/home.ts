@@ -56,6 +56,7 @@ export interface Article {
   readTime: string;
   image: string;
   fallback: string;
+  url?: string;
 }
 
 export interface Official {

@@ -181,6 +181,16 @@ export const TESTIMONIALS: Testimonial[] = [
 
 export const ARTICLES: Article[] = [
   {
+    title: 'Tapin Youthpreneur, Dispora Dorong Pemuda Naik Kelas Jadi Wirausaha Mandiri',
+    modalTitle: 'Liputan Media: Radar Banjarmasin (Jawa Pos)',
+    date: '17/09/2026',
+    readTime: 'Radar Banjarmasin',
+    image:
+      'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=80',
+    fallback: 'https://placehold.co/400x250/FEE78A/141416?text=Radar+Banjarmasin',
+    url: 'https://radarbanjarmasin.jawapos.com/banua/2609170014/tapin-youthpreneur-dispora-dorong-pemuda-naik-kelas-jadi-wirausaha-mandiri#goog_rewarded',
+  },
+  {
     title: '10 Realitas yang Wajib Diketahui Pemuda Sebelum Memulai Bisnis di Daerah',
     modalTitle: 'Artikel: 10 Fakta Memulai Bisnis di Luar Kota Besar',
     date: '04/10/2026',
@@ -198,15 +208,6 @@ export const ARTICLES: Article[] = [
       'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
     fallback: 'https://placehold.co/400x250/141416/FFFFFF?text=Panduan+Legalitas',
   },
-  {
-    title: 'Temukan Potensi Komoditas Desa yang Paling Diminati Pasar Luar Negeri',
-    modalTitle: 'Artikel: Komoditas Desa yang Laris Manis di Luar Negeri',
-    date: '19/08/2026',
-    readTime: '6 menit baca',
-    image:
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80',
-    fallback: 'https://placehold.co/400x250/141416/FFFFFF?text=Ekspor+Komoditas',
-  },
 ];
 
 export const OFFICIALS: Official[] = [
@@ -221,7 +222,7 @@ export const OFFICIALS: Official[] = [
     name: 'H. Juanda',
     role: 'Wakil Bupati Tapin',
     image: '/assets/wakil-bupati.webp',
-    accentColor: 'bg-brand-blue',
-    badgeVariant: 'neoMint',
+    accentColor: 'bg-brand-yellow',
+    badgeVariant: 'neoYellow',
   },
 ];

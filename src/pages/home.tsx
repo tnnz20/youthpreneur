@@ -4,6 +4,7 @@ import { CoursesSection } from '@/components/home/courses-section';
 import { FeaturesRibbon } from '@/components/home/features-ribbon';
 import { HeroSection } from '@/components/home/hero-section';
 import { LeadersSection } from '@/components/home/leaders-section';
+import { MediaSection } from '@/components/home/media-section';
 import { MentorsSection } from '@/components/home/mentors-section';
 import { MetricsSection } from '@/components/home/metrics-section';
 import { TestimonialsSection } from '@/components/home/testimonials-section';
@@ -14,6 +15,7 @@ export default function HomePage() {
       <LeadersSection />
       <HeroSection />
       <MetricsSection />
+      <MediaSection />
       <CoursesSection />
       <FeaturesRibbon />
       <CategoriesSection />

@@ -35,8 +35,9 @@ export function HeroSection() {
             </Badge>
 
             <h1 className="text-brand-dark text-4xl leading-[1.12] font-black tracking-tight sm:text-5xl lg:text-[56px]">
-              Bangun Bisnis Hebat <br className="hidden sm:inline" />
-              dari Potensi Daerahmu
+              Pemuda Berdaya, <br className="hidden sm:inline" />
+              Wirausaha Tumbuh, <br className="hidden sm:inline" />
+              Tapin Maju
             </h1>
 
             <p className="text-brand-muted max-w-lg text-base leading-relaxed font-normal sm:text-lg">
@@ -99,7 +100,7 @@ export function HeroSection() {
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
                   fallbackSrc="https://placehold.co/600x800/FEE78A/141416?text=Wirausaha+Muda"
                   alt="Pemuda Pengusaha Daerah Sukses"
-                  className="h-full w-full object-cover object-top pt-6"
+                  className="h-full w-full object-cover object-top"
                 />
               </div>
 
