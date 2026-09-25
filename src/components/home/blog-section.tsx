@@ -33,14 +33,25 @@ export function BlogSection() {
                 />
               </div>
               <CardContent className="flex flex-1 flex-col justify-between p-5">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => openModal(article.modalTitle)}
-                  className="text-brand-dark h-auto w-full justify-start p-0 text-left text-base leading-snug font-bold whitespace-normal group-hover:underline hover:bg-transparent"
-                >
-                  {article.title}
-                </Button>
+                {article.url ? (
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-dark h-auto w-full text-left text-base leading-snug font-bold whitespace-normal group-hover:underline"
+                  >
+                    {article.title}
+                  </a>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => openModal(article.modalTitle)}
+                    className="text-brand-dark h-auto w-full justify-start p-0 text-left text-base leading-snug font-bold whitespace-normal group-hover:underline hover:bg-transparent"
+                  >
+                    {article.title}
+                  </Button>
+                )}
                 <div className="text-brand-muted mt-5 flex items-center justify-between border-t border-gray-100 pt-3 text-[11px]">
                   <span>{article.date}</span>
                   <span className="font-medium">{article.readTime}</span>

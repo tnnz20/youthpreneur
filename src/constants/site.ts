@@ -17,6 +17,11 @@ export const NAV_LINKS: NavLinkItem[] = [
   { label: 'Mentor', to: '/#mentor' },
   { label: 'Database Pemuda', to: '/database' },
   { label: 'Tentang Kami', to: '/about' },
+  {
+    label: 'Unduh Perbup',
+    to: '/documents/perbup-tapin-no-22-tahun-2026-kewirausahaan.pdf',
+    download: 'Perbup-Tapin-No-22-Tahun-2026-Kewirausahaan.pdf',
+  },
 ];
 
 export const KECAMATAN = [

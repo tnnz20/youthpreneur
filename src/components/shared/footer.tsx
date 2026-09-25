@@ -83,9 +83,21 @@ export function Footer() {
               <ul className="text-brand-muted space-y-2 text-xs">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    <Link to={link.to} className="hover:text-brand-dark transition">
-                      {link.label}
-                    </Link>
+                    {link.download ? (
+                      <a
+                        href={link.to}
+                        download={typeof link.download === 'string' ? link.download : true}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-brand-dark transition"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link to={link.to} className="hover:text-brand-dark transition">
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
                 {column.actions.map((action) => (

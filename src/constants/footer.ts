@@ -28,6 +28,11 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
       { label: 'Tentang Kami', to: '/about' },
       { label: 'Kabar Daerah', to: '/#blog' },
       { label: 'Jadi Mentor', to: '/#mentor' },
+      {
+        label: 'Unduh Perbup Kewirausahaan',
+        to: '/documents/perbup-tapin-no-22-tahun-2026-kewirausahaan.pdf',
+        download: 'Perbup-Tapin-No-22-Tahun-2026-Kewirausahaan.pdf',
+      },
     ],
     actions: [
       {

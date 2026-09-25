@@ -11,7 +11,7 @@ import { useSession } from '@/hooks/use-session';
 
 import { NAV_LINKS } from '@/constants/site';
 
-import { LayoutDashboard, Menu } from 'lucide-react';
+import { FileDown, LayoutDashboard, Menu } from 'lucide-react';
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -48,16 +48,40 @@ export function Navbar() {
           />
         </div>
 
-        <nav className="text-brand-dark/80 hidden shrink-0 items-center gap-6 text-sm font-semibold lg:flex xl:gap-7">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              to={link.to}
-              className="flex items-center gap-1.5 transition-colors hover:text-black"
-            >
-              {link.label}
-            </Link>
-          ))}
+        <nav className="text-brand-dark/80 hidden shrink-0 items-center gap-5 text-sm font-semibold lg:flex xl:gap-6">
+          {NAV_LINKS.map((link) =>
+            link.download ? (
+              <a
+                key={link.label}
+                href={link.to}
+                download={typeof link.download === 'string' ? link.download : true}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-brand-dark hover:bg-brand-yellow-light inline-flex items-center gap-1.5 rounded-full border border-black/15 bg-white px-3 py-1 text-xs font-bold text-black transition-colors hover:border-black"
+              >
+                <FileDown className="h-3.5 w-3.5 text-amber-600" aria-hidden="true" />
+                <span>{link.label}</span>
+              </a>
+            ) : link.external || link.to.startsWith('http') ? (
+              <a
+                key={link.label}
+                href={link.to}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 transition-colors hover:text-black"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                to={link.to}
+                className="flex items-center gap-1.5 transition-colors hover:text-black"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -94,16 +118,47 @@ export function Navbar() {
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col px-4">
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.label}
-                    to={link.to}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-brand-dark border-b border-black/5 py-3 text-sm font-semibold hover:text-black"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {NAV_LINKS.map((link) =>
+                  link.download ? (
+                    <a
+                      key={link.label}
+                      href={link.to}
+                      download={typeof link.download === 'string' ? link.download : true}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileOpen(false)}
+                      className="text-brand-dark flex items-center justify-between border-b border-black/5 py-3 text-sm font-semibold hover:text-black"
+                    >
+                      <span className="flex items-center gap-2">
+                        <FileDown className="h-4 w-4 text-amber-600" aria-hidden="true" />
+                        {link.label}
+                      </span>
+                      <span className="border-brand-dark/20 bg-brand-yellow rounded px-2 py-0.5 text-[10px] font-bold uppercase">
+                        PDF
+                      </span>
+                    </a>
+                  ) : link.external || link.to.startsWith('http') ? (
+                    <a
+                      key={link.label}
+                      href={link.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setMobileOpen(false)}
+                      className="text-brand-dark border-b border-black/5 py-3 text-sm font-semibold hover:text-black"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      to={link.to}
+                      onClick={() => setMobileOpen(false)}
+                      className="text-brand-dark border-b border-black/5 py-3 text-sm font-semibold hover:text-black"
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
               </nav>
             </SheetContent>
           </Sheet>
